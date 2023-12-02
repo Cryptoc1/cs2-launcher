@@ -14,7 +14,14 @@ public sealed class CS2LauncherApplication : IAsyncDisposable
 
     internal CS2LauncherApplication( WebApplication app ) => WebApp = app;
 
-    public static CS2LauncherApplicationBuilder CreateBuilder( string[] args ) => new( args );
+    public static CS2LauncherApplicationBuilder CreateBuilder( string[] args )
+    {
+        var builder = WebApplication.CreateBuilder( args );
+        builder.Configuration.AddEnvironmentVariables( prefix: "CS2L_" );
+
+        builder.Services.AddCS2Launcher();
+        return new( builder );
+    }
 
     public ValueTask DisposeAsync( ) => WebApp.DisposeAsync();
 
@@ -25,13 +32,7 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
 {
     private readonly WebApplicationBuilder builder;
 
-    internal CS2LauncherApplicationBuilder( string[] args )
-    {
-        builder = WebApplication.CreateBuilder( args );
-        builder.Configuration.AddEnvironmentVariables( prefix: "CS2L_" );
-
-        builder.Services.AddCS2Launcher();
-    }
+    internal CS2LauncherApplicationBuilder( WebApplicationBuilder builder ) => this.builder = builder;
 
     public IConfigurationManager Configuration => builder.Configuration;
     public IHostEnvironment Environment => builder.Environment;

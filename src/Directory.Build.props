@@ -42,14 +42,14 @@
     <Authors>Samuel Steele</Authors>
     <Copyright>$([System.DateTime]::Now.Year) Escape Developers, LLC</Copyright>
     <PackageId>$(AssemblyName)</PackageId>
-    <PackageProjectUrl>https://github.com/ESCd/cs2-launcher</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/ESCd/cs2-launcher.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/cryptoc1/cs2-launcher</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/cryptoc1/cs2-launcher.git</RepositoryUrl>
     <Title>$(AssemblyName)</Title>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- <PackageReference Include="MinVer" Version="4.3.0" PrivateAssets="all" /> -->
-    <!-- <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" /> -->
+    <PackageReference Include="MinVer" Version="4.3.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

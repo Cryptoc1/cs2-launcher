@@ -21,10 +21,7 @@ internal sealed class Ingester( ILogger<Ingester> logger, IOptions<IngesterOptio
             logger.Ingesting( packet );
             foreach( var parser in options.Value.Parsers )
             {
-                if( !parser.IsMatch( packet.Body ) )
-                {
-                    continue;
-                }
+                if( !parser.IsMatch( packet.Body ) ) continue;
 
                 var value = parser.Parse( packet.Body );
                 logger.ParsedPacket( value );

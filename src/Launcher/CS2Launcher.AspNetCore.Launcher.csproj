@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\modules\CoreRcon\src\CoreRcon.Extensions.CounterStrike\CoreRcon.Extensions.CounterStrike.csproj" />
+    <ProjectReference Include="..\..\modules\CoreRcon\src\CoreRCON.Extensions.CounterStrike\CoreRCON.Extensions.CounterStrike.csproj" />
   </ItemGroup>
 
 </Project>
