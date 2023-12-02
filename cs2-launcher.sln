@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5222FED7-6FE1-46CA-AA88-EA10FA14075C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS2Launcher.AspNetCore.Launcher", "src\Launcher\CS2Launcher.AspNetCore.Launcher.csproj", "{115173BC-C8AD-4266-8759-3CA0A14374C2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS2Launcher.Sample", "sample\CS2Launcher.Sample.csproj", "{2ECAA280-96DA-4212-9857-6E3BAA4E2217}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{115173BC-C8AD-4266-8759-3CA0A14374C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{115173BC-C8AD-4266-8759-3CA0A14374C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{115173BC-C8AD-4266-8759-3CA0A14374C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{115173BC-C8AD-4266-8759-3CA0A14374C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ECAA280-96DA-4212-9857-6E3BAA4E2217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ECAA280-96DA-4212-9857-6E3BAA4E2217}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ECAA280-96DA-4212-9857-6E3BAA4E2217}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ECAA280-96DA-4212-9857-6E3BAA4E2217}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{115173BC-C8AD-4266-8759-3CA0A14374C2} = {5222FED7-6FE1-46CA-AA88-EA10FA14075C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {56EB9027-8ADE-4B88-BDE0-E9BC3DD1ACF4}
+	EndGlobalSection
+EndGlobal

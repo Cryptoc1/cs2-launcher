@@ -1,0 +1,63 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- Create a property to easily reference the root of the `src` folder -->
+    <SourceDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))</SourceDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <Deterministic>true</Deterministic>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Features>strict</Features>
+    <ImplicitUsings>true</ImplicitUsings>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IsAotCompatible>true</IsAotCompatible>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn);CS8618</NoWarn>
+
+    <!-- Disable legacy analyzers and enable NET/Roslyn analyzers -->
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <RunAnalyzers>true</RunAnalyzers>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+
+    <!-- net8.0 -->
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <!-- Git Versioning + Metadata -->
+  <PropertyGroup>
+    <MinVerDefaultPreReleaseIdentifiers>beta.0</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <!-- NuGet/AssemblyInfo -->
+  <PropertyGroup>
+    <Authors>Samuel Steele</Authors>
+    <Copyright>$([System.DateTime]::Now.Year) Escape Developers, LLC</Copyright>
+    <PackageId>$(AssemblyName)</PackageId>
+    <PackageProjectUrl>https://github.com/ESCd/cs2-launcher</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ESCd/cs2-launcher.git</RepositoryUrl>
+    <Title>$(AssemblyName)</Title>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- <PackageReference Include="MinVer" Version="4.3.0" PrivateAssets="all" /> -->
+    <!-- <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Collections" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' ">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+</Project>
