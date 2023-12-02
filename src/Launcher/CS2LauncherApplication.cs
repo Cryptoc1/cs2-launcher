@@ -27,7 +27,7 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
 
     internal CS2LauncherApplicationBuilder( string[] args )
     {
-        builder = WebApplication.CreateSlimBuilder( args );
+        builder = WebApplication.CreateBuilder( args );
         builder.Configuration.AddEnvironmentVariables( prefix: "CS2L_" );
 
         builder.Services.AddCS2Launcher();
