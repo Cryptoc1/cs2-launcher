@@ -1,5 +1,4 @@
-﻿using CS2Launcher.AspNetCore.Launcher.Ingest;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.Metrics;
@@ -41,13 +40,7 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
     public IDictionary<object, object> Properties => (( IHostApplicationBuilder )builder).Properties;
     public IServiceCollection Services => builder.Services;
 
-    public CS2LauncherApplication Build( )
-    {
-        var app = builder.Build();
-        app.MapPost( "/ingest", IngestEndpoint.Ingest );
-
-        return new( app );
-    }
+    public CS2LauncherApplication Build( ) => new( builder.Build() );
 
     public void ConfigureContainer<TContainerBuilder>( IServiceProviderFactory<TContainerBuilder> factory, Action<TContainerBuilder>? configure = null )
         where TContainerBuilder : notnull

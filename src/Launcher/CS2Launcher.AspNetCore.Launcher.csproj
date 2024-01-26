@@ -8,8 +8,4 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\modules\CoreRcon\src\CoreRCON.Extensions.CounterStrike\CoreRCON.Extensions.CounterStrike.csproj" />
-  </ItemGroup>
-
 </Project>

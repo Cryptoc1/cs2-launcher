@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CS2Launcher.AspNetCore.Launcher.Proc;
 
+[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.PublicProperties )]
 public sealed class DedicatedServerOptions
 {
     public string? AutoExec { get; set; }
@@ -27,8 +29,7 @@ public sealed class DedicatedServerOptions
 
     public bool RedirectOutput { get; set; } = true;
 
-    [Required]
-    public string RconPassword { get; set; }
+    public string? RconPassword { get; set; }
 
     public string? User { get; set; }
 
