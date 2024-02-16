@@ -10,6 +10,7 @@
     <PublishAot>true</PublishAot>
     <PublishTrimmed>true</PublishTrimmed>
     <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <TargetFramework>net8.0</TargetFramework>
     <TrimMode>partial</TrimMode>
     <UserSecretsId>CS2LAUNCHER-SAMPLE-17947b4b-b2a8-4c6d-a8ae-8eea3c24f3c0</UserSecretsId>
