@@ -54,7 +54,7 @@ jobs:
           global-json-file: global.json
 
       - name: restore
-        run: dotnet restore src/Launcher/CS2Launcher.AspNetCore.Launcher.csproj --locked-mode
+        run: dotnet restore --locked-mode
 
       - name: pack
         run: dotnet pack src/Launcher/CS2Launcher.AspNetCore.Launcher.csproj -c Release -o .package --no-restore
