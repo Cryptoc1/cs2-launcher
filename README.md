@@ -9,12 +9,19 @@ A .NET Generic Host Builder for running CS2 Dedicated Servers.
 dotnet new console -n {launcher-name}
 ```
 
+- Update the project to target the Web Sdk
+```xml
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <!-- ... -->
+</Project>
+```
+
 - Add a reference to `CS2Launcher.AspNetCore.Launcher`
 ```shell
 dotnet add package CS2Launcher.AspNetCore.Launcher
 ```
 
-- Update `Program.cs`
+- Update the `Program.cs`
 ```csharp
 using CS2Launcher.AspNetCore.Launcher;
 
