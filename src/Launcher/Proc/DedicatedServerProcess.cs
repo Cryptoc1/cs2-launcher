@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.Versioning;
 using System.Text;
 
 namespace CS2Launcher.AspNetCore.Launcher.Proc;
@@ -31,9 +32,9 @@ internal sealed class DedicatedServerProcess : Process
             StartInfo.UseShellExecute = false;
         }
 
-        if( !string.IsNullOrEmpty( options.User ) )
+        if( !string.IsNullOrEmpty( options.SystemUser ) )
         {
-            StartInfo.UserName = options.User;
+            StartInfo.UserName = options.SystemUser;
         }
 
         if( !string.IsNullOrEmpty( options.WorkingDirectory ) )
@@ -47,19 +48,23 @@ internal sealed class DedicatedServerProcess : Process
         var arguments = new CS2ArgumentsBuilder( "-dedicated" )
             .Append( options.Insecure ? "-insecure" : string.Empty );
 
-        if( !string.IsNullOrEmpty( options.GLSToken ) ) arguments.Append( $"+sv_setsteamaccount {options.GLSToken}" );
+        if( !string.IsNullOrEmpty( options.GSLToken ) ) arguments.Append( $"+sv_setsteamaccount {options.GSLToken}" );
         if( !string.IsNullOrWhiteSpace( options.RconPassword ) ) arguments.Append( @$"+con_enable true +rcon_password ""{options.RconPassword}""" );
 
         if( options.WorkshopCollectionId.HasValue ) arguments.Append( $"+host_workshop_collection {options.WorkshopCollectionId.Value}" );
         foreach( var workshopMapId in options.WorkshopMapIds ) arguments.Append( $"+host_workshop_map {workshopMapId}" );
 
-        return arguments.Append( $"+map {options.Map}" )
+        arguments.Append( $"+map {options.Map}" )
             .Append( !string.IsNullOrEmpty( options.GameAlias ) ? $"+game_alias {options.GameAlias}" : string.Empty )
             .Append( !string.IsNullOrEmpty( options.AutoExec ) ? $"+exec {options.AutoExec}" : string.Empty )
-            .Append( options.AdditionalArgs )
-            .Build();
+            .Append( options.AdditionalArgs );
+
+        options.OnBuildArguments?.Invoke( arguments );
+        return arguments.Build();
     }
 
+    [SupportedOSPlatform( "linux" )]
+    [SupportedOSPlatform( "windows" )]
     public new bool Start( )
     {
         if( IsStarted = base.Start() )
@@ -75,12 +80,17 @@ internal sealed class DedicatedServerProcess : Process
     }
 }
 
+/// <summary> A builder of CS2 dedicated server arguments. </summary>
 public sealed class CS2ArgumentsBuilder
 {
     private StringBuilder builder = new();
 
+    /// <summary> Create a new builder. </summary>
+    /// <param name="args"> The initial arguments. </param>
     public CS2ArgumentsBuilder( params string[] args ) => Append( args );
 
+    /// <summary> Append the given <paramref name="value"/> to the builder. </summary>
+    /// <param name="value"> The argument value to append. </param>
     public CS2ArgumentsBuilder Append( string? value )
     {
         value = value?.Trim();
@@ -92,7 +102,11 @@ public sealed class CS2ArgumentsBuilder
         return this;
     }
 
+    /// <summary> Append the given <paramref name="values"/> to the builder. </summary>
+    /// <param name="values"> The argument values to append. </param>
     public CS2ArgumentsBuilder Append( IEnumerable<string?> values ) => values.Aggregate( this, ( args, arg ) => args.Append( arg ) );
 
+    /// <summary> Build the dedicated server arguments string. </summary>
+    /// <returns> The combined, normalized, arguments. </returns>
     public string Build( ) => builder.ToString().Trim();
 }

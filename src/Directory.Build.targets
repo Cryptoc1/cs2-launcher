@@ -1,9 +1,5 @@
 <Project>
 
-  <PropertyGroup>
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
-  </PropertyGroup>
-
   <PropertyGroup Condition=" '$(IsTestProject)' == 'true' ">
     <MinVerSkip>true</MinVerSkip>
   </PropertyGroup>

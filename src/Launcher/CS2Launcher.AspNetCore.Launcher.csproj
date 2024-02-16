@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
+    <Description>A .NET Generic Host Builder for running CS2 Dedicated Servers.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <None Include="$(SourceDirectory)..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

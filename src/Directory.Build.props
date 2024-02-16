@@ -11,6 +11,7 @@
     <Deterministic>true</Deterministic>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <Features>strict</Features>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ImplicitUsings>true</ImplicitUsings>
     <IncludeSymbols>true</IncludeSymbols>
     <IsAotCompatible>true</IsAotCompatible>
@@ -31,7 +32,8 @@
 
   <!-- Git Versioning + Metadata -->
   <PropertyGroup>
-    <MinVerDefaultPreReleaseIdentifiers>beta.0</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerDefaultPreReleaseIdentifiers>rc.0</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerMinimumMajorMinor>1.0</MinVerMinimumMajorMinor>
     <MinVerTagPrefix>v</MinVerTagPrefix>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -42,6 +44,7 @@
     <Authors>Samuel Steele</Authors>
     <Copyright>$([System.DateTime]::Now.Year) Escape Developers, LLC</Copyright>
     <PackageId>$(AssemblyName)</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/cryptoc1/cs2-launcher</PackageProjectUrl>
     <RepositoryUrl>https://github.com/cryptoc1/cs2-launcher.git</RepositoryUrl>
     <Title>$(AssemblyName)</Title>

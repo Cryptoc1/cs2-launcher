@@ -1,0 +1,89 @@
+name: default
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          cache: true
+          cache-dependency-path: ./**/packages.lock.json
+          global-json-file: global.json
+
+      - name: restore
+        run: dotnet restore --locked-mode
+
+      - name: build
+        run: dotnet build --no-restore
+
+  pack:
+    if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/develop')
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          cache: true
+          cache-dependency-path: ./**/packages.lock.json
+          global-json-file: global.json
+
+      - name: restore
+        run: dotnet restore src/Launcher/CS2Launcher.AspNetCore.Launcher.csproj --locked-mode
+
+      - name: pack
+        run: dotnet pack src/Launcher/CS2Launcher.AspNetCore.Launcher.csproj -c Release -o .package --no-restore
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cs2-launcher
+          path: .package
+
+  publish:
+    needs: [pack]
+
+    runs-on: windows-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: global.json
+
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cs2-launcher
+
+      - name: push
+        run: dotnet nuget push "*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

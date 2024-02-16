@@ -1,3 +1,4 @@
+using System.Runtime.Versioning;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -7,13 +8,12 @@ namespace CS2Launcher.AspNetCore.Launcher.Proc;
 internal sealed partial class DedicatedServer(
     IHostApplicationLifetime lifetime,
     ILogger<DedicatedServer> logger,
-    IOptions<DedicatedServerOptions> options
-) : BackgroundService
+    IOptions<DedicatedServerOptions> optionsAccessor ) : BackgroundService
 {
-    private readonly IHostApplicationLifetime lifetime = lifetime;
-    private readonly ILogger<DedicatedServer> logger = logger;
-    private readonly DedicatedServerOptions options = options.Value;
+    private readonly DedicatedServerOptions options = optionsAccessor.Value;
 
+    [SupportedOSPlatform( "linux" )]
+    [SupportedOSPlatform( "windows" )]
     protected override async Task ExecuteAsync( CancellationToken cancellation )
     {
         using( var process = new DedicatedServerProcess( options ) )
@@ -24,8 +24,7 @@ internal sealed partial class DedicatedServer(
                 logger.FailedToStart(
                     process.ExitCode,
                     process.StartInfo.RedirectStandardError ? await process.StandardError.ReadToEndAsync( cancellation ) : "<unavailable>",
-                    process.StartInfo.RedirectStandardOutput ? await process.StandardOutput.ReadToEndAsync( cancellation ) : "<unavailable>"
-                );
+                    process.StartInfo.RedirectStandardOutput ? await process.StandardOutput.ReadToEndAsync( cancellation ) : "<unavailable>" );
 
                 lifetime.StopApplication();
                 return;
@@ -56,9 +55,9 @@ internal sealed partial class DedicatedServer(
     }
 }
 
-internal sealed class DedicatedServerCrashedException( int exitCode ) : Exception( $"{exitCode}" )
-{
-}
+/// <summary> Represents an exception that occurs when the <see cref="DedicatedServerProcess"/> crashes. </summary>
+/// <param name="exitCode"> The exit code of the underlying process. </param>
+public sealed class DedicatedServerCrashedException( int exitCode ) : Exception( $"{exitCode}" );
 
 internal static partial class DedicatedServerLogging
 {
