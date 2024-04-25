@@ -1,0 +1,37 @@
+﻿@page "/"
+
+@inject NavigationManager Navigation
+
+@implements IAsyncDisposable
+
+<PageTitle>Home</PageTitle>
+
+Hello, world!
+
+@code {
+
+    private ConsoleSignaler signaler = default!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await signaler.Connect();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        signaler = new(Navigation);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (signaler is not null)
+        {
+            await signaler.DisposeAsync();
+        }
+    }
+
+}

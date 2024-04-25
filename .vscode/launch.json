@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Sample Debug",
+      "name": "Debug Sample (Core)",
       "type": "coreclr",
       "request": "launch",
       "program": "${workspaceFolder}/sample/bin/Debug/net8.0/CS2Launcher.Sample.dll",
@@ -30,6 +30,47 @@
         }
       },
       "stopAtEntry": false,
+    },
+    {
+      "name": "Debug Sample (Blazor)",
+      "type": "blazorwasm",
+      "request": "launch",
+      "browser": "chrome",
+      "cwd": "${workspaceFolder}/sample",
+      "dotNetConfig": {
+        "justMyCode": true,
+        "logging": {
+          "engineLogging": false,
+          "moduleLoad": false,
+          "threadExit": false,
+        },
+        "requireExactSource": true,
+        "sourceFileMap": {
+          "/Views": "${workspaceFolder}/src/Launcher/Views"
+        },
+        "sourceLinkOptions": {
+          "https://raw.githubusercontent.com/*": {
+            "enabled": true
+          },
+          "*": {
+            "enabled": false
+          }
+        },
+        "stopAtEntry": false,
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "hosted": true,
+      "preLaunchTask": "${defaultBuildTask}",
+      "program": "${workspaceFolder}/sample/bin/Debug/net8.0/CS2Launcher.Sample.dll",
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "killOnServerStop": true,
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+      },
+      "url": "https://localhost:52750",
+      "webRoot": "${workspaceFolder}/sample",
     }
   ]
 }

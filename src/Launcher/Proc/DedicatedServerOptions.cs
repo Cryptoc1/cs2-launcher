@@ -14,6 +14,8 @@ public sealed class DedicatedServerOptions
     /// <summary> Additional custom arguments. </summary>
     public List<string> AdditionalArgs { get; set; } = [];
 
+    public bool Enabled { get; set; } = true;
+
     /// <summary> The <c>game_alias</c> to launch with. </summary>
     public string GameAlias { get; set; } = "deathmatch";
 
@@ -38,11 +40,11 @@ public sealed class DedicatedServerOptions
     [Required]
     public string Program { get; set; }
 
-    /// <summary> Whether stdout of the underlying process should be redirected. </summary>
-    public bool RedirectOutput { get; set; } = true;
-
     /// <summary> The RCON password the launch with. </summary>
     public string? RconPassword { get; set; }
+
+    /// <summary> Whether stdout of the underlying process should be redirected. </summary>
+    public bool RedirectOutput { get; set; } = true;
 
     /// <summary> The name of the system user to run the underlying process as. </summary>
     public string? SystemUser { get; set; }

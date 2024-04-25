@@ -1,4 +1,12 @@
+using System.Reflection;
+using AspNet.Security.OpenId.Steam;
+using CS2Launcher.AspNetCore.App.Abstractions;
+using CS2Launcher.AspNetCore.Launcher.Configuration;
+using CS2Launcher.AspNetCore.Launcher.Hosting;
 using CS2Launcher.AspNetCore.Launcher.Proc;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CS2Launcher.AspNetCore.Launcher;
@@ -12,13 +20,31 @@ public static class LauncherServiceExtensions
     {
         ArgumentNullException.ThrowIfNull( services );
 
-#pragma warning disable IL2026,IL3050
         services.AddHostedService<DedicatedServer>()
             .AddOptions<DedicatedServerOptions>()
             .BindConfiguration( "Server" )
             .ValidateDataAnnotations();
-#pragma warning restore IL2026,IL3050
 
-        return services;
+        services.AddControllersWithViews();
+        services.AddRazorComponents()
+            .AddInteractiveWebAssemblyComponents();
+
+        services.AddAuthorization()
+            .AddAuthentication( CookieAuthenticationDefaults.AuthenticationScheme )
+            .AddCookie()
+            .AddSteam();
+
+        services.AddSignalR()
+            .AddJsonProtocol()
+            .AddMessagePackProtocol();
+
+        services.AddRequestDecompression()
+            .AddResponseCompression();
+
+        services.AddSingleton( new LauncherHostContext( Assembly.GetEntryAssembly()! ) )
+            .AddTransient<HostContext>( serviceProvider => serviceProvider.GetRequiredService<LauncherHostContext>() );
+
+        return services.ConfigureOptions<ConfigureAuthentication>()
+            .ConfigureOptions<ConfigureResponseCompression>();
     }
 }

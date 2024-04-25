@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <DebuggerSupport Condition=" '$(Configuration)' == 'Debug' ">true</DebuggerSupport>
+    <EnablePostCSSTransform>true</EnablePostCSSTransform>
+    <IsAotCompatible>true</IsAotCompatible>
+    <IsPackable>false</IsPackable>
+    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+    <RunAOTCompilation>true</RunAOTCompilation>
+    <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+    <WasmEnableWebcil>true</WasmEnableWebcil>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="_Imports.razor.css" CssScope="_" />
+    <Content Remove="*.config.js" />
+  </ItemGroup>
+
+  <Target Name="RestoreNpmPackages" AfterTargets="PrepareForBuild;Restore" BeforeTargets="BeforeBuild" Condition=" '$(EnablePostCSSTransform)' == 'true' ">
+    <!-- The project contains a `package.json`, but not a `package-lock.json` -->
+    <Exec Command="npm i" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="!Exists('$(MSBuildProjectDirectory)\package-lock.json') AND Exists('$(MSBuildProjectDirectory)\package.json') AND !Exists('$(MSBuildProjectDirectory)\node_modules\.package-lock.json')" />
+
+    <!-- The project contains a `package.json` AND `package-lock.json` -->
+    <Exec Command="npm ci" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="Exists('$(MSBuildProjectDirectory)\package-lock.json') AND Exists('$(MSBuildProjectDirectory)\package.json') AND !Exists('$(MSBuildProjectDirectory)\node_modules\.package-lock.json')" />
+  </Target>
+
+  <Target Name="TransformScopedCssBundle" AfterTargets="BundleScopedCssFiles" Condition=" '$(EnablePostCSSTransform)' == 'true' ">
+    <PropertyGroup>
+      <_ScopedCssBundle>$(ProjectDir)obj\$(ConfigurationName)\$(TargetFramework)\scopedcss\projectbundle\$(ProjectName).bundle.scp.css</_ScopedCssBundle>
+      <_ScopedCssBundle Condition=" '$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true' ">$(ProjectDir)obj\$(ConfigurationName)\$(TargetFramework)\scopedcss\bundle\$(ProjectName).styles.css</_ScopedCssBundle>
+
+      <_CrossEnvArguments>MSBUILD_PROJECT_DIR='$(MSBuildProjectDirectory)'</_CrossEnvArguments>
+
+      <_PostCssArguments>$(_ScopedCssBundle) -r --config . --verbose</_PostCssArguments>
+      <_PostCssArguments Condition=" '$(Configuration)' == 'Release' ">$(_PostCssArguments) --env production --no-map</_PostCssArguments>
+    </PropertyGroup>
+
+    <Exec Command="npx cross-env $(_CrossEnvArguments) postcss $(_PostCssArguments)" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="Exists('$(_ScopedCssBundle)')" />
+  </Target>
+
+</Project>

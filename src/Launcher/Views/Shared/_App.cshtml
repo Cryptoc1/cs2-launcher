@@ -1,0 +1,42 @@
+@using CS2Launcher.AspNetCore.Launcher.Hosting
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Hosting
+
+@inject LauncherHostContext LauncherHost
+
+<!DOCTYPE html>
+
+<html lang="en" _>
+
+<head>
+    <base href="/" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    @* <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> *@
+
+    <link href="/@(LauncherHost.AssemblyName).styles.css" rel="preload" as="style" asp-append-version="true" />
+    <environment names="@Environments.Development">
+        <link href="https://cdn.tailwindcss.com/3.4.3" rel="preload" as="script" />
+    </environment>
+
+    <link href="/_framework/blazor.webassembly.js" rel="preload" as="script" asp-append-version="true" />
+    <link href="/_framework/blazor.boot.json" rel="prefetch" as="fetch" asp-append-version="true" />
+
+    <component type="@typeof( HeadOutlet )" render-mode="WebAssemblyPrerendered" />
+    <link href="/@(LauncherHost.AssemblyName).styles.css" rel="stylesheet" asp-append-version="true" />
+
+    <environment names="@Environments.Development">
+        <script src="https://cdn.tailwindcss.com/3.4.3"></script>
+    </environment>
+</head>
+
+<body>
+    <component type="@typeof(AppRoot)" render-mode="WebAssemblyPrerendered" />
+
+    <persist-component-state />
+    <script src="/_framework/blazor.webassembly.js" asp-append-version="true"></script>
+</body>
+
+</html>
