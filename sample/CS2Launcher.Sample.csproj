@@ -7,7 +7,6 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <OptimizationPreference>Speed</OptimizationPreference>
-    <!-- <PublishTrimmed>true</PublishTrimmed> -->
     <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <TargetFramework>net8.0</TargetFramework>

@@ -4,10 +4,10 @@
     <DebuggerSupport Condition=" '$(Configuration)' == 'Debug' ">true</DebuggerSupport>
     <EnablePostCSSTransform>true</EnablePostCSSTransform>
     <IsAotCompatible>true</IsAotCompatible>
-    <IsPackable>false</IsPackable>
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
-    <RunAOTCompilation>true</RunAOTCompilation>
+    <!-- <RunAOTCompilation>true</RunAOTCompilation> -->
     <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+    <WasmEmitSymbolMap Condition=" '$(Configuration)' == 'Debug' ">true</WasmEmitSymbolMap>
     <WasmEnableWebcil>true</WasmEnableWebcil>
   </PropertyGroup>
 
@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.4" />
+    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,7 +34,7 @@
   <Target Name="TransformScopedCssBundle" AfterTargets="BundleScopedCssFiles" Condition=" '$(EnablePostCSSTransform)' == 'true' ">
     <PropertyGroup>
       <_ScopedCssBundle>$(ProjectDir)obj\$(ConfigurationName)\$(TargetFramework)\scopedcss\projectbundle\$(ProjectName).bundle.scp.css</_ScopedCssBundle>
-      <_ScopedCssBundle Condition=" '$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true' ">$(ProjectDir)obj\$(ConfigurationName)\$(TargetFramework)\scopedcss\bundle\$(ProjectName).styles.css</_ScopedCssBundle>
+      <!-- <_ScopedCssBundle Condition=" '$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true' ">$(ProjectDir)obj\$(ConfigurationName)\$(TargetFramework)\scopedcss\bundle\$(ProjectName).styles.css</_ScopedCssBundle> -->
 
       <_CrossEnvArguments>MSBUILD_PROJECT_DIR='$(MSBuildProjectDirectory)'</_CrossEnvArguments>
 

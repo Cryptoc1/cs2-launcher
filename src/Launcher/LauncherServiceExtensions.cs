@@ -1,10 +1,14 @@
 using System.Reflection;
 using AspNet.Security.OpenId.Steam;
+using CS2Launcher.AspNetCore.App;
 using CS2Launcher.AspNetCore.App.Abstractions;
+using CS2Launcher.AspNetCore.Launcher.Abstractions;
+using CS2Launcher.AspNetCore.Launcher.Authorization;
 using CS2Launcher.AspNetCore.Launcher.Configuration;
 using CS2Launcher.AspNetCore.Launcher.Hosting;
 using CS2Launcher.AspNetCore.Launcher.Proc;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,26 +29,35 @@ public static class LauncherServiceExtensions
             .BindConfiguration( "Server" )
             .ValidateDataAnnotations();
 
-        services.AddControllersWithViews();
-        services.AddRazorComponents()
-            .AddInteractiveWebAssemblyComponents();
+        services.AddCS2LauncherApp()
+            .AddControllersWithViews();
 
-        services.AddAuthorization()
-            .AddAuthentication( CookieAuthenticationDefaults.AuthenticationScheme )
+        services.AddAuthentication( CookieAuthenticationDefaults.AuthenticationScheme )
             .AddCookie()
             .AddSteam();
 
-        services.AddSignalR()
-            .AddJsonProtocol()
-            .AddMessagePackProtocol();
-
-        services.AddRequestDecompression()
-            .AddResponseCompression();
-
-        services.AddSingleton( new LauncherHostContext( Assembly.GetEntryAssembly()! ) )
+        services.AddAuthorization()
+            .AddSingleton<IAuthorizationHandler, AppUserAuthorizationHandler>()
+            .AddCors()
+            .AddRequestDecompression()
+            .AddResponseCaching()
+            .AddResponseCompression()
+            .AddRouting( options => options.LowercaseUrls = true )
+            .AddSingleton( new LauncherHostContext( Assembly.GetEntryAssembly()! ) )
             .AddTransient<HostContext>( serviceProvider => serviceProvider.GetRequiredService<LauncherHostContext>() );
 
+        services.AddSignalR()
+#if DEBUG
+            .AddJsonProtocol()
+#endif
+            .AddMessagePackProtocol();
+
+        services.AddOptions<LauncherAppOptions>()
+            .BindConfiguration( "App" )
+            .ValidateDataAnnotations();
+
         return services.ConfigureOptions<ConfigureAuthentication>()
+            .ConfigureOptions<ConfigureAuthorization>()
             .ConfigureOptions<ConfigureResponseCompression>();
     }
 }

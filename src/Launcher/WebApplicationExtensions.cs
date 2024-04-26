@@ -18,20 +18,22 @@ internal static class WebApplicationExtensions
         }
         else
         {
-            app.UseExceptionHandler( "/error", createScopeForErrors: true );
             app.UseHsts();
         }
 
         app.UseHttpsRedirection();
         app.UseCookiePolicy();
 
+        app.UseRequestDecompression();
+        app.UseResponseCaching();
+        if( !app.Environment.IsDevelopment() )
+        {
+            app.UseResponseCompression();
+        }
+
         app.UseBlazorFrameworkFiles();
         app.UseStaticFiles( new StaticFileOptions { ServeUnknownFileTypes = true } );
-        app.UseCors( policy => policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials() );
-
-        app.UseRequestDecompression();
-        app.UseResponseCompression();
-        app.UseResponseCaching();
+        app.UseCors();
 
         app.UseAuthentication();
         app.UseAuthorization();

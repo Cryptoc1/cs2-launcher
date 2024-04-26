@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using CS2Launcher.AspNetCore.App.Abstractions.Signaling;
 using CS2Launcher.AspNetCore.App.Infrastructure;
 using Microsoft.AspNetCore.Components;
@@ -17,13 +18,11 @@ internal abstract class Signaler( Action<IHubConnectionBuilder> configure ) : IA
         => ( ) =>
         {
             var builder = new HubConnectionBuilder()
-
-                // .AddMessagePackProtocol()
-                .AddJsonProtocol()
+                .AddMessagePackProtocol()
 #if DEBUG
-        .ConfigureLogging( logging => logging.SetMinimumLevel( LogLevel.Debug ) )
+                .AddJsonProtocol()
+                .ConfigureLogging( logging => logging.SetMinimumLevel( LogLevel.Debug ) )
 #endif
-
                 .WithStatefulReconnect()
                 .WithAutomaticReconnect();
 
@@ -52,15 +51,15 @@ internal abstract class Signaler( Action<IHubConnectionBuilder> configure ) : IA
         return Connection.StartAsync();
     }
 
-    public IDisposable On<TSignal>( Func<TSignal, Task> handler )
+    public IDisposable On<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.PublicProperties )] TSignal>( Func<TSignal, Task> handler )
         where TSignal : Signal<TSignal>
         => Connection.On( typeof( TSignal ).Name, handler );
 
-    public IDisposable On<TSignal>( Action<TSignal> handler )
+    public IDisposable On<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.PublicProperties )] TSignal>( Action<TSignal> handler )
         where TSignal : Signal<TSignal>
         => Connection.On( typeof( TSignal ).Name, handler );
 
-    public Task Send<TSignal>( TSignal signal )
+    public Task Send<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.PublicProperties )] TSignal>( TSignal signal )
         where TSignal : Signal<TSignal>
         => Connection.SendAsync( typeof( TSignal ).Name, signal );
 }

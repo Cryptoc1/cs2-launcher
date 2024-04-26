@@ -1,0 +1,13 @@
+﻿<div class="animate-pulse flex flex-row font-medium items-center max-h-fit max-w-fit space-x-1.5">
+    <span class="animate-spin flex items-center">
+        <Icon Name="IconName.ProgressActivity" />
+    </span>
+    <span class="text-sm">@Text</span>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Text { get; set; } = "Loading...";
+
+}

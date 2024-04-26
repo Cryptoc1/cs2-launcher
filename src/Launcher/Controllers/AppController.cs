@@ -10,6 +10,7 @@ public sealed class AppController : Controller
     [Authorize]
     public ViewResult Index( ) => View( "_App" );
 
+    [AllowAnonymous]
     [HttpGet( "/login" )]
     public ChallengeResult Login( string returnUrl = "/" ) => Challenge(
         new AuthenticationProperties

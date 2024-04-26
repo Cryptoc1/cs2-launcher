@@ -14,6 +14,7 @@ public sealed class DedicatedServerOptions
     /// <summary> Additional custom arguments. </summary>
     public List<string> AdditionalArgs { get; set; } = [];
 
+    /// <summary> Whether the server is enabled. </summary>
     public bool Enabled { get; set; } = true;
 
     /// <summary> The <c>game_alias</c> to launch with. </summary>
@@ -21,6 +22,10 @@ public sealed class DedicatedServerOptions
 
     /// <summary> A Game Server Login Token to launch with. </summary>
     public string? GSLToken { get; set; }
+
+    /// <summary> The host ip to bind the server to. </summary>
+    [Required]
+    public string Host { get; set; }
 
     /// <summary> Whether to launch the dedicated server in 'insecure' mode. </summary>
     public bool Insecure { get; set; }

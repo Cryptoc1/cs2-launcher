@@ -1,0 +1,228 @@
+﻿@page "/"
+
+@implements IAsyncDisposable
+
+@inject ElementInterop ElementInterop
+@inject NavigationManager Navigation
+
+<PageTitle>Console@(!string.IsNullOrEmpty(Host) ? $": {Host}" : "")</PageTitle>
+
+<main class="antialiased font-medium font-mono h-full mx-auto p-2 w-full">
+    @if (!string.IsNullOrEmpty(Host))
+    {
+        <div class="h-full overflow-y-auto overscroll-contain scroll-smooth w-full">
+            <Virtualize Items="@Entries" Context="entry">
+                <div class="p-2" @key="@entry.Key">
+                    <div class="flex flex-row items-center">
+                        <span class=@ClassNames.Combine("flex items-center pr-2", (entry.Value.IsError ? "text-rose-400" : entry.Value.IsExecuting ? "text-amber-400" : "text-green-300")+ "/80")>
+                            <Icon Name="@(entry.Value.IsError ? IconName.Error : entry.Value.IsExecuting ? IconName.Pending : IconName.Circle)" />
+                        </span>
+                        <span class="whitespace-nowrap">@Host</span>
+                        <Icon Name="@IconName.ChevronRight" />
+                        <span class="ml-2 py-2">@entry.Value.Command</span>
+                    </div>
+
+                    @if (entry.Value.IsExecuting)
+                    {
+                        <div class="flex flex-row items-center py-1">
+                            <Loading Text="Executing Command..." />
+                        </div>
+                    }
+                    else
+                    {
+                        <samp class=@ClassNames.Combine("font-normal", entry.Value.IsError ? "text-rose-300" : "")>@entry.Value.Text</samp>
+                    }
+                </div>
+            </Virtualize>
+
+            <EditForm class="flex flex-row items-center p-2" Model="@Form" OnValidSubmit="OnSubmit">
+                <DataAnnotationsValidator />
+                <span class="flex-row inline-flex items-center mr-2">
+                    <span class="flex items-center pr-2 text-green-300/80">
+                        <Icon Name="IconName.CloudCircle" />
+                    </span>
+                    <span class="whitespace-nowrap">@Host</span>
+                    <Icon Name="@IconName.ChevronRight" />
+                </span>
+                <InputText class="bg-transparent border-none outline-none px-0 w-full focus:ring-0" @ref="@commandInput" @bind-Value="@Form.Command" @onblur="@OnCommandInputBlur" @onkeydown="@OnCommandInputKeyDown" type="text" autofocus />
+            </EditForm>
+        </div>
+    }
+    else
+    {
+        <Loading />
+    }
+</main>
+
+@code {
+
+    private InputText? commandInput;
+    private ConsoleSignaler signaler = default!;
+    private List<IDisposable>? signals;
+
+    private Dictionary<long, CommandEntry> Entries { get; set; } = [];
+    private ConsoleForm Form { get; set; } = new();
+    private string Host { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            signals = [signaler.On<ConsoleSignals.Connected>(OnConnected),
+signaler.On<ConsoleSignals.ExecutedCommand>(OnExecutedCommand),
+signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
+
+            await signaler.Connect();
+        }
+    }
+
+    private void OnCommandInputBlur()
+    {
+        Form.Offset = 0;
+    }
+
+    private async Task OnCommandInputKeyDown(KeyboardEventArgs e)
+    {
+        var handled = await (e.Code switch
+        {
+            "ArrowDown" => OnArrowDown(),
+            "ArrowUp" => OnArrowUp(),
+            _ => Task.FromResult(false)
+        });
+
+        if (handled && string.IsNullOrEmpty(Form.Command))
+        {
+            Form.Offset = 0;
+        }
+
+        async Task<bool> OnArrowDown()
+        {
+            var offset = ((Entries.Count - 1) - Form.Offset) + 1;
+            if (offset >= 0 && offset < Entries.Count)
+            {
+                Form.Command = Entries.Values.ElementAt(offset).Command;
+                Form.Offset--;
+                await InvokeAsync(StateHasChanged);
+
+                await Task.Delay(75);
+                await TryFocusCommandInput();
+                return true;
+            }
+
+            return false;
+        }
+
+        async Task<bool> OnArrowUp()
+        {
+            var offset = (Entries.Count - 1) - Form.Offset;
+            if (offset >= 0)
+            {
+                Form.Command = Entries.Values.ElementAt(offset).Command;
+                Form.Offset++;
+                await InvokeAsync(StateHasChanged);
+
+                await Task.Delay(75);
+                await TryFocusCommandInput();
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    private Task OnExecutedCommand(ConsoleSignals.ExecutedCommand command)
+    {
+        if (Entries.TryGetValue(command.Token, out var entry))
+        {
+            Entries[command.Token] = entry with
+                {
+                    IsExecuting = false,
+                    Text = command.Text
+                };
+
+            return InvokeAsync(StateHasChanged);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private Task OnExecuteCommandFailed(ConsoleSignals.ExecuteCommandFailed failure)
+    {
+        if (Entries.TryGetValue(failure.Token, out var entry))
+        {
+            Entries[failure.Token] = entry with
+                {
+                    IsExecuting = false,
+                    IsError = true,
+                    Text = failure.Error,
+                };
+
+            return InvokeAsync(StateHasChanged);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private async Task OnConnected(ConsoleSignals.Connected connected)
+    {
+        Host = connected.Host;
+
+        await InvokeAsync(StateHasChanged);
+        await TryFocusCommandInput();
+    }
+
+    protected override void OnInitialized()
+    {
+        Form ??= new();
+        signaler = new(Navigation);
+    }
+
+    private async Task OnSubmit()
+    {
+        var signal = new ConsoleSignals.ExecuteCommand(Form.Command, DateTime.UtcNow.Ticks);
+
+        Entries.Add(signal.Token, new(signal.Command));
+        await signaler.Send(signal);
+
+        Form = new();
+
+        await Task.Delay(75);
+        await TryFocusCommandInput();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        signals?.ForEach(signal => signal.Dispose());
+        signals?.Clear();
+
+        if (signaler is not null)
+        {
+            await signaler.DisposeAsync();
+        }
+    }
+
+    private ValueTask TryFocusCommandInput()
+    {
+        if (commandInput?.Element.HasValue is true)
+        {
+            return ElementInterop.FocusAndSelectEnd(commandInput.Element.Value);
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    private sealed record CommandEntry(string Command, bool IsExecuting = true, string? Text = default)
+    {
+        public bool IsError { get; init; }
+    }
+
+    public sealed class ConsoleForm
+    {
+        public int Offset { get; set; }
+
+        [Required]
+        public string Command { get; set; }
+    }
+
+}
