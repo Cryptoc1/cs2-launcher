@@ -5,52 +5,63 @@
 @inject ElementInterop ElementInterop
 @inject NavigationManager Navigation
 
-<PageTitle>Console@(!string.IsNullOrEmpty(Host) ? $": {Host}" : "")</PageTitle>
+<PageTitle>Console: @(!string.IsNullOrEmpty(Host) ? Host : "Connecting...")</PageTitle>
 
-<main class="antialiased font-medium font-mono h-full mx-auto p-2 w-full">
-    @if (!string.IsNullOrEmpty(Host))
+<main class="antialiased font-medium font-mono min-h-screen mx-auto overflow-y-auto overscroll-contain p-2 scroll-smooth w-full" @onclick="@OnMainClicked">
+    @if (!string.IsNullOrEmpty(ConnectError))
     {
-        <div class="h-full overflow-y-auto overscroll-contain scroll-smooth w-full">
-            <Virtualize Items="@Entries" Context="entry">
-                <div class="p-2" @key="@entry.Key">
-                    <div class="flex flex-row items-center">
-                        <span class=@ClassNames.Combine("flex items-center pr-2", (entry.Value.IsError ? "text-rose-400" : entry.Value.IsExecuting ? "text-amber-400" : "text-green-300")+ "/80")>
-                            <Icon Name="@(entry.Value.IsError ? IconName.Error : entry.Value.IsExecuting ? IconName.Pending : IconName.Circle)" />
-                        </span>
-                        <span class="whitespace-nowrap">@Host</span>
-                        <Icon Name="@IconName.ChevronRight" />
-                        <span class="ml-2 py-2">@entry.Value.Command</span>
-                    </div>
+        <div class="flex flex-row items-center p-2">
+            <span class="flex items-center pr-2 text-rose-400/80">
+                <Icon Name="@IconName.Error" />
+            </span>
+            <samp class="text-rose-300">@ConnectError</samp>
+        </div>
 
-                    @if (entry.Value.IsExecuting)
-                    {
-                        <div class="flex flex-row items-center py-1">
-                            <Loading Text="Executing Command..." />
-                        </div>
-                    }
-                    else
-                    {
-                        <samp class=@ClassNames.Combine("font-normal", entry.Value.IsError ? "text-rose-300" : "")>@entry.Value.Text</samp>
-                    }
-                </div>
-            </Virtualize>
-
-            <EditForm class="flex flex-row items-center p-2" Model="@Form" OnValidSubmit="OnSubmit">
-                <DataAnnotationsValidator />
-                <span class="flex-row inline-flex items-center mr-2">
-                    <span class="flex items-center pr-2 text-green-300/80">
-                        <Icon Name="IconName.CloudCircle" />
+        <button class="flex flex-row items-center p-2 hover:underline" @onclick="@OnRetryClicked">
+            <samp>Retry?</samp>
+        </button>
+    }
+    else if (!string.IsNullOrEmpty(Host))
+    {
+        <Virtualize Items="@Entries" Context="entry">
+            <div class="p-2" @key="@entry.Key">
+                <div class="flex flex-row items-center">
+                    <span class=@ClassNames.Combine("flex items-center pr-2", (entry.Value.IsError ? "text-rose-400" : entry.Value.IsExecuting ? "text-amber-400" : "text-green-300")+ "/80")>
+                        <Icon Name="@(entry.Value.IsError ? IconName.Error : entry.Value.IsExecuting ? IconName.Pending : IconName.Circle)" />
                     </span>
                     <span class="whitespace-nowrap">@Host</span>
                     <Icon Name="@IconName.ChevronRight" />
+                    <span class="ml-2 py-2">@entry.Value.Command</span>
+                </div>
+
+                @if (entry.Value.IsExecuting)
+                {
+                    <div class="flex flex-row items-center py-1">
+                        <Loading Text="Executing Command..." />
+                    </div>
+                }
+                else
+                {
+                    <samp class=@ClassNames.Combine("font-normal", entry.Value.IsError ? "text-rose-300" : "")>@entry.Value.Text</samp>
+                }
+            </div>
+        </Virtualize>
+
+        <EditForm class="flex flex-row items-center p-2" Model="@Form" OnValidSubmit="OnSubmit">
+            <DataAnnotationsValidator />
+            <span class="flex-row inline-flex items-center mr-2">
+                <span class="flex items-center pr-2 text-green-300/80">
+                    <Icon Name="IconName.CloudCircle" />
                 </span>
-                <InputText class="bg-transparent border-none outline-none px-0 w-full focus:ring-0" @ref="@commandInput" @bind-Value="@Form.Command" @onblur="@OnCommandInputBlur" @onkeydown="@OnCommandInputKeyDown" type="text" autofocus />
-            </EditForm>
-        </div>
+                <span class="whitespace-nowrap">@Host</span>
+                <Icon Name="@IconName.ChevronRight" />
+            </span>
+            <InputText class="bg-transparent border-none outline-none px-0 w-full focus:ring-0" @ref="@commandInput" @bind-Value="@Form.Command" @onblur="@OnCommandInputBlur" @onfocus="@OnCommandInputFocus" @onkeydown="@OnCommandInputKeyDown" type="text" autofocus />
+        </EditForm>
     }
     else
     {
-        <Loading />
+        <Loading Text="Connecting..." />
     }
 </main>
 
@@ -60,16 +71,19 @@
     private ConsoleSignaler signaler = default!;
     private List<IDisposable>? signals;
 
+    private string? ConnectError { get; set; }
     private Dictionary<long, CommandEntry> Entries { get; set; } = [];
     private ConsoleForm Form { get; set; } = new();
     private string Host { get; set; }
+    private bool IsCommandInputFocused { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            signals = [signaler.On<ConsoleSignals.Connected>(OnConnected),
+            signals = [signaler.On<ConsoleSignals.ConnectFailed>(OnConnectFailed),
+signaler.On<ConsoleSignals.Connected>(OnConnected),
 signaler.On<ConsoleSignals.ExecutedCommand>(OnExecutedCommand),
 signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
 
@@ -79,7 +93,13 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
 
     private void OnCommandInputBlur()
     {
+        IsCommandInputFocused = false;
+    }
+
+    private void OnCommandInputFocus()
+    {
         Form.Offset = 0;
+        IsCommandInputFocused = true;
     }
 
     private async Task OnCommandInputKeyDown(KeyboardEventArgs e)
@@ -164,8 +184,17 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
         return Task.CompletedTask;
     }
 
+    private async Task OnConnectFailed(ConsoleSignals.ConnectFailed failure)
+    {
+        await signaler.Disconnect();
+
+        ConnectError = failure.Error;
+        await InvokeAsync(StateHasChanged);
+    }
+
     private async Task OnConnected(ConsoleSignals.Connected connected)
     {
+        ConnectError = "";
         Host = connected.Host;
 
         await InvokeAsync(StateHasChanged);
@@ -176,6 +205,24 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
     {
         Form ??= new();
         signaler = new(Navigation);
+    }
+
+    private async Task OnMainClicked()
+    {
+        if (commandInput?.Element.HasValue is true && !IsCommandInputFocused)
+        {
+            await TryFocusCommandInput();
+        }
+    }
+
+    private async Task OnRetryClicked()
+    {
+        await signaler.Disconnect();
+
+        ConnectError = "";
+        await InvokeAsync(StateHasChanged);
+
+        await signaler.Connect();
     }
 
     private async Task OnSubmit()

@@ -7,6 +7,7 @@ using CS2Launcher.AspNetCore.App.Abstractions.Signaling;
 using CS2Launcher.AspNetCore.App.Abstractions;
 using Microsoft.Extensions.Options;
 using CS2Launcher.AspNetCore.Launcher.Proc;
+using CoreRCON.Parsers.Standard;
 
 namespace CS2Launcher.AspNetCore.Launcher.Api;
 
@@ -59,31 +60,49 @@ public sealed class ConsoleHub( IOptions<DedicatedServerOptions> serverOptionsAc
     /// <inheritdoc/>
     public override async Task OnConnectedAsync( )
     {
-        await Connected(
-            Clients.Caller,
-            GetOrCreateConsole(),
-            Context.ConnectionAborted );
+        try
+        {
+            var status = await Connect(
+                GetOrCreateConsole(),
+                Context.ConnectionAborted );
+
+            await Clients.Caller.Signal(
+                new ConsoleSignals.Connected( status.Hostname ?? $"{status.Endpoints?.Public}" ),
+                Context.ConnectionAborted );
+        }
+        catch( RCONException exception )
+        {
+            TryDestroyConsole();
+            await Clients.Caller.Signal(
+                new ConsoleSignals.ConnectFailed( exception.Message ),
+                Context.ConnectionAborted );
+        }
 
         await base.OnConnectedAsync();
 
-        static async Task Connected( IClientProxy caller, RCONClient console, CancellationToken cancellation )
+        static async Task<Status> Connect( RCONClient console, CancellationToken cancellation )
         {
-            await console.ConnectAsync();
-
-            var status = await console.Status( cancellation );
-            await caller.Signal( new ConsoleSignals.Connected( status.Hostname ?? status.Endpoints?.Public.ToString() ?? "" ), cancellation );
+            await console.ConnectAsync().ConfigureAwait( false );
+            return await console.Status( cancellation ).ConfigureAwait( false );
         }
     }
 
     /// <inheritdoc/>
     public override Task OnDisconnectedAsync( Exception? exception )
     {
+        TryDestroyConsole();
+        return base.OnDisconnectedAsync( exception );
+    }
+
+    private bool TryDestroyConsole( )
+    {
         if( Context.Items.Remove( ConsoleKey, out var value ) && value is RCONClient console )
         {
             console.Dispose();
+            return true;
         }
 
-        return base.OnDisconnectedAsync( exception );
+        return false;
     }
 }
 

@@ -9,6 +9,10 @@ public static class ConsoleSignals
     /// <param name="Host"> The host that's been connected. </param>
     public sealed record Connected( string Host ) : Signal<Connected>;
 
+    /// <summary> Represents the 'ConnectFailed' signal. </summary>
+    /// <param name="Error"> The error that produced the failure. </param>
+    public sealed record ConnectFailed( string Error ) : Signal<ConnectFailed>;
+
     /// <summary> Represents the 'ExecuteCommand' signal. </summary>
     /// <param name="Command"> The command to be executed. </param>
     /// <param name="Token"> A unique identifier used for traking the signal. </param>

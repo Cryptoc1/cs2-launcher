@@ -1,7 +1,7 @@
 <Project>
   <Import Project="Microsoft.AspNetCore.StaticWebAssets.props" Condition=" Exists('$(MSBuildThisFileDirectory)Microsoft.AspNetCore.StaticWebAssets.props') " />
 
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true' ">
     <DebuggerSupport Condition=" '$(Configuration)' == 'Debug' ">true</DebuggerSupport>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
@@ -13,7 +13,7 @@
     <WasmEnableWebcil>true</WasmEnableWebcil>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true' ">
     <SupportedPlatform Include="browser" />
     <TrimmerRootAssembly Include="CS2Launcher.AspNetCore.App" />
   </ItemGroup>

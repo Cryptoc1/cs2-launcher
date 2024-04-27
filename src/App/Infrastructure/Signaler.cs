@@ -53,6 +53,8 @@ internal abstract class Signaler( Action<IHubConnectionBuilder> configure ) : IA
         return Connection.StartAsync();
     }
 
+    public Task Disconnect( ) => Connection.StopAsync();
+
     public IDisposable On<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.PublicProperties )] TSignal>( Func<TSignal, Task> handler )
         where TSignal : Signal<TSignal>
         => Connection.On( typeof( TSignal ).Name, handler );
