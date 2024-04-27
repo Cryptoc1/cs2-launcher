@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
@@ -30,7 +32,7 @@ jobs:
           global-json-file: global.json
 
       - name: restore
-        run: dotnet restore --locked-mode
+        run: dotnet workload restore && dotnet restore --locked-mode
 
       - name: build
         run: dotnet build --no-restore
@@ -45,6 +47,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          submodules: true
 
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
@@ -54,7 +57,7 @@ jobs:
           global-json-file: global.json
 
       - name: restore
-        run: dotnet restore --locked-mode
+        run: dotnet workload restore && dotnet restore --locked-mode
 
       - name: pack
         run: dotnet pack -c Release -o .packages --no-restore
