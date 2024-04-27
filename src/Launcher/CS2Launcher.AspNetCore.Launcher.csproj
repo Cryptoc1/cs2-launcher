@@ -5,6 +5,7 @@
     <Description>A .NET Generic Host Builder for running CS2 Dedicated Servers.</Description>
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,8 +19,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\App\CS2Launcher.AspNetCore.App.csproj" />
-    <ProjectReference Include="..\..\modules\CoreRcon\src\CoreRCON.Extensions.CounterStrike\CoreRCON.Extensions.CounterStrike.csproj" />
+    <ProjectReference Include="..\App\CS2Launcher.AspNetCore.App.csproj" Private="false" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\modules\CoreRcon\src\CoreRCON.Extensions.CounterStrike\CoreRCON.Extensions.CounterStrike.csproj" PrivateAssets="all" />
+
+    <!-- NOTE: force transitive deps of CoreRCON, since `PrivateAssets` is used to prevent generated a dependency key on nuget -->
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.1" />
+    <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
+  </ItemGroup>
+
+  <Target DependsOnTargets="BuildOnlySettings;ResolveReferences" Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+    </ItemGroup>
+  </Target>
 
 </Project>

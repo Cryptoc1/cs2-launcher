@@ -435,26 +435,6 @@
         "resolved": "8.0.0",
         "contentHash": "CMaFr7v+57RW7uZfZkPExsPB6ljwzhjACWW1gfU35Y56rk72B/Wu+sTqxVmGSk4SFUlPc3cjeKND0zktziyjBA=="
       },
-      "corercon": {
-        "type": "Project",
-        "dependencies": {
-          "CoreRCON.Parsers": "[1.0.0, )",
-          "System.Diagnostics.DiagnosticSource": "[8.0.1, )",
-          "System.IO.Pipelines": "[8.0.0, )"
-        }
-      },
-      "corercon.extensions.counterstrike": {
-        "type": "Project",
-        "dependencies": {
-          "CoreRCON": "[6.0.0, )"
-        }
-      },
-      "corercon.parsers": {
-        "type": "Project",
-        "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "[6.0.0, )"
-        }
-      },
       "cs2launcher.aspnetcore.app": {
         "type": "Project",
         "dependencies": {
@@ -469,8 +449,9 @@
         "dependencies": {
           "AspNet.Security.OpenId.Steam": "[8.0.0, )",
           "CS2Launcher.AspNetCore.App": "[1.0.0, )",
-          "CoreRCON.Extensions.CounterStrike": "[1.0.0, )",
-          "Microsoft.AspNetCore.Components.WebAssembly.Server": "[8.0.4, )"
+          "Microsoft.AspNetCore.Components.WebAssembly.Server": "[8.0.4, )",
+          "System.Diagnostics.DiagnosticSource": "[8.0.1, )",
+          "System.IO.Pipelines": "[8.0.0, )"
         }
       },
       "cs2launcher.sample.app": {

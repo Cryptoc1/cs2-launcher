@@ -38,6 +38,7 @@ jobs:
         run: dotnet build --no-restore
 
   pack:
+    needs: [build]
     if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/develop')
 
     runs-on: ubuntu-latest
