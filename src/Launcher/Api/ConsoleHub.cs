@@ -10,11 +10,13 @@ using CS2Launcher.AspNetCore.Launcher.Proc;
 
 namespace CS2Launcher.AspNetCore.Launcher.Api;
 
+/// <summary> Hub for handling <see cref="ConsoleSignals"/>. </summary>
 [Authorize]
 public sealed class ConsoleHub( IOptions<DedicatedServerOptions> serverOptionsAccessor ) : Hub
 {
     private static readonly object ConsoleKey = new();
 
+    /// <summary> Handle the <see cref="ConsoleSignals.ExecuteCommand"/>. </summary>
     [HubMethodName( nameof( ConsoleSignals.ExecuteCommand ) )]
     public async Task ExecuteCommand( ConsoleSignals.ExecuteCommand command )
     {
@@ -46,9 +48,7 @@ public sealed class ConsoleHub( IOptions<DedicatedServerOptions> serverOptionsAc
 
         var options = serverOptionsAccessor.Value;
         client = new RCONClient(
-            new IPEndPoint(
-                IPAddress.Parse( options.Host ),
-                27015 ),
+            new IPEndPoint( IPAddress.Parse( options.Host ), 27015 ),
             options.RconPassword!,
             new() { AutoConnect = true } );
 

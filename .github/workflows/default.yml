@@ -57,13 +57,13 @@ jobs:
         run: dotnet restore --locked-mode
 
       - name: pack
-        run: dotnet pack src/Launcher/CS2Launcher.AspNetCore.Launcher.csproj -c Release -o .package --no-restore
+        run: dotnet pack -c Release -o .packages --no-restore
 
       - name: upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cs2-launcher
-          path: .package
+          name: cs2-launcher-packages
+          path: .packages
 
   publish:
     needs: [pack]
@@ -83,7 +83,7 @@ jobs:
       - name: download artifact
         uses: actions/download-artifact@v4
         with:
-          name: cs2-launcher
+          name: cs2-launcher-packages
 
       - name: push
         run: dotnet nuget push "*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

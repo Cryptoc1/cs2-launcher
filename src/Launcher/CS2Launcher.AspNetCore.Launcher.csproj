@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\App\CS2Launcher.AspNetCore.App.csproj" />
-    <!-- <ProjectReference Include="..\..\modules\CoreRcon\src\CoreRCON\CoreRCON.csproj" /> -->
     <ProjectReference Include="..\..\modules\CoreRcon\src\CoreRCON.Extensions.CounterStrike\CoreRCON.Extensions.CounterStrike.csproj" />
   </ItemGroup>
 

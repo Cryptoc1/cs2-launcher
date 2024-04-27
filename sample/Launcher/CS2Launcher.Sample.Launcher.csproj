@@ -1,21 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
-    <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
     <OptimizationPreference>Speed</OptimizationPreference>
     <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <TargetFramework>net8.0</TargetFramework>
     <TrimMode>partial</TrimMode>
     <UserSecretsId>CS2LAUNCHER-SAMPLE-17947b4b-b2a8-4c6d-a8ae-8eea3c24f3c0</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Launcher\CS2Launcher.AspNetCore.Launcher.csproj" />
+    <ProjectReference Include="..\App\CS2Launcher.Sample.App.csproj" />
+    <ProjectReference Include="..\..\src\Launcher\CS2Launcher.AspNetCore.Launcher.csproj" />
   </ItemGroup>
 
 </Project>

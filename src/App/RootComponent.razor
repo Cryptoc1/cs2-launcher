@@ -1,4 +1,4 @@
-﻿<Router AppAssembly="@typeof(AppRoot).Assembly">
+﻿<Router AppAssembly="@typeof(RootComponent).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="routeData" DefaultLayout="@typeof(Layout)" />
     </Found>
@@ -10,3 +10,16 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            Console.WriteLine($"CS2Launcher App v{AppVersion.Value}");
+        }
+    }
+
+}

@@ -1,22 +1,20 @@
 using System.Diagnostics.CodeAnalysis;
+using CS2Launcher.AspNetCore.App.Hosting;
 using CS2Launcher.AspNetCore.App.Interop;
-using CS2Launcher.AspNetCore.App.Shared;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CS2Launcher.AspNetCore.App;
 
+/// <summary> Extensions for registering services required by the CS2Launcher App. </summary>
 public static class AppServiceExtensions
 {
-    [DynamicDependency( DynamicallyAccessedMemberTypes.All, typeof( AppRoot ) )]
-    [DynamicDependency( DynamicallyAccessedMemberTypes.All, typeof( Console ) )]
-    [DynamicDependency( DynamicallyAccessedMemberTypes.All, typeof( Layout ) )]
-    public static IServiceCollection AddCS2LauncherApp( this IServiceCollection services )
+    /// <summary> Add services required by the CS2Launcher App. </summary>
+    /// <typeparam name="TRoot"> The type of <see cref="RootComponent"/> of the app. </typeparam>
+    public static IServiceCollection AddCS2LauncherApp<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.All )] TRoot>( this IServiceCollection services )
+        where TRoot : RootComponent
     {
         ArgumentNullException.ThrowIfNull( services );
-
-        // EnsureRuntimeRefs();
-        return services.AddScoped<ElementInterop>();
+        return services.AddSingleton( new RootComponentDescriptor( typeof( TRoot ) ) )
+            .AddScoped<ElementInterop>();
     }
-
-    // [DynamicDependency( DynamicallyAccessedMemberTypes.All, typeof( AppRoot ) )]
-    // internal static void EnsureRuntimeRefs( ) => typeof( AppRoot ).GetTypeInfo();
 }

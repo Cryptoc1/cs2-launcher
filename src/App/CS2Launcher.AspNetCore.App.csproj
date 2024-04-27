@@ -1,14 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <DebuggerSupport Condition=" '$(Configuration)' == 'Debug' ">true</DebuggerSupport>
+    <Description>Blazor Runtime Components for CS2 Launcher.</Description>
     <EnablePostCSSTransform>true</EnablePostCSSTransform>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <IsAotCompatible>true</IsAotCompatible>
-    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
-    <!-- <RunAOTCompilation>true</RunAOTCompilation> -->
-    <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
-    <WasmEmitSymbolMap Condition=" '$(Configuration)' == 'Debug' ">true</WasmEmitSymbolMap>
-    <WasmEnableWebcil>true</WasmEnableWebcil>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <SupportedPlatform Include="browser" />
+
+    <None Include="$(SourceDirectory)..\README.md" Pack="true" PackagePath="\" />
     <None Update="_Imports.razor.css" CssScope="_" />
     <Content Remove="*.config.js" />
   </ItemGroup>

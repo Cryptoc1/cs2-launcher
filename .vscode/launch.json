@@ -5,14 +5,14 @@
       "name": "Debug Sample (Core)",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/sample/bin/Debug/net8.0/CS2Launcher.Sample.dll",
+      "program": "${workspaceFolder}/sample/Launcher/bin/Debug/net8.0/CS2Launcher.Sample.Launcher.dll",
       "args": [
         "environment=Development"
       ],
       "env": {
         "DOTNET_ENVIRONMENT": "Development"
       },
-      "cwd": "${workspaceFolder}/sample",
+      "cwd": "${workspaceFolder}/sample/Launcher",
       "justMyCode": true,
       "preLaunchTask": "${defaultBuildTask}",
       "requireExactSource": true,
@@ -36,7 +36,7 @@
       "type": "blazorwasm",
       "request": "launch",
       "browser": "chrome",
-      "cwd": "${workspaceFolder}/sample",
+      "cwd": "${workspaceFolder}/sample/Launcher",
       "dotNetConfig": {
         "justMyCode": true,
         "logging": {
@@ -63,14 +63,14 @@
       },
       "hosted": true,
       "preLaunchTask": "${defaultBuildTask}",
-      "program": "${workspaceFolder}/sample/bin/Debug/net8.0/CS2Launcher.Sample.dll",
+      "program": "${workspaceFolder}/sample/Launcher/bin/Debug/net8.0/CS2Launcher.Sample.Launcher.dll",
       "serverReadyAction": {
         "action": "debugWithChrome",
         "killOnServerStop": true,
         "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
       },
       "url": "https://localhost:52750",
-      "webRoot": "${workspaceFolder}/sample",
+      "webRoot": "${workspaceFolder}/sample/Launcher",
     }
   ]
 }

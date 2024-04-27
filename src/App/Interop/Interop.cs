@@ -6,7 +6,7 @@ namespace CS2Launcher.AspNetCore.App.Interop;
 
 internal abstract class Interop( IJSRuntime runtime, string moduleName ) : IAsyncDisposable
 {
-    public string ModulePath => $"/Interop/{moduleName}.module.js";
+    public string ModulePath => $"/_content/CS2Launcher.AspNetCore.App/Interop/{moduleName}.module.js";
 
     private readonly AsyncLock moduleLock = new();
 

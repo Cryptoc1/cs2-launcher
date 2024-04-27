@@ -3,6 +3,8 @@ using CS2Launcher.AspNetCore.App.Abstractions.Signaling;
 using CS2Launcher.AspNetCore.App.Infrastructure;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 internal abstract class Signaler( Action<IHubConnectionBuilder> configure ) : IAsyncDisposable
 {

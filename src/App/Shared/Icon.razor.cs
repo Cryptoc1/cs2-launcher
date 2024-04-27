@@ -1,5 +1,7 @@
 ﻿namespace CS2Launcher.AspNetCore.App.Shared;
 
+/// <summary> Describes the name of icons. </summary>
+/// <param name="name"> The name of the icon. </param>
 public readonly struct IconName( string name )
 {
     public static readonly IconName ChevronRight = new( "chevron_right" );
@@ -13,6 +15,7 @@ public readonly struct IconName( string name )
     public override string ToString( ) => name;
 }
 
+/// <summary> Describes the desired size of an icon. </summary>
 public enum IconSize
 {
     ExtraSmall,

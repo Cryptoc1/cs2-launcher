@@ -1,4 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using CS2Launcher.AspNetCore.App;
+using CS2Launcher.AspNetCore.App.Hosting;
+using CS2Launcher.AspNetCore.Launcher.Abstractions;
+using CS2Launcher.AspNetCore.Launcher.Authorization;
+using CS2Launcher.AspNetCore.Launcher.Configuration;
+using CS2Launcher.AspNetCore.Launcher.Hosting;
+using CS2Launcher.AspNetCore.Launcher.Proc;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -15,22 +26,22 @@ namespace CS2Launcher.AspNetCore.Launcher;
 public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposable, IEndpointRouteBuilder, IHost
 {
     /// <summary> The underlying host of the launcher. </summary>
-    internal readonly WebApplication app;
+    internal readonly WebApplication WebApp;
 
-    IServiceProvider IEndpointRouteBuilder.ServiceProvider => (( IEndpointRouteBuilder )app).ServiceProvider;
-    ICollection<EndpointDataSource> IEndpointRouteBuilder.DataSources => (( IEndpointRouteBuilder )app).DataSources;
+    IServiceProvider IEndpointRouteBuilder.ServiceProvider => (( IEndpointRouteBuilder )WebApp).ServiceProvider;
+    ICollection<EndpointDataSource> IEndpointRouteBuilder.DataSources => (( IEndpointRouteBuilder )WebApp).DataSources;
 
-    IServiceProvider IHost.Services => app.Services;
+    IServiceProvider IHost.Services => WebApp.Services;
 
-    IServiceProvider IApplicationBuilder.ApplicationServices { get => (( IApplicationBuilder )app).ApplicationServices; set => (( IApplicationBuilder )app).ApplicationServices = value; }
-    IFeatureCollection IApplicationBuilder.ServerFeatures => (( IApplicationBuilder )app).ServerFeatures;
-    IDictionary<string, object?> IApplicationBuilder.Properties => (( IApplicationBuilder )app).Properties;
+    IServiceProvider IApplicationBuilder.ApplicationServices { get => (( IApplicationBuilder )WebApp).ApplicationServices; set => (( IApplicationBuilder )WebApp).ApplicationServices = value; }
+    IFeatureCollection IApplicationBuilder.ServerFeatures => (( IApplicationBuilder )WebApp).ServerFeatures;
+    IDictionary<string, object?> IApplicationBuilder.Properties => (( IApplicationBuilder )WebApp).Properties;
 
-    internal CS2LauncherApplication( WebApplication app ) => this.app = app;
+    internal CS2LauncherApplication( WebApplication app ) => WebApp = app;
 
-    RequestDelegate IApplicationBuilder.Build( ) => (( IApplicationBuilder )app).Build();
+    RequestDelegate IApplicationBuilder.Build( ) => (( IApplicationBuilder )WebApp).Build();
 
-    IApplicationBuilder IEndpointRouteBuilder.CreateApplicationBuilder( ) => (( IEndpointRouteBuilder )app).CreateApplicationBuilder();
+    IApplicationBuilder IEndpointRouteBuilder.CreateApplicationBuilder( ) => (( IEndpointRouteBuilder )WebApp).CreateApplicationBuilder();
 
     /// <summary> Initialize a <see cref="CS2LauncherApplicationBuilder"/> with pre-configured defaults. </summary>
     /// <param name="args"> The command line arguments.  </param>
@@ -38,28 +49,38 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
     {
         var builder = WebApplication.CreateBuilder( args );
         builder.Configuration.AddEnvironmentVariables( prefix: "CS2L_" );
-        builder.Services.AddCS2Launcher();
+
+        builder.Services.AddCors()
+            .AddRequestDecompression()
+            .AddResponseCaching()
+            .AddResponseCompression()
+            .AddRouting( options => options.LowercaseUrls = true );
+
+        builder.Services.AddHostedService<DedicatedServer>()
+            .AddOptions<DedicatedServerOptions>()
+            .BindConfiguration( "Server" )
+            .ValidateDataAnnotations();
 
         return new( builder );
     }
 
-    void IDisposable.Dispose( ) => (app as IDisposable)?.Dispose();
+    void IDisposable.Dispose( ) => (WebApp as IDisposable)?.Dispose();
 
     /// <inheritdoc/>
-    public ValueTask DisposeAsync( ) => app.DisposeAsync();
+    public ValueTask DisposeAsync( ) => WebApp.DisposeAsync();
 
-    IApplicationBuilder IApplicationBuilder.New( ) => (( IApplicationBuilder )app).New();
+    IApplicationBuilder IApplicationBuilder.New( ) => (( IApplicationBuilder )WebApp).New();
 
     /// <summary> Runs the applications. </summary>
     /// <returns> A task that completes when the application is shutdown. </returns>
-    /// <remarks> If the <see cref="Proc.DedicatedServerProcess"/> crashes, the host application will be shutdown. </remarks>
-    public Task RunAsync( ) => app.RunAsync();
+    /// <remarks> If the <see cref="DedicatedServerProcess"/> crashes, the host application will be shutdown. </remarks>
+    public Task RunAsync( ) => WebApp.RunAsync();
 
-    Task IHost.StartAsync( CancellationToken cancellation ) => app.StartAsync( cancellation );
+    Task IHost.StartAsync( CancellationToken cancellation ) => WebApp.StartAsync( cancellation );
 
-    Task IHost.StopAsync( CancellationToken cancellation ) => app.StopAsync( cancellation );
+    Task IHost.StopAsync( CancellationToken cancellation ) => WebApp.StopAsync( cancellation );
 
-    IApplicationBuilder IApplicationBuilder.Use( Func<RequestDelegate, RequestDelegate> middleware ) => app.Use( middleware );
+    IApplicationBuilder IApplicationBuilder.Use( Func<RequestDelegate, RequestDelegate> middleware ) => WebApp.Use( middleware );
 }
 
 /// <summary> A builder for a CS2 Launcher and its services. </summary>
@@ -97,7 +118,34 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
     public CS2LauncherApplication Build( )
     {
         var app = builder.Build();
-        app.UseCS2Launcher();
+        if( app.Environment.IsDevelopment() )
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseCookiePolicy();
+        app.UseCors();
+
+        app.UseRequestDecompression();
+        app.UseResponseCaching();
+        if( !app.Environment.IsDevelopment() )
+        {
+            app.UseResponseCompression();
+        }
+
+        if( app.Services.GetService<RootComponentDescriptor>() is not null )
+        {
+            app.UseLauncherApp();
+        }
+        else
+        {
+            app.Map( "/", ( ) => Results.NoContent() );
+        }
 
         return new( app );
     }
@@ -106,4 +154,36 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
     public void ConfigureContainer<TContainerBuilder>( IServiceProviderFactory<TContainerBuilder> factory, Action<TContainerBuilder>? configure = null )
         where TContainerBuilder : notnull
         => (( IHostApplicationBuilder )builder).ConfigureContainer( factory, configure );
+
+    /// <summary> Host the Launcher App with the root component of type <typeparamref name="TRoot"/>. </summary>
+    /// <typeparam name="TRoot"> The root component of the Launcher App. </typeparam>
+    public CS2LauncherApplicationBuilder WithLauncherApp<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.All )] TRoot>( )
+        where TRoot : RootComponent
+    {
+        Services.AddCS2LauncherApp<TRoot>()
+            .AddSingleton( LauncherHostContext.From( Assembly.GetEntryAssembly()! ) )
+            .AddControllersWithViews();
+
+        Services.AddAuthorization()
+            .AddSingleton<IAuthorizationHandler, AppUserAuthorizationHandler>()
+            .AddAuthentication( CookieAuthenticationDefaults.AuthenticationScheme )
+            .AddCookie()
+            .AddSteam();
+
+        Services.AddSignalR()
+#if DEBUG
+            .AddJsonProtocol()
+#endif
+            .AddMessagePackProtocol();
+
+        Services.AddOptions<LauncherAppOptions>()
+            .BindConfiguration( "App" )
+            .ValidateDataAnnotations();
+
+        Services.ConfigureOptions<ConfigureAuthentication>()
+            .ConfigureOptions<ConfigureAuthorization>()
+            .ConfigureOptions<ConfigureResponseCompression>();
+
+        return this;
+    }
 }

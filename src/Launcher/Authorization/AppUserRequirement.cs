@@ -24,7 +24,7 @@ internal sealed class AppUserAuthorizationHandler( IOptions<LauncherAppOptions> 
     }
 }
 
-public sealed class AppUserRequirement : IAuthorizationRequirement;
+internal sealed class AppUserRequirement : IAuthorizationRequirement;
 
 internal static class SteamClaimsExtensions
 {
