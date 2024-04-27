@@ -1,0 +1,24 @@
+@tailwind base;
+
+@layer base {
+    ::deep body {
+        @apply caret-neutral-200/80 bg-gray-800 bg-gradient-to-tl from-gray-900/80 via-zinc-950/40 to-gray-900/80 font-sans text-base text-zinc-200;
+    }
+
+    ::deep ::selection {
+        @apply backdrop-blur bg-slate-500/50 shadow text-neutral-50;
+    }
+
+    ::deep code,
+    ::deep pre,
+    ::deep samp {
+        @apply font-mono;
+    }
+
+    ::deep samp {
+        @apply whitespace-pre;
+    }
+}
+
+@tailwind components;
+@tailwind utilities;

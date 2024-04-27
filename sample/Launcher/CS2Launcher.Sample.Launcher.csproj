@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <OptimizationPreference>Speed</OptimizationPreference>
+    <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
+    <TrimMode>partial</TrimMode>
+    <UserSecretsId>CS2LAUNCHER-SAMPLE-17947b4b-b2a8-4c6d-a8ae-8eea3c24f3c0</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\App\CS2Launcher.Sample.App.csproj" />
+    <ProjectReference Include="..\..\src\Launcher\CS2Launcher.AspNetCore.Launcher.csproj" />
+  </ItemGroup>
+
+</Project>

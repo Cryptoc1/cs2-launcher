@@ -1,0 +1,25 @@
+<Project>
+
+  <PropertyGroup>
+    <DebuggerSupport Condition=" '$(Configuration)' == 'Debug' ">true</DebuggerSupport>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+    <IsAotCompatible>true</IsAotCompatible>
+    <RunAOTCompilation>true</RunAOTCompilation>
+    <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+    <TrimMode>partial</TrimMode>
+    <WasmEmitSymbolMap Condition=" '$(Configuration)' == 'Debug' ">true</WasmEmitSymbolMap>
+    <WasmEnableWebcil>true</WasmEnableWebcil>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+    <TrimmerRootAssembly Include="CS2Launcher.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4" />
+  </ItemGroup>
+
+</Project>

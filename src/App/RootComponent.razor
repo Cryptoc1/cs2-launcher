@@ -1,0 +1,25 @@
+﻿<Router AppAssembly="@typeof(RootComponent).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="routeData" DefaultLayout="@typeof(Layout)" />
+    </Found>
+
+    <NotFound>
+        <LayoutView Layout="@typeof(Layout)">
+            <h1 class="text-2xl">Not Found</h1>
+            <p>Nothing to see here...</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            Console.WriteLine($"CS2Launcher App v{AppVersion.Value}");
+        }
+    }
+
+}

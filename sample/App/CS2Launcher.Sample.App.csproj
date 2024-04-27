@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+  <Import Project="..\..\src\App\build\CS2Launcher.AspNetCore.App.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\App\CS2Launcher.AspNetCore.App.csproj" />
+  </ItemGroup>
+
+</Project>
