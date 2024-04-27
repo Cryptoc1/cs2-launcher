@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="Microsoft.AspNetCore.StaticWebAssets.props" />
+  <Import Project="Microsoft.AspNetCore.StaticWebAssets.props" Condition=" Exists('$(MSBuildThisFileDirectory)Microsoft.AspNetCore.StaticWebAssets.props') " />
 
   <PropertyGroup>
     <DebuggerSupport Condition=" '$(Configuration)' == 'Debug' ">true</DebuggerSupport>
