@@ -127,6 +127,7 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
             app.UseHsts();
         }
 
+        app.UseForwardedHeaders();
         app.UseHttpsRedirection();
         app.UseCookiePolicy();
         app.UseCors();
