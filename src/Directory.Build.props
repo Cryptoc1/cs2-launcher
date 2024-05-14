@@ -26,6 +26,7 @@
     <RunAnalyzers>true</RunAnalyzers>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
 
     <!-- net8.0 -->
     <TargetFramework>net8.0</TargetFramework>
