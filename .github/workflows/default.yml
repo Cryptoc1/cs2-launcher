@@ -29,7 +29,9 @@ jobs:
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
-          global-json-file: global.json
+          dotnet-version: |
+            9.0.x
+            8.0.x
 
       - name: restore
         run: dotnet workload restore && dotnet restore --locked-mode
