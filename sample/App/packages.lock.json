@@ -17,15 +17,15 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[8.0.2, )",
-        "resolved": "8.0.2",
-        "contentHash": "hKTrehpfVzOhAz0mreaTAZgbz0DrMEbWq4n3hAo8Ks6WdxdqQhNPvzOqn9VygKuWf1bmxPdraqzTaXriO/sn0A=="
+        "requested": "[8.0.4, )",
+        "resolved": "8.0.4",
+        "contentHash": "PZb5nfQ+U19nhnmnR9T1jw+LTmozhuG2eeuzuW5A7DqxD/UXW2ucjmNJqnqOuh8rdPzM3MQXoF8AfFCedJdCUw=="
       },
       "Microsoft.NET.Sdk.WebAssembly.Pack": {
         "type": "Direct",
-        "requested": "[8.0.2, )",
-        "resolved": "8.0.2",
-        "contentHash": "sq7Zs4E699WDIbFloiK/qmp9JtL8vpzMGILjnzYjkY4O1qj6z1Iu36dl4xWXrkVsKDnxw8CZ7NDqsntq5FFPgg=="
+        "requested": "[9.0.0-preview.4.24266.19, )",
+        "resolved": "9.0.0-preview.4.24266.19",
+        "contentHash": "7aicx4kEEXI97NdeTl4XJf8X6wq+DOBtPJvqsFRlnxt8dHt9JM67YTeVzF9/qi5Utj9d4NDSVK/Bs9T5GP9Plw=="
       },
       "MessagePack": {
         "type": "Transitive",

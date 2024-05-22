@@ -165,6 +165,9 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
             .AddSingleton( LauncherHostContext.From( Assembly.GetEntryAssembly()! ) )
             .AddControllersWithViews();
 
+        Services.AddRazorComponents()
+            .AddInteractiveWebAssemblyComponents();
+
         Services.AddAuthorization()
             .AddSingleton<IAuthorizationHandler, AppUserAuthorizationHandler>()
             .AddAuthentication( CookieAuthenticationDefaults.AuthenticationScheme )
