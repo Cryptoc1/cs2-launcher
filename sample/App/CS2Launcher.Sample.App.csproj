@@ -2,7 +2,7 @@
   <Import Project="..\..\src\App\build\CS2Launcher.AspNetCore.App.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(AspNetCoreVersion)" />
     <ProjectReference Include="..\..\src\App\CS2Launcher.AspNetCore.App.csproj" />
   </ItemGroup>
 
