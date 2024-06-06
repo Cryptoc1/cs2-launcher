@@ -186,6 +186,7 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
 
         Services.ConfigureOptions<ConfigureAuthentication>()
             .ConfigureOptions<ConfigureAuthorization>()
+            .ConfigureOptions<ConfigureCookiePolicy>()
             .ConfigureOptions<ConfigureResponseCompression>();
 
         return this;
