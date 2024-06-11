@@ -15,8 +15,7 @@
     [Parameter]
     public IconSize Size { get; init; } = IconSize.Base;
 
-    private static string ToCssClass(IconSize size)
-    => size switch
+    private static string ToCssClass(IconSize size) => size switch
     {
         IconSize.ExtraSmall => "text-xs",
         IconSize.Small => "text-sm",
