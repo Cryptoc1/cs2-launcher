@@ -31,7 +31,7 @@
     <!-- net8.0 -->
     <TargetFramework>net8.0</TargetFramework>
 
-    <AspNetCoreVersion>8.0.6</AspNetCoreVersion>
+    <AspNetCoreVersion>8.0.7</AspNetCoreVersion>
   </PropertyGroup>
 
   <!-- Git Versioning + Metadata -->
