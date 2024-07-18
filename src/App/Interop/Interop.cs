@@ -1,6 +1,5 @@
 ﻿using Microsoft.JSInterop;
 using CS2Launcher.AspNetCore.App.Infrastructure;
-using Nito.AsyncEx;
 
 namespace CS2Launcher.AspNetCore.App.Interop;
 
@@ -8,7 +7,7 @@ internal abstract class Interop( IJSRuntime runtime, string moduleName ) : IAsyn
 {
     public string ModulePath => $"/_content/CS2Launcher.AspNetCore.App/Interop/{moduleName}.module.js";
 
-    private readonly AsyncLock moduleLock = new();
+    private readonly SemaphoreSlim semaphore = new( 1, 1 );
 
     private IJSObjectReference? module;
     protected IJSRuntime Runtime { get; } = runtime;
@@ -43,9 +42,14 @@ internal abstract class Interop( IJSRuntime runtime, string moduleName ) : IAsyn
     {
         if( module is not null ) return;
 
-        using( await moduleLock.LockAsync() )
+        await semaphore.WaitAsync();
+        try
         {
             module ??= await Runtime.InvokeAsync<IJSObjectReference>( "import", ModulePath );
+        }
+        finally
+        {
+            semaphore.Release();
         }
     }
 }

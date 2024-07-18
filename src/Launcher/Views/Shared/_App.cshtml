@@ -24,10 +24,10 @@
 
     <component type="@typeof( HeadOutlet )" render-mode="WebAssemblyPrerendered" />
 
-    <link href="//fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,100&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
-    <link href="/@(LauncherHost.AssemblyName).styles.css" rel="stylesheet" asp-append-version="true" />
+    <link href="//fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,100&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet" type="text/css" />
+    <link href="/@(LauncherHost.AssemblyName).styles.css" rel="stylesheet" type="text/css" asp-append-version="true" />
     <environment names="@Environments.Development">
-        <script src="//cdn.tailwindcss.com/3.4.4"></script>
+        <script src="//cdn.tailwindcss.com/3.4.5" type="text/javascript"></script>
     </environment>
 </head>
 
@@ -35,7 +35,7 @@
     <component type="@RootComponent.ComponentType" render-mode="WebAssemblyPrerendered" />
 
     <persist-component-state />
-    <script src="/_framework/blazor.webassembly.js" asp-append-version="true"></script>
+    <script src="/_framework/blazor.webassembly.js" type="text/javascript" asp-append-version="true"></script>
 </body>
 
 </html>

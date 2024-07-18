@@ -15,6 +15,7 @@ public static class AppServiceExtensions
     {
         ArgumentNullException.ThrowIfNull( services );
         return services.AddSingleton( new RootComponentDescriptor( typeof( TRoot ) ) )
-            .AddScoped<ElementInterop>();
+            .AddScoped<ElementInterop>()
+            .AddScoped<LocalStorageInterop>();
     }
 }

@@ -3,6 +3,7 @@
 @implements IAsyncDisposable
 
 @inject ElementInterop ElementInterop
+@inject LocalStorageInterop LocalStorage
 @inject NavigationManager Navigation
 
 <PageTitle>Console: @(!string.IsNullOrEmpty(Host) ? Host : "Connecting...")</PageTitle>
@@ -67,13 +68,17 @@
 
 @code {
 
+    private const string HistoryStorageKey = "console.history";
+    private const int MaxEntries = 250;
+
     private InputText? commandInput;
     private ConsoleSignaler signaler = default!;
     private List<IDisposable>? signals;
 
     private string? ConnectError { get; set; }
-    private Dictionary<long, CommandEntry> Entries { get; set; } = [];
+    private Dictionary<long, CommandEntry> Entries { get; set; } = new(MaxEntries);
     private ConsoleForm Form { get; set; } = new();
+    private List<string> History { get; set; } = new(MaxEntries);
     private string Host { get; set; }
     private bool IsCommandInputFocused { get; set; }
 
@@ -87,7 +92,11 @@ signaler.On<ConsoleSignals.Connected>(OnConnected),
 signaler.On<ConsoleSignals.ExecutedCommand>(OnExecutedCommand),
 signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
 
-            await signaler.Connect();
+            var connect = signaler.Connect();
+            History = await LocalStorage.Get<List<string>>(HistoryStorageKey) ?? [];
+            History.EnsureCapacity(MaxEntries);
+
+            await connect;
         }
     }
 
@@ -108,7 +117,7 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
         {
             "ArrowDown" => OnArrowDown(),
             "ArrowUp" => OnArrowUp(),
-            _ => Task.FromResult(false)
+            _ => new(false)
         });
 
         if (handled && string.IsNullOrEmpty(Form.Command))
@@ -116,34 +125,36 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
             Form.Offset = 0;
         }
 
-        async Task<bool> OnArrowDown()
+        async ValueTask<bool> OnArrowDown()
         {
-            var offset = ((Entries.Count - 1) - Form.Offset) + 1;
-            if (offset >= 0 && offset < Entries.Count)
+            var offset = ((History.Count - 1) - Form.Offset) + 1;
+            if (offset >= 0 && offset < History.Count)
             {
-                Form.Command = Entries.Values.ElementAt(offset).Command;
+                Form.Command = History[offset];
                 Form.Offset--;
                 await InvokeAsync(StateHasChanged);
 
                 await Task.Delay(75);
                 await TryFocusCommandInput();
+
                 return true;
             }
 
             return false;
         }
 
-        async Task<bool> OnArrowUp()
+        async ValueTask<bool> OnArrowUp()
         {
-            var offset = (Entries.Count - 1) - Form.Offset;
+            var offset = (History.Count - 1) - Form.Offset;
             if (offset >= 0)
             {
-                Form.Command = Entries.Values.ElementAt(offset).Command;
+                Form.Command = History[offset];
                 Form.Offset++;
                 await InvokeAsync(StateHasChanged);
 
                 await Task.Delay(75);
                 await TryFocusCommandInput();
+
                 return true;
             }
 
@@ -151,7 +162,7 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
         }
     }
 
-    private Task OnExecutedCommand(ConsoleSignals.ExecutedCommand command)
+    private async Task OnExecutedCommand(ConsoleSignals.ExecutedCommand command)
     {
         if (Entries.TryGetValue(command.Token, out var entry))
         {
@@ -161,10 +172,11 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
                     Text = command.Text
                 };
 
-            return InvokeAsync(StateHasChanged);
-        }
+            var render = InvokeAsync(StateHasChanged);
 
-        return Task.CompletedTask;
+            await LocalStorage.Set(HistoryStorageKey, History);
+            await render;
+        }
     }
 
     private Task OnExecuteCommandFailed(ConsoleSignals.ExecuteCommandFailed failure)
@@ -228,10 +240,23 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
     private async Task OnSubmit()
     {
         var signal = new ConsoleSignals.ExecuteCommand(Form.Command, DateTime.UtcNow.Ticks);
+        if (Entries.Count >= MaxEntries)
+        {
+            var token = Entries.Keys.First();
+            Entries.Remove(token);
+        }
 
         Entries.Add(signal.Token, new(signal.Command));
-        await signaler.Send(signal);
+        if (History.Count >= MaxEntries)
+        {
+            History.RemoveAt(History.Count - 1);
+        }
+        else if (History.ElementAtOrDefault(History.Count - 1) != signal.Command)
+        {
+            History.Add(signal.Command);
+        }
 
+        await signaler.Send(signal);
         Form = new();
 
         await Task.Delay(75);
@@ -266,10 +291,10 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
 
     public sealed class ConsoleForm
     {
-        public int Offset { get; set; }
-
         [Required]
         public string Command { get; set; }
+
+        public int Offset { get; set; }
     }
 
 }

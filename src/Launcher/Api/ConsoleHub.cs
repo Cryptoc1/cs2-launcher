@@ -26,7 +26,7 @@ public sealed class ConsoleHub( IOptions<DedicatedServerOptions> serverOptionsAc
         {
             value = await GetOrCreateConsole().SendCommandAsync( command.Command, Context.ConnectionAborted );
         }
-        catch( RCONException exception )
+        catch( Exception exception ) when( exception is RCONException )
         {
             await Clients.Caller.Signal(
                 new ConsoleSignals.ExecuteCommandFailed( exception.Message, command.Token ),
@@ -49,6 +49,8 @@ public sealed class ConsoleHub( IOptions<DedicatedServerOptions> serverOptionsAc
 
         var options = serverOptionsAccessor.Value;
         client = new RCONClient(
+
+            // TODO: make port configurable
             new IPEndPoint( IPAddress.Parse( options.Host ), 27015 ),
             options.RconPassword!,
             new() { AutoConnect = true } );
