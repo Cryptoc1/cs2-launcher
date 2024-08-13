@@ -9,7 +9,7 @@
     <Nullable>enable</Nullable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <TargetFramework>net8.0</TargetFramework>
-    <AspNetCoreVersion>8.0.7</AspNetCoreVersion>
+    <AspNetCoreVersion>8.0.8</AspNetCoreVersion>
   </PropertyGroup>
 
 </Project>
