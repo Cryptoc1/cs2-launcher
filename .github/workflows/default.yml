@@ -61,13 +61,13 @@ jobs:
         run: dotnet workload restore && dotnet restore --locked-mode
 
       - name: pack
-        run: dotnet pack -c Release -o .packages --no-restore
+        run: dotnet pack -c Release -o dist --no-restore
 
       - name: upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: cs2-launcher-packages
-          path: .packages
+          path: dist
 
   publish:
     needs: [pack]
