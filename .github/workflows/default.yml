@@ -55,10 +55,12 @@ jobs:
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
-          global-json-file: global.json
+          dotnet-version: |
+            8.0.x
+            9.0.x
 
       - name: restore
-        run: dotnet workload restore && dotnet restore --locked-mode
+        run: dotnet workload restore && dotnet workload install wasm-tools-net8 && dotnet restore --locked-mode
 
       - name: pack
         run: dotnet pack -c Release -o dist --no-restore
@@ -74,15 +76,10 @@ jobs:
 
     runs-on: windows-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: global.json
-
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          global-json-file: global.json
+          dotnet-version: 9.0.x
 
       - name: download artifact
         uses: actions/download-artifact@v4

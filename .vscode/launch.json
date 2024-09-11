@@ -63,7 +63,7 @@
       },
       "hosted": true,
       "preLaunchTask": "${defaultBuildTask}",
-      "program": "${workspaceFolder}/sample/Launcher/bin/Debug/net8.0/CS2Launcher.Sample.Launcher.dll",
+      "program": "${workspaceFolder}/sample/Launcher/bin/Debug/net9.0/CS2Launcher.Sample.Launcher.dll",
       "serverReadyAction": {
         "action": "debugWithChrome",
         "killOnServerStop": true,

@@ -29,9 +29,9 @@
     <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
 
     <!-- net8.0 -->
-    <TargetFramework>net8.0</TargetFramework>
-
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <AspNetCoreVersion>8.0.8</AspNetCoreVersion>
+    <AspNetCoreVersion Condition=" '$(TargetFramework)' == 'net9.0' ">9.0.0-rc.*</AspNetCoreVersion>
   </PropertyGroup>
 
   <!-- Git Versioning + Metadata -->
