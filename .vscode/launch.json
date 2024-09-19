@@ -2,37 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Sample (Core)",
-      "type": "coreclr",
-      "request": "launch",
-      "program": "${workspaceFolder}/sample/Launcher/bin/Debug/net8.0/CS2Launcher.Sample.Launcher.dll",
-      "args": [
-        "environment=Development"
-      ],
-      "env": {
-        "DOTNET_ENVIRONMENT": "Development"
-      },
-      "cwd": "${workspaceFolder}/sample/Launcher",
-      "justMyCode": true,
-      "preLaunchTask": "${defaultBuildTask}",
-      "requireExactSource": true,
-      "logging": {
-        "moduleLoad": false,
-        "threadExit": false,
-      },
-      "console": "integratedTerminal",
-      "sourceLinkOptions": {
-        "https://raw.githubusercontent.com/*": {
-          "enabled": true
-        },
-        "*": {
-          "enabled": false
-        }
-      },
-      "stopAtEntry": false,
-    },
-    {
-      "name": "Debug Sample (Blazor)",
+      "name": "Debug Sample (net9.0)",
       "type": "blazorwasm",
       "request": "launch",
       "browser": "chrome",

@@ -10,6 +10,7 @@ public static class AppServiceExtensions
 {
     /// <summary> Add services required by the CS2Launcher App. </summary>
     /// <typeparam name="TRoot"> The type of <see cref="RootComponent"/> of the app. </typeparam>
+    [DynamicDependency( DynamicallyAccessedMemberTypes.All, typeof( Shared.Layout ) )]
     public static IServiceCollection AddCS2LauncherApp<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.All )] TRoot>( this IServiceCollection services )
         where TRoot : RootComponent
     {

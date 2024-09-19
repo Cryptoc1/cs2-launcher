@@ -7,6 +7,7 @@ using CS2Launcher.AspNetCore.Launcher.Authorization;
 using CS2Launcher.AspNetCore.Launcher.Configuration;
 using CS2Launcher.AspNetCore.Launcher.Hosting;
 using CS2Launcher.AspNetCore.Launcher.Proc;
+using HealthChecks.ApplicationStatus.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -52,9 +53,14 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
 
         builder.Services.AddCors()
             .AddRequestDecompression()
+            .AddRequestTimeouts()
             .AddResponseCaching()
             .AddResponseCompression()
             .AddRouting( options => options.LowercaseUrls = true );
+
+        // TODO: health for `Proc.DedicatedServer` worker
+        builder.Services.AddHealthChecks()
+            .AddApplicationStatus();
 
         builder.Services.AddHostedService<DedicatedServer>()
             .AddOptions<DedicatedServerOptions>()
@@ -139,13 +145,15 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
             app.UseResponseCompression();
         }
 
+        app.UseRequestTimeouts();
         if( app.Services.GetService<RootComponentDescriptor>() is not null )
         {
             app.UseLauncherApp();
         }
         else
         {
-            app.Map( "/", ( ) => Results.NoContent() );
+            app.Map( "/", ( ) => Results.NoContent() )
+                .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
         }
 
         return new( app );

@@ -16,7 +16,10 @@ internal sealed partial class DedicatedServer(
     [SupportedOSPlatform( "windows" )]
     protected override async Task ExecuteAsync( CancellationToken cancellation )
     {
-        if( !options.Enabled ) return;
+        if( !options.Enabled )
+        {
+            return;
+        }
 
         using( var process = new DedicatedServerProcess( options ) )
         using( cancellation.Register( OnCancellation, process ) )
@@ -51,8 +54,10 @@ internal sealed partial class DedicatedServer(
 
         static void OnCancellation( object? state )
         {
-            var process = ( DedicatedServerProcess )state!;
-            if( process.IsRunning ) process.Kill( true );
+            if( state is DedicatedServerProcess process && process.IsRunning )
+            {
+                process.Kill( true );
+            }
         };
     }
 }

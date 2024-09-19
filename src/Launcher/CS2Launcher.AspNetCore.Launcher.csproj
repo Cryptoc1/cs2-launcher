@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OpenId.Steam" Version="8.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.ApplicationStatus" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(AspNetCoreVersion)" />
   </ItemGroup>
 

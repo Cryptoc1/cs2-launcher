@@ -40,7 +40,10 @@ internal abstract class Interop( IJSRuntime runtime, string moduleName ) : IAsyn
 
     private async ValueTask EnsureModuleReference( )
     {
-        if( module is not null ) return;
+        if( module is not null )
+        {
+            return;
+        }
 
         await semaphore.WaitAsync();
         try

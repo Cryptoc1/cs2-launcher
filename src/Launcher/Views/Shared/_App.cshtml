@@ -17,14 +17,15 @@
 
     <link rel="preconnect" href="//fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="//fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700" as="style" crossorigin />
     <link href="/@(LauncherHost.AssemblyName).styles.css" rel="preload" as="style" asp-append-version="true" />
 
     <link href="/_framework/blazor.webassembly.js" rel="preload" as="script" asp-append-version="true" />
     <link href="/_framework/blazor.boot.json" rel="prefetch" as="fetch" asp-append-version="true" />
 
-    <component type="@typeof( HeadOutlet )" render-mode="WebAssemblyPrerendered" />
+    <component type="@typeof(HeadOutlet)" render-mode="WebAssemblyPrerendered" />
 
-    <link href="//fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,100&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700" type="text/css" crossorigin />
     <link href="/@(LauncherHost.AssemblyName).styles.css" rel="stylesheet" type="text/css" asp-append-version="true" />
     <environment names="@Environments.Development">
         <script src="//cdn.tailwindcss.com/3.4.5" type="text/javascript"></script>

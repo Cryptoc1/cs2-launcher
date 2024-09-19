@@ -48,11 +48,25 @@ internal sealed class DedicatedServerProcess : Process
         var arguments = new CS2ArgumentsBuilder( "-dedicated" )
             .Append( options.Insecure ? "-insecure" : string.Empty );
 
-        if( !string.IsNullOrEmpty( options.GSLToken ) ) arguments.Append( $"+sv_setsteamaccount {options.GSLToken}" );
-        if( !string.IsNullOrWhiteSpace( options.RconPassword ) ) arguments.Append( @$"+con_enable true +rcon_password ""{options.RconPassword}""" );
+        if( !string.IsNullOrEmpty( options.GSLToken ) )
+        {
+            arguments.Append( $"+sv_setsteamaccount {options.GSLToken}" );
+        }
 
-        if( options.WorkshopCollectionId.HasValue ) arguments.Append( $"+host_workshop_collection {options.WorkshopCollectionId.Value}" );
-        foreach( var workshopMapId in options.WorkshopMapIds ) arguments.Append( $"+host_workshop_map {workshopMapId}" );
+        if( !string.IsNullOrWhiteSpace( options.RconPassword ) )
+        {
+            arguments.Append( @$"+con_enable true +rcon_password ""{options.RconPassword}""" );
+        }
+
+        if( options.WorkshopCollectionId.HasValue )
+        {
+            arguments.Append( $"+host_workshop_collection {options.WorkshopCollectionId.Value}" );
+        }
+
+        foreach( var workshopMapId in options.WorkshopMapIds )
+        {
+            arguments.Append( $"+host_workshop_map {workshopMapId}" );
+        }
 
         arguments.Append( $"+map {options.Map}" )
             .Append( !string.IsNullOrEmpty( options.GameAlias ) ? $"+game_alias {options.GameAlias}" : string.Empty )

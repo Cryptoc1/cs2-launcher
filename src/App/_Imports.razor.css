@@ -2,7 +2,11 @@
 
 @layer base {
     ::deep body {
-        @apply caret-neutral-200/80 bg-gray-800 bg-gradient-to-tl from-gray-900/80 via-zinc-950/40 to-gray-900/80 font-sans text-base text-zinc-200;
+        @apply backdrop-blur bg-gray-800 bg-gradient-to-tl from-gray-900/80 via-zinc-950/40 to-gray-900/80;
+        @apply antialiased caret-neutral-200/80 font-normal font-sans text-base text-zinc-200 tracking-normal;
+
+        font-optical-sizing: auto;
+        font-variation-settings: "wdth" 100, "YTLC" 500;
     }
 
     ::deep ::selection {

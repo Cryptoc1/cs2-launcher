@@ -9,6 +9,8 @@ internal sealed class ConfigureAuthorization : IConfigureOptions<AuthorizationOp
 {
     public void Configure( AuthorizationOptions options )
     {
+        ArgumentNullException.ThrowIfNull( options );
+
         options.DefaultPolicy = new AuthorizationPolicyBuilder( SteamAuthenticationDefaults.AuthenticationScheme )
             .RequireAuthenticatedUser()
             .AddRequirements( new AppUserRequirement() )

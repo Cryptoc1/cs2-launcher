@@ -8,11 +8,13 @@ internal sealed class ConfigureAuthentication : IPostConfigureOptions<CookieAuth
 {
     public void PostConfigure( string? name, CookieAuthenticationOptions options )
     {
+        ArgumentNullException.ThrowIfNull( options );
         options.LoginPath = "/login";
     }
 
     public void PostConfigure( string? name, SteamAuthenticationOptions options )
     {
+        ArgumentNullException.ThrowIfNull( options );
         options.SaveTokens = true;
     }
 }
