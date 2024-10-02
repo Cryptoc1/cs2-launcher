@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace CS2Launcher.AspNetCore.Launcher.Proc;
+namespace CS2Launcher.AspNetCore.Launcher.Abstractions;
 
 /// <summary> Represents the options of the underlying dedicated server process. </summary>
 [DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.PublicProperties )]

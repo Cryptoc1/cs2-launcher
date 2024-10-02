@@ -1,0 +1,93 @@
+@inject DialogInterop Interop
+
+<dialog class=@ClassNames.Combine(AdditionalAttributes, "ease-in transition", IsOpen ? "opacity-100" : "opacity-0") @oncancel="@OnDialogCancel" @onclose="@OnDialogClose" @ref="@element" @attributes="@AdditionalAttributes">
+    @ChildContent
+</dialog>
+
+@code {
+
+    private ElementReference? element;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; init; }
+
+    [Parameter]
+    public bool AutoOpen { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public required RenderFragment ChildContent { get; init; }
+
+    private bool isOpen;
+    public bool IsOpen
+    {
+        get => isOpen;
+        protected set
+        {
+            if (isOpen != value)
+            {
+                isOpen = value;
+                StateHasChanged();
+            }
+        }
+    }
+
+    [Parameter]
+    public EventCallback OnClose { get; init; }
+
+    [Parameter]
+    public EventCallback OnOpen { get; init; }
+
+    public async Task Close()
+    {
+        if (!IsOpen)
+        {
+            return;
+        }
+
+        IsOpen = false;
+
+        await Task.Yield();
+        await Interop.Close(element!.Value);
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && AutoOpen)
+        {
+            return Open();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private async Task OnDialogCancel()
+    {
+        IsOpen = false;
+        await OnClose.InvokeAsync();
+    }
+
+    private async Task OnDialogClose()
+    {
+        if (IsOpen)
+        {
+            IsOpen = false;
+        }
+
+        await OnClose.InvokeAsync();
+    }
+
+
+    public async Task Open()
+    {
+        if (IsOpen)
+        {
+            return;
+        }
+
+        await Interop.ShowModal(element!.Value);
+        IsOpen = true;
+
+        await OnOpen.InvokeAsync();
+    }
+}

@@ -1,19 +1,16 @@
-using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using CoreRCON;
 using CoreRCON.Extensions.CounterStrike;
-using CS2Launcher.AspNetCore.App.Abstractions.Signaling;
-using CS2Launcher.AspNetCore.App.Abstractions;
-using Microsoft.Extensions.Options;
-using CS2Launcher.AspNetCore.Launcher.Proc;
+using CS2Launcher.AspNetCore.Launcher.Abstractions;
 using CoreRCON.Parsers.Standard;
+using CS2Launcher.AspNetCore.App.Abstractions.Signals;
 
-namespace CS2Launcher.AspNetCore.Launcher.Api;
+namespace CS2Launcher.AspNetCore.Launcher.Hubs;
 
 /// <summary> Hub for handling <see cref="ConsoleSignals"/>. </summary>
 [Authorize]
-public sealed class ConsoleHub( IOptions<DedicatedServerOptions> serverOptionsAccessor ) : Hub
+public sealed class ConsoleHub( IServerConsoleFactory consoleFactory ) : Hub
 {
     private static readonly object ConsoleKey = new();
 
@@ -47,29 +44,18 @@ public sealed class ConsoleHub( IOptions<DedicatedServerOptions> serverOptionsAc
             return client;
         }
 
-        var options = serverOptionsAccessor.Value;
-        client = new RCONClient(
-
-            // TODO: make port configurable
-            new IPEndPoint( IPAddress.Parse( options.Host ), 27015 ),
-            options.RconPassword!,
-            new() { AutoConnect = true } );
-
-        Context.Items[ ConsoleKey ] = client;
+        Context.Items[ ConsoleKey ] = client = consoleFactory.Create();
         return client;
     }
 
     /// <inheritdoc/>
     public override async Task OnConnectedAsync( )
     {
+        Status? status = default;
         try
         {
-            var status = await Connect(
+            status = await Connect(
                 GetOrCreateConsole(),
-                Context.ConnectionAborted );
-
-            await Clients.Caller.Signal(
-                new ConsoleSignals.Connected( status.Hostname ?? $"{status.Endpoints?.Public}" ),
                 Context.ConnectionAborted );
         }
         catch( RCONException exception )
@@ -80,7 +66,12 @@ public sealed class ConsoleHub( IOptions<DedicatedServerOptions> serverOptionsAc
                 Context.ConnectionAborted );
         }
 
-        await base.OnConnectedAsync();
+        if( status is not null )
+        {
+            await Clients.Caller.Signal(
+                new ConsoleSignals.Connected( status.Hostname ?? $"{status.Endpoints?.Public}" ),
+                Context.ConnectionAborted );
+        }
 
         static async Task<Status> Connect( RCONClient console, CancellationToken cancellation )
         {

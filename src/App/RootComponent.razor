@@ -1,10 +1,12 @@
-﻿<Router AppAssembly="@typeof(RootComponent).Assembly">
+﻿@using CS2Launcher.AspNetCore.App.Routing
+
+<Router AppAssembly="@typeof(RootComponent).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="@typeof(Layout)" />
+        <AppRouteView RouteData="routeData" User="@User" />
     </Found>
 
     <NotFound>
-        <LayoutView Layout="@typeof(Layout)">
+        <LayoutView Layout="@typeof(AppLayout)">
             <h1 class="text-2xl">Not Found</h1>
             <p>Nothing to see here...</p>
         </LayoutView>
@@ -12,6 +14,10 @@
 </Router>
 
 @code {
+
+    [EditorRequired]
+    [Parameter]
+    public AppUser User { get; init; }
 
     protected override void OnAfterRender(bool firstRender)
     {

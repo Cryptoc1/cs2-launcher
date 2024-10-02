@@ -7,6 +7,7 @@
     "fully supports es6-module"
   ],
   "devDependencies": {
+    "@catppuccin/tailwindcss": "0.1.6",
     "@tailwindcss/forms": "0.5.9",
     "cross-env": "7.0.3",
     "cssnano": "7.0.6",

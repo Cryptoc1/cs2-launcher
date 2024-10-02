@@ -1,0 +1,18 @@
+﻿<i @attributes="@AdditionalAttributes" class="@ClassNames.Combine(AdditionalAttributes, Size.ToCssClass(), Filled ? "filled" : string.Empty)">@Name</i>
+
+@code {
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; init; }
+
+    [Parameter]
+    public bool Filled { get; init; } = true;
+
+    [EditorRequired]
+    [Parameter]
+    public IconName Name { get; set; } = default!;
+
+    [Parameter]
+    public TextSize Size { get; init; } = TextSize.Base;
+
+}

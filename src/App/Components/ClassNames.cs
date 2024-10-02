@@ -1,4 +1,4 @@
-﻿namespace CS2Launcher.AspNetCore.App.Shared;
+﻿namespace CS2Launcher.AspNetCore.App.Components;
 
 /// <summary> Helpers for combining css class names. </summary>
 public static class ClassNames

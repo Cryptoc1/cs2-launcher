@@ -1,0 +1,49 @@
+@inject ClipboardInterop Clipboard
+@inject NavigationManager Navigation
+
+<ErrorBoundary ChildContent="@ChildContent" @ref="@error">
+    <ErrorContent Context="exception">
+        <Dialog AutoOpen="true" @ref="@dialog">
+            <h1 class="font-semibold text-xl">Exception Encountered!</h1>
+            <hr />
+            <p class="pt-2 pb-4">An exception was encountered that resulted in a critical failure of the application.</p>
+            <div class="flex flex-row items-center justify-between">
+                <button type="button" class="flex flex-row icon items-center" title="Copy Details" @onclick="@(() => Clipboard.Write($"{exception}"))">
+                    <Icon Name="@IconName.CopyAll" Filled="false" Size="@TextSize.Large" />
+                </button>
+
+                <div class="flex flex-row items-center justify-end space-x-3">
+                    <button type="button" class="flex flex-row group items-center" @onclick="@(() => Navigation.Refresh(true))">
+                        Reload
+                    </button>
+                    @if (IsClosable)
+                    {
+                        <button type="button" class="flex flex-row group items-center" @onclick="@OnCloseClick">
+                            Close
+                        </button>
+                    }
+                </div>
+            </div>
+        </Dialog>
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+
+    private ErrorBoundary? error;
+    private Dialog? dialog;
+
+    [EditorRequired]
+    [Parameter]
+    public RenderFragment ChildContent { get; init; } = default!;
+
+    [Parameter]
+    public bool IsClosable { get; init; }
+
+    private Task OnCloseClick()
+    {
+        error!.Recover();
+        return dialog!.Close();
+    }
+
+}

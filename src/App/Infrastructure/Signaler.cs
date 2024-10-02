@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
-using CS2Launcher.AspNetCore.App.Abstractions.Signaling;
+using CS2Launcher.AspNetCore.App.Abstractions.Signals;
 using CS2Launcher.AspNetCore.App.Infrastructure;
+using CS2Launcher.AspNetCore.App.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,13 +21,12 @@ internal abstract class Signaler( Action<IHubConnectionBuilder> configure ) : IA
         => ( ) =>
         {
             var builder = new HubConnectionBuilder()
-                .AddMessagePackProtocol()
+                .AddJsonProtocol( options => options.PayloadSerializerOptions.TypeInfoResolverChain.Add( AppJsonContext.Default ) )
 #if DEBUG
-                .AddJsonProtocol()
                 .ConfigureLogging( logging => logging.SetMinimumLevel( LogLevel.Debug ) )
 #endif
-                .WithStatefulReconnect()
-                .WithAutomaticReconnect();
+                .WithAutomaticReconnect()
+                .WithStatefulReconnect();
 
             configure( builder );
             return builder.Build();

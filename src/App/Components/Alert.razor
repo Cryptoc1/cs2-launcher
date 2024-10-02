@@ -1,0 +1,56 @@
+<div class=@ClassNames.Combine(AdditionalAttributes, ToCssClass(Type), Pulse ? "animate-pulse" : "", "bg-ctp-surface0 flex flex-col p-2 px-4 ring-1 rounded-md space-y-1")>
+    <h5 class="flex flex-row font-semibold items-center space-x-2 text-lg">
+        <Icon Name="@(Icon ?? ToIconName(Type))" Size="TextSize.ExtraLarge2" />
+        <span>@Heading</span>
+    </h5>
+    @if (!string.IsNullOrEmpty(Text))
+    {
+        <p>@Text</p>
+    }
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+</div>
+
+@code {
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; init; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; init; }
+
+    [EditorRequired]
+    [Parameter]
+    public string Heading { get; init; } = string.Empty;
+
+    [Parameter]
+    public IconName? Icon { get; init; }
+
+    [Parameter]
+    public bool Pulse { get; init; }
+
+    [Parameter]
+    public string Text { get; init; } = string.Empty;
+
+    [Parameter]
+    public AlertType Type { get; init; }
+
+    private static string ToCssClass(AlertType type) => type switch
+    {
+        AlertType.Hint => "ring-ctp-mauve text-ctp-mauve",
+        AlertType.Warning => "ring-ctp-yellow text-ctp-yellow",
+        AlertType.Critical => "ring-ctp-red text-ctp-red",
+        _ => "ring-ctp-overlay1",
+    };
+
+    private static IconName ToIconName(AlertType type) => type switch
+    {
+        AlertType.Hint => IconName.Help,
+        AlertType.Warning => IconName.Warning,
+        AlertType.Critical => IconName.Report,
+        _ => IconName.Info,
+    };
+
+}

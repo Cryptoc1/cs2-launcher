@@ -1,0 +1,28 @@
+<a class="bg-ctp-surface0 flex flex-row items-center p-4 ring-1 ring-ctp-overlay1 rounded-md space-x-4" href="@Path" title="@Title">
+    <Icon Name="@Icon" Size="@TextSize.ExtraLarge5" />
+    <div class="flex flex-col space-y-1">
+        <div class="font-semibold text-lg tracking-wide">@Title</div>
+        @if (ChildContent is not null)
+        {
+            @ChildContent
+        }
+    </div>
+</a>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; init; }
+
+    [EditorRequired]
+    [Parameter]
+    public IconName Icon { get; init; } = default!;
+
+    [Parameter]
+    public string Path { get; init; } = "#";
+
+    [EditorRequired]
+    [Parameter]
+    public string Title { get; set; } = default!;
+
+}

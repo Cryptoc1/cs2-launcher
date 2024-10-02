@@ -1,16 +1,41 @@
 @tailwind base;
 
 @layer base {
+    ::deep * {
+        @apply antialiased;
+    }
+
     ::deep body {
-        @apply backdrop-blur bg-gray-800 bg-gradient-to-tl from-gray-900/80 via-zinc-950/40 to-gray-900/80;
-        @apply antialiased caret-neutral-200/80 font-normal font-sans text-base text-zinc-200 tracking-normal;
+        @apply backdrop-blur bg-ctp-base ctp-macchiato min-h-screen;
+        @apply bg-gradient-to-b from-ctp-crust/40 to-ctp-mantle/60;
+        @apply antialiased caret-ctp-rosewater font-normal font-sans leading-normal text-base text-ctp-text tracking-normal;
 
         font-optical-sizing: auto;
         font-variation-settings: "wdth" 100, "YTLC" 500;
     }
 
     ::deep ::selection {
-        @apply backdrop-blur bg-slate-500/50 shadow text-neutral-50;
+        @apply backdrop-blur bg-ctp-rosewater/40 shadow text-ctp-text;
+    }
+
+    ::deep button:not(.icon),
+    ::deep a.btn:not(.icon) {
+        @apply bg-ctp-surface2 cursor-pointer drop-shadow-sm ease-in inline-block outline-none p-1 px-3 rounded-md ring-0 ring-ctp-pink/20 text-ctp-text transition;
+        @apply active:bg-ctp-overlay1 active:ring-1 active:shadow-md active:text-ctp-text;
+        @apply focus:ring-1 focus-visible:ring-2 hover:ring-1 hover:shadow-sm;
+    }
+
+    ::deep button.icon,
+    ::deep a.btn.icon {
+        @apply cursor-pointer ease-in inline-block flex outline-none p-1.5 ring-0 ring-ctp-pink/20 rounded-md text-ctp-text transition;
+        @apply active:!bg-ctp-base active:ring-1 active:shadow-md active:text-ctp-text;
+        @apply focus:ring-1 focus-visible:ring-2 hover:bg-ctp-base hover:drop-shadow-sm hover:ring-1 hover:shadow-sm;
+    }
+
+    ::deep button.icon:disabled,
+    ::deep a.btn.icon:disabled {
+        @apply cursor-not-allowed text-ctp-overlay1;
+        @apply hover:bg-transparent hover:drop-shadow-none hover:ring-0 hover:shadow-none hover:text-ctp-subtext0;
     }
 
     ::deep code,
@@ -21,6 +46,40 @@
 
     ::deep samp {
         @apply whitespace-pre;
+    }
+
+    ::deep input:not(.input-no-defaults),
+    ::deep select {
+        @apply backdrop-blur border-none bg-ctp-surface0/95 ease-in outline-none px-3 py-2 rounded-sm shadow-sm transition;
+        @apply active:ring-1 active:ring-ctp-pink focus:ring-1 focus:ring-ctp-pink focus-visible:ring-1 focus-visible:ring-ctp-pink;
+    }
+
+    ::deep input[type="checkbox"] {
+        @apply appearance-none h-6 w-6 checked:bg-ctp-pink;
+    }
+
+    ::deep button:disabled,
+    ::deep a.btn:disabled,
+    ::deep input:disabled,
+    ::deep input:read-only:not([type="checkbox"]),
+    ::deep select:disabled,
+    ::deep textarea:disabled,
+    ::deep textarea:read-only {
+        @apply cursor-not-allowed text-ctp-overlay1;
+    }
+
+    ::deep input:not(.input-no-defaults).invalid,
+    ::deep select.invalid,
+    ::deep textarea.invalid {
+        @apply outline-ctp-red/60 outline-offset-0;
+    }
+
+    ::deep label {
+        @apply pl-1 text-ctp-subtext0 text-sm;
+    }
+
+    ::deep .validation-message {
+        @apply font-medium pl-0.5 pt-1 text-ctp-red text-xs;
     }
 }
 

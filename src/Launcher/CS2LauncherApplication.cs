@@ -6,7 +6,6 @@ using CS2Launcher.AspNetCore.Launcher.Abstractions;
 using CS2Launcher.AspNetCore.Launcher.Authorization;
 using CS2Launcher.AspNetCore.Launcher.Configuration;
 using CS2Launcher.AspNetCore.Launcher.Hosting;
-using CS2Launcher.AspNetCore.Launcher.Proc;
 using HealthChecks.ApplicationStatus.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +19,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.Metrics;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using CS2Launcher.AspNetCore.Launcher.Infrastructure;
+using CS2Launcher.AspNetCore.App.Abstractions.Api;
 
 namespace CS2Launcher.AspNetCore.Launcher;
 
@@ -58,11 +59,12 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
             .AddResponseCompression()
             .AddRouting( options => options.LowercaseUrls = true );
 
-        // TODO: health for `Proc.DedicatedServer` worker
         builder.Services.AddHealthChecks()
-            .AddApplicationStatus();
+            .AddApplicationStatus()
+            .AddCheck<DedicatedServerHealthCheck>( nameof( DedicatedServer ) );
 
-        builder.Services.AddHostedService<DedicatedServer>()
+        builder.Services.AddSingleton<IDedicatedServer, DedicatedServer>()
+            .AddHostedService( serviceProvider => serviceProvider.GetRequiredService<IDedicatedServer>() )
             .AddOptions<DedicatedServerOptions>()
             .BindConfiguration( "Server" )
             .ValidateDataAnnotations();
@@ -79,7 +81,6 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
 
     /// <summary> Runs the applications. </summary>
     /// <returns> A task that completes when the application is shutdown. </returns>
-    /// <remarks> If the <see cref="DedicatedServerProcess"/> crashes, the host application will be shutdown. </remarks>
     public Task RunAsync( ) => WebApp.RunAsync();
 
     Task IHost.StartAsync( CancellationToken cancellation ) => WebApp.StartAsync( cancellation );
@@ -156,6 +157,9 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
                 .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
         }
 
+        app.MapHealthChecks( "/healthz" )
+           .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
+
         return new( app );
     }
 
@@ -171,6 +175,8 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
     {
         Services.AddCS2LauncherApp<TRoot>()
             .AddSingleton( LauncherHostContext.From( Assembly.GetEntryAssembly()! ) )
+            .AddTransient<ILauncherApiClient, LauncherApiClient>()
+            .AddTransient<IServerConsoleFactory, ServerConsoleFactory>()
             .AddControllersWithViews();
 
         Services.AddRazorComponents()
@@ -183,18 +189,21 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
             .AddSteam();
 
         Services.AddSignalR()
-#if DEBUG
-            .AddJsonProtocol()
-#endif
-            .AddMessagePackProtocol();
+            .AddJsonProtocol();
 
         Services.AddOptions<LauncherAppOptions>()
             .BindConfiguration( "App" )
             .ValidateDataAnnotations();
 
+        Services.AddOptions<SteamApiOptions>()
+            .BindConfiguration( "Steam" )
+            .ValidateDataAnnotations();
+
         Services.ConfigureOptions<ConfigureAuthentication>()
             .ConfigureOptions<ConfigureAuthorization>()
             .ConfigureOptions<ConfigureCookiePolicy>()
+            .ConfigureOptions<ConfigureJson>()
+            .ConfigureOptions<ConfigureMvc>()
             .ConfigureOptions<ConfigureResponseCompression>();
 
         return this;

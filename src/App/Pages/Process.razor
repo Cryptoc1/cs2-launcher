@@ -1,0 +1,90 @@
+@using System.Diagnostics.CodeAnalysis
+@using CS2Launcher.AspNetCore.App.Abstractions.Api
+@using CS2Launcher.AspNetCore.App.Abstractions.Signals
+@using CS2Launcher.AspNetCore.App.Infrastructure
+
+@page "/process"
+
+@inherits Stateful<ProcessState>
+@implements IAsyncDisposable
+
+@inject ILauncherApiClient Api
+@inject NavigationManager Navigation
+
+<PageTitle>CS2Launcher: Process</PageTitle>
+
+<main class="container mx-auto p-4 pt-8 lg:w-2/3">
+    <h1 class="font-bold mb-4 text-3xl">Process</h1>
+    @if (!State.IsLoading)
+    {
+        <p class="py-2">Server is <code class="bg-ctp-surface1 font-semibold p-0.5 px-1 rounded-sm text-sm">@State.Status.ToString()</code></p>
+        <div class="gap-4 grid grid-cols-3 my-2">
+            <Alert Heading="Memory" Icon="@IconName.Memory">
+                <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Paged)</p>
+                <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Virtual)</p>
+                <p>Working: @FormatGigaBytes(State.Metrics.Memory.Working)</p>
+            </Alert>
+
+            @if (State.Metrics.Memory.Peak is not null)
+            {
+                <Alert Heading="Memory (peak)" Icon="@IconName.MemoryAlt">
+                    <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Peak.Paged)</p>
+                    <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Peak.Virtual)</p>
+                    <p>Working: @FormatGigaBytes(State.Metrics.Memory.Peak.Working)</p>
+                </Alert>
+            }
+
+            <Alert Heading="Processor Time" Icon="@IconName.Pace">
+                <p>Privileged: @FormatTime(State.Metrics.Processor.Privileged)</p>
+                <p>User: @FormatTime(State.Metrics.Processor.User)</p>
+                <p>Total: @FormatTime(State.Metrics.Processor.Total)</p>
+            </Alert>
+        </div>
+    }
+    else
+    {
+        <div class="flex flex-row py-2">
+            <Loading />
+        </div>
+    }
+</main>
+
+@code {
+
+    [DisallowNull]
+    private MetricsSignaler signaler;
+    private List<IDisposable>? signals;
+
+    public async ValueTask DisposeAsync()
+    {
+        signals?.ForEach(signal => signal.Dispose());
+        signals?.Clear();
+
+        if (signaler is not null)
+        {
+            await signaler.DisposeAsync();
+            signaler = default!;
+        }
+    }
+
+    private static string FormatGigaBytes(long bytes) => $"{((bytes / 1024f) / 1024f) / 1024f:0.00}GB";
+    private static string FormatTime(TimeSpan time) => $@"{time:hh\:mm\:ss}";
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            signals = [signaler.On<MetricsSignals.Report>(OnMetricsReported)];
+            return Mutate(state => ProcessState.Load(Api.Server, signaler, state));
+        }
+
+        return Task.CompletedTask;
+    }
+
+    protected override void OnInitialized()
+    {
+        signaler = new(Navigation);
+    }
+
+    private async Task OnMetricsReported(MetricsSignals.Report report) => await Mutate(state => ProcessState.OnReport(report, state));
+}

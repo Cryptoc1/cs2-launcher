@@ -1,4 +1,4 @@
-using CS2Launcher.AspNetCore.Launcher.Api;
+using CS2Launcher.AspNetCore.Launcher.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 
@@ -14,23 +14,33 @@ internal static class LauncherApplicationExtensions
             app.UseWebAssemblyDebugging();
         }
 
+        app.UseAuthentication();
+        app.UseAuthorization();
+
 #if NET8_0
         app.UseBlazorFrameworkFiles();
         app.UseStaticFiles( new StaticFileOptions { ServeUnknownFileTypes = true } );
 #endif
 
-        app.UseAuthentication();
-        app.UseAuthorization();
-
 #if NET9_0_OR_GREATER
         app.MapStaticAssets()
-            .RequireAuthorization()
             .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
 #endif
 
-        app.MapHub<ConsoleHub>( "/api/signals/console", options => options.AllowStatefulReconnects = true );
+        app.MapHub<ConsoleHub>( "/api/signals/console", options => options.AllowStatefulReconnects = true )
+            .RequireAuthorization()
+            .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
+
+        app.MapHub<MetricsHub>( "/api/signals/metrics", options => options.AllowStatefulReconnects = true )
+            .RequireAuthorization()
+            .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
+
+        app.MapControllers()
+            .RequireAuthorization()
+            .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
 
         app.MapFallbackToController( "Index", "App" )
+            .RequireAuthorization()
             .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
 
         return app;

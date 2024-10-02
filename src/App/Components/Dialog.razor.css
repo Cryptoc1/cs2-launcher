@@ -1,0 +1,9 @@
+@layer components {
+    dialog {
+        @apply backdrop-blur bg-ctp-surface0/90 drop-shadow-sm min-w-96 p-6 ring-1 ring-ctp-base/20 rounded-md text-ctp-text;
+    }
+
+    dialog::backdrop {
+        @apply backdrop-blur-sm bg-ctp-overlay0/20;
+    }
+}

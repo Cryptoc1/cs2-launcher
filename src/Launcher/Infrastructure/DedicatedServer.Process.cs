@@ -1,18 +1,20 @@
 using System.Diagnostics;
-using System.Runtime.Versioning;
 using System.Text;
+using CS2Launcher.AspNetCore.Launcher.Abstractions;
 
-namespace CS2Launcher.AspNetCore.Launcher.Proc;
+namespace CS2Launcher.AspNetCore.Launcher.Infrastructure;
 
-internal sealed class DedicatedServerProcess : Process
+internal sealed class DedicatedServerProcess : Process, IAsyncDisposable
 {
     public bool IsRunning => IsStarted && !HasExited;
     public bool IsStarted { get; private set; }
 
+    private readonly CancellationTokenRegistration cancellation;
     private readonly ProcessPriorityClass priority;
 
-    public DedicatedServerProcess( DedicatedServerOptions options )
+    public DedicatedServerProcess( DedicatedServerOptions options, CancellationToken cancellation )
     {
+        this.cancellation = cancellation.Register( OnCancellation, this );
         priority = options.ProcessPriority;
 
         EnableRaisingEvents = false;
@@ -41,6 +43,14 @@ internal sealed class DedicatedServerProcess : Process
         {
             StartInfo.WorkingDirectory = Path.GetFullPath( options.WorkingDirectory );
         }
+
+        static void OnCancellation( object? state )
+        {
+            if( state is DedicatedServerProcess process && process.IsRunning )
+            {
+                process.Kill( true );
+            }
+        };
     }
 
     private static string BuildArguments( DedicatedServerOptions options )
@@ -77,8 +87,22 @@ internal sealed class DedicatedServerProcess : Process
         return arguments.Build();
     }
 
-    [SupportedOSPlatform( "linux" )]
-    [SupportedOSPlatform( "windows" )]
+    protected override void Dispose( bool disposing )
+    {
+        if( disposing )
+        {
+            cancellation.Dispose();
+        }
+
+        base.Dispose( disposing );
+    }
+
+    public ValueTask DisposeAsync( )
+    {
+        Dispose();
+        return cancellation.DisposeAsync();
+    }
+
     public new bool Start( )
     {
         if( IsStarted = base.Start() )
@@ -92,35 +116,4 @@ internal sealed class DedicatedServerProcess : Process
 
         return IsStarted;
     }
-}
-
-/// <summary> A builder of CS2 dedicated server arguments. </summary>
-public sealed class CS2ArgumentsBuilder
-{
-    private StringBuilder builder = new();
-
-    /// <summary> Create a new builder. </summary>
-    /// <param name="args"> The initial arguments. </param>
-    public CS2ArgumentsBuilder( params string[] args ) => Append( args );
-
-    /// <summary> Append the given <paramref name="value"/> to the builder. </summary>
-    /// <param name="value"> The argument value to append. </param>
-    public CS2ArgumentsBuilder Append( string? value )
-    {
-        value = value?.Trim();
-        if( !string.IsNullOrEmpty( value ) )
-        {
-            builder = builder.Append( ' ' ).Append( value );
-        }
-
-        return this;
-    }
-
-    /// <summary> Append the given <paramref name="values"/> to the builder. </summary>
-    /// <param name="values"> The argument values to append. </param>
-    public CS2ArgumentsBuilder Append( IEnumerable<string?> values ) => values.Aggregate( this, ( args, arg ) => args.Append( arg ) );
-
-    /// <summary> Build the dedicated server arguments string. </summary>
-    /// <returns> The combined, normalized, arguments. </returns>
-    public string Build( ) => builder.ToString().Trim();
 }

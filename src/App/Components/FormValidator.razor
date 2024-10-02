@@ -1,0 +1,61 @@
+@using System.Linq.Expressions
+
+<DataAnnotationsValidator />
+
+@code {
+
+    private ValidationMessageStore messageStore = default!;
+
+    [CascadingParameter]
+    private EditContext CurrentEditContext { get; set; } = default!;
+
+    [Parameter]
+    public IDictionary<string, string[]>? Errors { get; set; }
+
+    public void ClearErrors()
+    {
+        messageStore.Clear();
+        CurrentEditContext.NotifyValidationStateChanged();
+    }
+
+    public void DisplayErrors(IDictionary<string, string[]> errors)
+    {
+        foreach (var error in errors)
+        {
+            messageStore.Add(CurrentEditContext.Field(error.Key), error.Value);
+        }
+
+        CurrentEditContext.NotifyValidationStateChanged();
+    }
+
+    public bool IsModelModified() => CurrentEditContext.IsModified();
+
+    public bool IsValid(Expression<Func<object>> accessor) => CurrentEditContext.IsValid(accessor);
+
+    public void MarkAsModified(in FieldIdentifier field) => CurrentEditContext.NotifyFieldChanged(field);
+
+    public void MarkAsUnmodified() => CurrentEditContext.MarkAsUnmodified();
+
+    protected override void OnInitialized()
+    {
+        if (CurrentEditContext is null)
+        {
+            throw new InvalidOperationException($"{nameof(FormValidator)} requires a cascading parameter of type {nameof(EditContext)}.");
+        }
+
+        messageStore = new(CurrentEditContext);
+
+        CurrentEditContext.OnValidationRequested += (s, e) => messageStore.Clear();
+        CurrentEditContext.OnFieldChanged += (s, e) => messageStore.Clear(e.FieldIdentifier);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Errors?.Count > 0)
+        {
+            messageStore.Clear();
+            DisplayErrors(Errors);
+        }
+    }
+
+}

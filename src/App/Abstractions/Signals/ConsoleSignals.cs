@@ -1,6 +1,4 @@
-using CS2Launcher.AspNetCore.App.Abstractions.Signaling;
-
-namespace CS2Launcher.AspNetCore.App.Abstractions;
+namespace CS2Launcher.AspNetCore.App.Abstractions.Signals;
 
 /// <summary> Signals used by the 'Console' feature. </summary>
 public static class ConsoleSignals

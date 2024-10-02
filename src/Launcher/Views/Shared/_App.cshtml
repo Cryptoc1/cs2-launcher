@@ -1,5 +1,6 @@
 @using CS2Launcher.AspNetCore.App.Hosting
 @using CS2Launcher.AspNetCore.Launcher.Hosting
+@using CS2Launcher.AspNetCore.Launcher.Infrastructure
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.Extensions.Hosting
 
@@ -20,8 +21,8 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700" as="style" crossorigin />
     <link href="/@(LauncherHost.AssemblyName).styles.css" rel="preload" as="style" asp-append-version="true" />
 
-    <link href="/_framework/blazor.webassembly.js" rel="preload" as="script" asp-append-version="true" />
     <link href="/_framework/blazor.boot.json" rel="prefetch" as="fetch" asp-append-version="true" />
+    <link href="/_framework/blazor.webassembly.js" rel="preload" as="script" asp-append-version="true" />
 
     <component type="@typeof(HeadOutlet)" render-mode="WebAssemblyPrerendered" />
 
@@ -33,7 +34,7 @@
 </head>
 
 <body>
-    <component type="@RootComponent.ComponentType" render-mode="WebAssemblyPrerendered" />
+    <component type="@RootComponent.ComponentType" param-User="@Context.GetUser()" render-mode="WebAssemblyPrerendered" />
 
     <persist-component-state />
     <script src="/_framework/blazor.webassembly.js" type="text/javascript" asp-append-version="true"></script>

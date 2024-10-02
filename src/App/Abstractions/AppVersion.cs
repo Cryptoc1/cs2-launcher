@@ -1,8 +1,9 @@
+using System.Globalization;
 using System.Reflection;
 
 namespace CS2Launcher.AspNetCore.App.Abstractions;
 
-/// <summary> Represents the version of the CS2Launcher App. </summary>
+/// <summary> Represents the version numbers of a build of the CS2Launcher App. </summary>
 public sealed class AppVersion
 {
     /// <summary> A reference to the current version of the application. </summary>
@@ -17,6 +18,9 @@ public sealed class AppVersion
     /// <summary> The patch, or hotfix, version. </summary>
     public int Patch { get; }
 
+    /// <summary> The height of a pre-release in relation to the version. </summary>
+    public int? Candidate { get; set; }
+
     /// <summary> Additional versioning metadata for tracking. </summary>
     public string? Metadata { get; }
 
@@ -30,10 +34,20 @@ public sealed class AppVersion
         Patch = version.Build;
 
         var informational = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-        var index = informational?.IndexOf( '-' ) ?? -1;
-        if( index > 0 )
+        if( !string.IsNullOrEmpty( informational ) )
         {
-            Metadata = informational![ (index + 1)..(informational!.IndexOf( '+' ) + 8) ];
+            var index = informational.IndexOf( '-' );
+            if( index > 0 )
+            {
+                index += 4;
+                Candidate = int.Parse( informational[ index..(index + 1) ], CultureInfo.InvariantCulture );
+            }
+
+            index = informational.IndexOf( '+' );
+            if( index > 0 )
+            {
+                Metadata = informational[ (index + 1)..(index + 8) ];
+            }
         }
     }
 
@@ -41,7 +55,17 @@ public sealed class AppVersion
     public override string ToString( )
     {
         var version = $"{Major}.{Minor}.{Patch}";
-        return !string.IsNullOrEmpty( Metadata ) ? $"{version}-{Metadata}" : version;
+        if( Candidate.HasValue )
+        {
+            version += $"-rc.{Candidate}";
+        }
+
+        if( !string.IsNullOrEmpty( Metadata ) )
+        {
+            version += $"+{Metadata}";
+        }
+
+        return version;
     }
 
     /// <inheritdoc/>

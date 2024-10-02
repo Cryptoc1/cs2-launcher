@@ -1,0 +1,30 @@
+@using CS2Launcher.AspNetCore.App.Abstractions.Api
+
+@inherits Stateful<ProcessTileState>
+
+@inject ILauncherApiClient Api
+
+<_Tile Icon="@IconName.Memory" Path="/process" Title="Process">
+    @if (!State.IsLoading)
+    {
+        <p class="text-sm">Server is <code class="bg-ctp-surface1 font-semibold p-0.5 px-1 rounded-sm text-xs">@State.Status.ToString()</code></p>
+    }
+    else
+    {
+        <Loading />
+    }
+</_Tile>
+
+@code {
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            return Mutate(state => ProcessTileState.Load(Api.Server, state));
+        }
+
+        return Task.CompletedTask;
+    }
+
+}

@@ -15,7 +15,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ImplicitUsings>true</ImplicitUsings>
     <IncludeSymbols>true</IncludeSymbols>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);CS8618</NoWarn>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
@@ -25,7 +25,7 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <RunAnalyzers>true</RunAnalyzers>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <AnalysisLevel>preview-recommended</AnalysisLevel>
     <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
 
     <!-- net8.0 -->

@@ -1,90 +1,103 @@
-﻿@page "/"
+﻿@using System.Diagnostics.CodeAnalysis
+@using CS2Launcher.AspNetCore.App.Abstractions.Signals
+@using CS2Launcher.AspNetCore.App.Infrastructure
 
+@page "/console"
+
+@inherits Stateful<ConsoleState>
 @implements IAsyncDisposable
 
 @inject ElementInterop ElementInterop
 @inject LocalStorageInterop LocalStorage
 @inject NavigationManager Navigation
 
-<PageTitle>Console: @(!string.IsNullOrEmpty(Host) ? Host : "Connecting...")</PageTitle>
+<PageTitle>CS2Launcher: Console - @(State.IsLoading ? "Connecting..." : State.Host ?? State.ConnectError)</PageTitle>
 
-<main class="antialiased font-medium font-mono min-h-screen mx-auto overflow-y-auto overscroll-contain p-2 scroll-smooth w-full" @onclick="@OnMainClicked">
-    @if (!string.IsNullOrEmpty(ConnectError))
+<main class="font-medium font-mono min-h-full mx-auto overflow-y-auto p-2 scroll-smooth w-full" @onclick="@OnMainClicked">
+    @if (!State.IsLoading)
     {
-        <div class="flex flex-row items-center p-2">
-            <span class="flex items-center pr-2 text-rose-400/80">
-                <Icon Name="@IconName.Error" />
-            </span>
-            <samp class="text-rose-300">@ConnectError</samp>
-        </div>
-
-        <button class="flex flex-row items-center p-2 hover:underline" @onclick="@OnRetryClicked">
-            <samp>Retry?</samp>
-        </button>
-    }
-    else if (!string.IsNullOrEmpty(Host))
-    {
-        <Virtualize Items="@Entries" Context="entry">
-            <div class="p-2" @key="@entry.Key">
-                <div class="flex flex-row items-center">
-                    <span class=@ClassNames.Combine("flex items-center pr-2", (entry.Value.IsError ? "text-rose-400" : entry.Value.IsExecuting ? "text-amber-400" : "text-green-300")+ "/80")>
-                        <Icon Name="@(entry.Value.IsError ? IconName.Error : entry.Value.IsExecuting ? IconName.Pending : IconName.Circle)" />
-                    </span>
-                    <span class="whitespace-nowrap">@Host</span>
-                    <Icon Name="@IconName.ChevronRight" />
-                    <span class="ml-2 py-2">@entry.Value.Command</span>
-                </div>
-
-                @if (entry.Value.IsExecuting)
-                {
-                    <div class="flex flex-row items-center py-1">
-                        <Loading Text="Executing Command..." />
-                    </div>
-                }
-                else
-                {
-                    <samp class=@ClassNames.Combine("font-normal", entry.Value.IsError ? "text-rose-300" : "")>@entry.Value.Text</samp>
-                }
-            </div>
-        </Virtualize>
-
-        <EditForm class="flex flex-row items-center p-2" Model="@Form" OnValidSubmit="OnSubmit">
-            <DataAnnotationsValidator />
-            <span class="flex-row inline-flex items-center mr-2">
-                <span class="flex items-center pr-2 text-green-300/80">
-                    <Icon Name="IconName.CloudCircle" />
+        @if (!string.IsNullOrEmpty(State.ConnectError))
+        {
+            <div class="flex flex-row items-center p-2">
+                <span class="flex items-center pr-2 text-ctp-red/80">
+                    <Icon Name="@IconName.Error" />
                 </span>
-                <span class="whitespace-nowrap">@Host</span>
-                <Icon Name="@IconName.ChevronRight" />
-            </span>
-            <InputText class="bg-transparent border-none outline-none px-0 w-full focus:ring-0" @ref="@commandInput" @bind-Value="@Form.Command" @onblur="@OnCommandInputBlur" @onfocus="@OnCommandInputFocus" @onkeydown="@OnCommandInputKeyDown" type="text" autofocus />
-        </EditForm>
+                <samp class="text-ctp-red">@State.ConnectError</samp>
+            </div>
+
+            <button type="button" @onclick="@OnRetryClicked">Retry?</button>
+        }
+        else
+        {
+            <Virtualize Items="@State.Entries" Context="entry">
+                <div class="p-2" @key="@entry.Key">
+                    <div class="flex flex-row items-center">
+                        <span class=@ClassNames.Combine("flex items-center pr-2", (entry.Value.IsError ? "text-ctp-red" : entry.Value.IsExecuting ? "text-ctp-yellow/80" : "text-ctp-green/80"))>
+                            <Icon Name="@(entry.Value.IsError ? IconName.Error : entry.Value.IsExecuting ? IconName.Pending : IconName.Circle)" />
+                        </span>
+                        <span class="whitespace-nowrap">@State.Host</span>
+                        <Icon Name="@IconName.ChevronRight" />
+                        <span class="ml-2 py-2">@entry.Value.Command</span>
+                    </div>
+
+                    @if (entry.Value.IsExecuting)
+                    {
+                        <div class="flex flex-row items-center py-1">
+                            <Loading Text="Executing Command..." />
+                        </div>
+                    }
+                    else
+                    {
+                        <samp class=@ClassNames.Combine("font-normal", entry.Value.IsError ? "text-ctp-red" : "")>@entry.Value.Text</samp>
+                    }
+                </div>
+            </Virtualize>
+
+            <EditForm class="flex flex-row items-center p-2" Model="@State.Form" OnValidSubmit="OnSubmit">
+                <FormValidator />
+                <span class="flex-row inline-flex items-center mr-2">
+                    <span class="flex items-center pr-2 text-ctp-green/80">
+                        <Icon Name="IconName.CloudCircle" />
+                    </span>
+                    <span class="whitespace-nowrap">@State.Host</span>
+                    <Icon Name="@IconName.ChevronRight" />
+                </span>
+                <InputText class="bg-transparent border-none input-no-defaults outline-none px-0 w-full focus:ring-0" @ref="@commandInput" @bind-Value="@State.Form.Command" @onblur="@OnCommandInputBlur" @onfocus="@OnCommandInputFocus" @onkeydown="@OnCommandInputKeyDown" type="text" autofocus />
+            </EditForm>
+        }
     }
     else
     {
-        <Loading Text="Connecting..." />
+        <div class="flex flex-row p-2">
+            <Loading Text="Connecting..." />
+        </div>
     }
 </main>
 
 @code {
 
-    private const string HistoryStorageKey = "console.history";
-    private const int MaxEntries = 250;
-
     private InputText? commandInput;
-    private ConsoleSignaler signaler = default!;
+
+    [DisallowNull]
+    private ConsoleSignaler signaler;
     private List<IDisposable>? signals;
 
-    private string? ConnectError { get; set; }
-    private Dictionary<long, CommandEntry> Entries { get; set; } = new(MaxEntries);
-    private ConsoleForm Form { get; set; } = new();
-    private List<string> History { get; set; } = new(MaxEntries);
-    private string Host { get; set; }
     private bool IsCommandInputFocused { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    public async ValueTask DisposeAsync()
     {
-        await base.OnAfterRenderAsync(firstRender);
+        signals?.ForEach(signal => signal.Dispose());
+        signals?.Clear();
+
+        if (signaler is not null)
+        {
+            await signaler.DisposeAsync();
+            signaler = default!;
+        }
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
         if (firstRender)
         {
             signals = [signaler.On<ConsoleSignals.ConnectFailed>(OnConnectFailed),
@@ -92,12 +105,10 @@ signaler.On<ConsoleSignals.Connected>(OnConnected),
 signaler.On<ConsoleSignals.ExecutedCommand>(OnExecutedCommand),
 signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
 
-            var connect = signaler.Connect();
-            History = await LocalStorage.Get<List<string>>(HistoryStorageKey) ?? [];
-            History.EnsureCapacity(MaxEntries);
-
-            await connect;
+            return Mutate(state => ConsoleState.Load(LocalStorage, signaler, state));
         }
+
+        return Task.CompletedTask;
     }
 
     private void OnCommandInputBlur()
@@ -105,10 +116,14 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
         IsCommandInputFocused = false;
     }
 
-    private void OnCommandInputFocus()
+    private async Task OnCommandInputFocus()
     {
-        Form.Offset = 0;
         IsCommandInputFocused = true;
+        await Mutate(state =>
+        {
+            state.Form.Offset = 0;
+            return state;
+        });
     }
 
     private async Task OnCommandInputKeyDown(KeyboardEventArgs e)
@@ -120,102 +135,71 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
             _ => new(false)
         });
 
-        if (handled && string.IsNullOrEmpty(Form.Command))
+        if (handled)
         {
-            Form.Offset = 0;
+            await Task.Delay(75);
+            await TryFocusCommandInput();
         }
 
-        async ValueTask<bool> OnArrowDown()
+        ValueTask<bool> OnArrowDown()
         {
-            var offset = ((History.Count - 1) - Form.Offset) + 1;
-            if (offset >= 0 && offset < History.Count)
+            var offset = ((State.History.Count - 1) - State.Form.Offset) + 1;
+            if (offset >= 0 && offset < State.History.Count)
             {
-                Form.Command = History[offset];
-                Form.Offset--;
-                await InvokeAsync(StateHasChanged);
+                return Mutate(state =>
+                {
+                    state.Form.Offset = Math.Max(0, state.Form.Offset - 1);
+                    if (string.IsNullOrWhiteSpace(state.Form.Command = state.History[offset]))
+                    {
+                        state.Form.Offset = 0;
+                    }
 
-                await Task.Delay(75);
-                await TryFocusCommandInput();
-
-                return true;
+                    return state;
+                });
             }
 
-            return false;
+            return new(false);
         }
 
-        async ValueTask<bool> OnArrowUp()
+        ValueTask<bool> OnArrowUp()
         {
-            var offset = (History.Count - 1) - Form.Offset;
+            var offset = (State.History.Count - 1) - State.Form.Offset;
             if (offset >= 0)
             {
-                Form.Command = History[offset];
-                Form.Offset++;
-                await InvokeAsync(StateHasChanged);
+                return Mutate(state =>
+                {
+                    state.Form.Offset++;
+                    if (string.IsNullOrWhiteSpace(state.Form.Command = state.History[offset]))
+                    {
+                        state.Form.Offset = 0;
+                    }
 
-                await Task.Delay(75);
-                await TryFocusCommandInput();
-
-                return true;
+                    return state;
+                });
             }
 
-            return false;
+            return new(false);
         }
     }
 
-    private async Task OnExecutedCommand(ConsoleSignals.ExecutedCommand command)
-    {
-        if (Entries.TryGetValue(command.Token, out var entry))
-        {
-            Entries[command.Token] = entry with
-                {
-                    IsExecuting = false,
-                    Text = command.Text
-                };
+    private Task OnExecutedCommand(ConsoleSignals.ExecutedCommand command) => Mutate(state => ConsoleState.OnExecutedCommand(LocalStorage, command, state));
 
-            var render = InvokeAsync(StateHasChanged);
-
-            await LocalStorage.Set(HistoryStorageKey, History);
-            await render;
-        }
-    }
-
-    private Task OnExecuteCommandFailed(ConsoleSignals.ExecuteCommandFailed failure)
-    {
-        if (Entries.TryGetValue(failure.Token, out var entry))
-        {
-            Entries[failure.Token] = entry with
-                {
-                    IsExecuting = false,
-                    IsError = true,
-                    Text = failure.Error,
-                };
-
-            return InvokeAsync(StateHasChanged);
-        }
-
-        return Task.CompletedTask;
-    }
+    private async Task OnExecuteCommandFailed(ConsoleSignals.ExecuteCommandFailed failure) => await Mutate(state => ConsoleState.OnExecuteCommandFailed(failure, state));
 
     private async Task OnConnectFailed(ConsoleSignals.ConnectFailed failure)
     {
+        await Mutate(state => ConsoleState.OnConnectFailed(failure, state));
         await signaler.Disconnect();
-
-        ConnectError = failure.Error;
-        await InvokeAsync(StateHasChanged);
     }
 
     private async Task OnConnected(ConsoleSignals.Connected connected)
     {
-        ConnectError = "";
-        Host = connected.Host;
-
-        await InvokeAsync(StateHasChanged);
+        await Mutate(state => ConsoleState.OnConnected(connected, state));
         await TryFocusCommandInput();
     }
 
     protected override void OnInitialized()
     {
-        Form ??= new();
         signaler = new(Navigation);
     }
 
@@ -227,50 +211,14 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
         }
     }
 
-    private async Task OnRetryClicked()
-    {
-        await signaler.Disconnect();
-
-        ConnectError = "";
-        await InvokeAsync(StateHasChanged);
-
-        await signaler.Connect();
-    }
+    private Task OnRetryClicked() => Mutate(state => ConsoleState.Reconnect(signaler, state));
 
     private async Task OnSubmit()
     {
-        var signal = new ConsoleSignals.ExecuteCommand(Form.Command, DateTime.UtcNow.Ticks);
-        if (Entries.Count >= MaxEntries)
+        if (await Mutate(state => ConsoleState.ExecuteCommand(signaler, state)))
         {
-            var token = Entries.Keys.First();
-            Entries.Remove(token);
-        }
-
-        Entries.Add(signal.Token, new(signal.Command));
-        if (History.Count >= MaxEntries)
-        {
-            History.RemoveAt(History.Count - 1);
-        }
-        else if (History.ElementAtOrDefault(History.Count - 1) != signal.Command)
-        {
-            History.Add(signal.Command);
-        }
-
-        await signaler.Send(signal);
-        Form = new();
-
-        await Task.Delay(75);
-        await TryFocusCommandInput();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        signals?.ForEach(signal => signal.Dispose());
-        signals?.Clear();
-
-        if (signaler is not null)
-        {
-            await signaler.DisposeAsync();
+            await Task.Delay(75);
+            await TryFocusCommandInput();
         }
     }
 
@@ -283,18 +231,4 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
 
         return ValueTask.CompletedTask;
     }
-
-    private sealed record CommandEntry(string Command, bool IsExecuting = true, string? Text = default)
-    {
-        public bool IsError { get; init; }
-    }
-
-    public sealed class ConsoleForm
-    {
-        [Required]
-        public string Command { get; set; }
-
-        public int Offset { get; set; }
-    }
-
 }
