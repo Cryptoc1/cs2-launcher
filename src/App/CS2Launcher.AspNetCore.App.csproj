@@ -33,7 +33,7 @@
     <Content Include="build\*.props" Pack="true" PackagePath="build\" />
   </ItemGroup>
 
-  <Target Name="RestoreNpmPackages" AfterTargets="PrepareForBuild;Restore" BeforeTargets="BeforeBuild" Condition=" '$(EnablePostCSSTransform)' == 'true' ">
+  <Target Name="RestoreNpmPackages" AfterTargets="PrepareForBuild;Restore" BeforeTargets="BeforeBuild" Condition=" '$(EnablePostCSSTransform)' == 'true' AND 'true' == 'false' ">
     <!-- The project contains a `package.json`, but not a `package-lock.json` -->
     <Exec Command="npm i" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="!Exists('$(MSBuildProjectDirectory)\package-lock.json') AND Exists('$(MSBuildProjectDirectory)\package.json') AND !Exists('$(MSBuildProjectDirectory)\node_modules\.package-lock.json')" />
 

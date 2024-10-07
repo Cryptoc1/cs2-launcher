@@ -64,6 +64,10 @@ jobs:
       - name: restore
         run: dotnet workload restore && dotnet workload install wasm-tools-net8 && dotnet restore --locked-mode
 
+      - name: restore npm
+        run: npm ci
+        working-directory: ./src/App
+
       - name: pack
         run: dotnet pack -c Release -o dist --no-restore
 
