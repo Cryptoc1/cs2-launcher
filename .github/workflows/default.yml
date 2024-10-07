@@ -36,6 +36,10 @@ jobs:
       - name: restore
         run: dotnet workload restore && dotnet restore --locked-mode
 
+      - name: restore npm
+        run: npm ci
+        working-directory: ./src/App
+
       - name: build
         run: dotnet build --no-restore
 
