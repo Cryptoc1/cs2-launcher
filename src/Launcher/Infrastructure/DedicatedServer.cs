@@ -10,16 +10,8 @@ internal sealed partial class DedicatedServer(
     ILogger<DedicatedServer> logger,
     IOptions<DedicatedServerOptions> optionsAccessor ) : BackgroundService, IAsyncDisposable, IDedicatedServer
 {
+    private readonly SemaphoreSlim processLock = new( 1, 1 );
     private DedicatedServerProcess? process;
-
-    public DedicatedServerOptions Options => optionsAccessor.Value;
-    public ServerStatus Status => process switch
-    {
-        not null and { IsRunning: true } => ServerStatus.Running,
-        not null and { HasExited: true } => ServerStatus.Crashed,
-        not null => ServerStatus.Starting,
-        null => ServerStatus.NotStarted,
-    };
 
     public override void Dispose( )
     {
@@ -46,19 +38,20 @@ internal sealed partial class DedicatedServer(
 
     protected override Task ExecuteAsync( CancellationToken cancellation )
     {
-        if( !Options.Enabled )
+        var options = optionsAccessor.Value;
+        if( !options.Enabled )
         {
             return Task.CompletedTask;
         }
 
-        if( !(process = new DedicatedServerProcess( Options, cancellation )).Start() )
+        if( !(process = new DedicatedServerProcess( options, cancellation )).Start() )
         {
             logger.FailedToStart( process.ExitCode );
             return Task.CompletedTask;
         }
 
         logger.ServerStarted();
-        if( Options.RedirectOutput )
+        if( options.RedirectOutput )
         {
             process.OutputDataReceived += ( _, args ) => logger.ServerStdOut( args.Data );
             process.BeginOutputReadLine();
@@ -67,20 +60,67 @@ internal sealed partial class DedicatedServer(
         return process.WaitForExitAsync( cancellation );
     }
 
-    public ServerMetrics GetMetrics( )
+    public async ValueTask<ServerMetrics> Metrics( )
     {
-        if( !Options.Enabled || process?.HasExited is null or true )
+        if( process is null || !await Refresh() )
         {
             return ServerMetrics.Zero;
         }
 
-        process.Refresh();
+        var status = AsServerStatus( process );
+        if( status is not (ServerStatus.Starting or ServerStatus.Running) )
+        {
+            return new( ServerMemoryMetrics.Zero, ServerProcessorMetrics.Zero, status );
+        }
+
         return new(
             new( process.PagedMemorySize64, process.VirtualMemorySize64, process.WorkingSet64 )
             {
                 Peak = new( process.PeakPagedMemorySize64, process.PeakVirtualMemorySize64, process.PeakWorkingSet64 )
             },
-            new( process.PrivilegedProcessorTime, process.TotalProcessorTime, process.UserProcessorTime ) );
+            new( process.PrivilegedProcessorTime, process.TotalProcessorTime, process.UserProcessorTime ),
+            status );
+    }
+
+    private async ValueTask<bool> Refresh( CancellationToken cancellation = default )
+    {
+        if( !optionsAccessor.Value.Enabled || process is null )
+        {
+            return false;
+        }
+
+        await processLock.WaitAsync( cancellation );
+        try
+        {
+            process.Refresh();
+            return true;
+        }
+        finally
+        {
+            processLock.Release();
+        }
+    }
+
+    public async ValueTask<ServerStatus> Status( )
+    {
+        if( process is null || !await Refresh() )
+        {
+            return ServerStatus.NotStarted;
+        }
+
+        return AsServerStatus( process );
+    }
+
+    private static ServerStatus AsServerStatus( DedicatedServerProcess process )
+    {
+        ArgumentNullException.ThrowIfNull( process );
+        return process switch
+        {
+            not null and { IsRunning: true } => ServerStatus.Running,
+            not null and { HasExited: true } => ServerStatus.Crashed,
+            not null => ServerStatus.Starting,
+            null => ServerStatus.NotStarted,
+        };
     }
 }
 

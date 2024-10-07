@@ -35,7 +35,7 @@ public sealed class MetricsHub( IDedicatedServer server ) : Hub
 
 sealed file class MetricsSubscription( IClientProxy client, IDedicatedServer server ) : IAsyncDisposable
 {
-    private readonly Timer timer = new( OnTimerElapsed, (client, server), TimeSpan.Zero, TimeSpan.FromSeconds( 15 ) );
+    private readonly Timer timer = new( OnTimerElapsed, (client, server), TimeSpan.Zero, TimeSpan.FromSeconds( 5 ) );
 
     public ValueTask DisposeAsync( ) => timer.DisposeAsync();
 
@@ -47,6 +47,7 @@ sealed file class MetricsSubscription( IClientProxy client, IDedicatedServer ser
             throw new ArgumentException( "The given value is not valid.", nameof( state ) );
         }
 
-        await client.Signal<MetricsSignals.Report>( new( server.GetMetrics() ) );
+        var metrics = await server.Metrics();
+        await client.Signal<MetricsSignals.Report>( new( metrics ) );
     }
 }

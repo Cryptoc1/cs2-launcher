@@ -27,11 +27,11 @@ internal static class LauncherApplicationExtensions
             .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
 #endif
 
-        app.MapHub<ConsoleHub>( "/api/signals/console", options => options.AllowStatefulReconnects = true )
+        app.MapHub<ConsoleHub>( "/api/signals/console" )
             .RequireAuthorization()
             .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
 
-        app.MapHub<MetricsHub>( "/api/signals/metrics", options => options.AllowStatefulReconnects = true )
+        app.MapHub<MetricsHub>( "/api/signals/metrics" )
             .RequireAuthorization()
             .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
 

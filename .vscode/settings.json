@@ -13,11 +13,11 @@
   "dotnet.codeLens.enableReferencesCodeLens": false,
   "dotnet.codeLens.enableTestsCodeLens": false,
   "dotnet.defaultSolution": "cs2-launcher.sln",
-  "dotnet.implementType.propertyGenerationBehavior": "preferAutoProperties",
   "dotnet.navigation.navigateToDecompiledSources": true,
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "*.cs": "${capture}.*.cs",
+    "*.cshtml": "${capture}.cshtml.cs,${capture}.cshtml.css,${capture}.cshtml.js",
     "*.csproj": "${capture}.csproj.user,packages.lock.json",
     "*.json": "${capture}.*.json",
     "*.razor": "${capture}.razor.cs, ${capture}.razor.css, ${capture}.razor.js",

@@ -20,7 +20,7 @@ sealed file class ServerApi(
     {
         ArgumentNullException.ThrowIfNull( parameters );
 
-        if( server.Status is not ServerStatus.Running )
+        if( await server.Status() is not ServerStatus.Running )
         {
             return false;
         }
@@ -41,7 +41,7 @@ sealed file class ServerApi(
         }
     }
 
-    public Task<ServerMetrics> Metrics( CancellationToken cancellation = default ) => Task.FromResult( server.GetMetrics() );
+    public async Task<ServerMetrics> Metrics( CancellationToken cancellation = default ) => await server.Metrics();
 
-    public Task<ServerStatus> Status( CancellationToken cancellation = default ) => Task.FromResult( server.Status );
+    public async Task<ServerStatus> Status( CancellationToken cancellation = default ) => await server.Status();
 }

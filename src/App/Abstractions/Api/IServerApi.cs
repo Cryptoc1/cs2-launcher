@@ -33,10 +33,11 @@ public sealed record class ChangeMapParameters
 /// <summary> Represents performance metrics of the server. </summary>
 /// <param name="Memory"> The server's memory metrics. </param>
 /// <param name="Processor"> The server's processor metrics. </param>
-public sealed record class ServerMetrics( ServerMemoryMetrics Memory, ServerProcessorMetrics Processor )
+/// <param name="Status"> The server's current state. </param>
+public sealed record class ServerMetrics( ServerMemoryMetrics Memory, ServerProcessorMetrics Processor, ServerStatus Status )
 {
     /// <summary> Represents metrics where each value is <c>0</c>. </summary>
-    public static readonly ServerMetrics Zero = new( ServerMemoryMetrics.Zero, ServerProcessorMetrics.Zero );
+    public static readonly ServerMetrics Zero = new( ServerMemoryMetrics.Zero, ServerProcessorMetrics.Zero, default );
 }
 
 /// <summary> Represents the server's memory usage metrics. </summary>

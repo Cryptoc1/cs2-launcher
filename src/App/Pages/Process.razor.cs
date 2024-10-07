@@ -9,7 +9,6 @@ public sealed record ProcessState : State
 {
     public bool IsLoading { get; init; } = true;
     public ServerMetrics Metrics { get; init; } = ServerMetrics.Zero;
-    public ServerStatus Status { get; init; }
 
     internal static async IAsyncEnumerable<ProcessState> Load( IServerApi serverApi, MetricsSignaler signaler, ProcessState state )
     {
@@ -22,18 +21,11 @@ public sealed record ProcessState : State
         await connect;
 
         static async Task<ProcessState> Load( IServerApi serverApi, ProcessState state )
-        {
-            var metrics = serverApi.Metrics();
-            var status = serverApi.Status();
-
-            await Task.WhenAll( metrics, status );
-            return state with
+            => state with
             {
                 IsLoading = false,
-                Metrics = metrics.Result,
-                Status = status.Result
+                Metrics = await serverApi.Metrics()
             };
-        }
     }
 
     internal static ProcessState OnReport( MetricsSignals.Report report, ProcessState state )

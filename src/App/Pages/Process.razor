@@ -17,8 +17,11 @@
     <h1 class="font-bold mb-4 text-3xl">Process</h1>
     @if (!State.IsLoading)
     {
-        <p class="py-2">Server is <code class="bg-ctp-surface1 font-semibold p-0.5 px-1 rounded-sm text-sm">@State.Status.ToString()</code></p>
         <div class="gap-4 grid grid-cols-3 my-2">
+            <Alert class="col-span-3" Heading="Status" Type="@ToAlertType(State.Metrics.Status)">
+                <p>Server is <code class="bg-ctp-surface1 font-semibold p-0.5 px-1 rounded-sm text-sm">@State.Metrics.Status.ToString()</code></p>
+            </Alert>
+
             <Alert Heading="Memory" Icon="@IconName.Memory">
                 <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Paged)</p>
                 <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Virtual)</p>
@@ -87,4 +90,11 @@
     }
 
     private async Task OnMetricsReported(MetricsSignals.Report report) => await Mutate(state => ProcessState.OnReport(report, state));
+
+    private static AlertType ToAlertType(ServerStatus status) => status switch
+    {
+        ServerStatus.Running => AlertType.Information,
+        ServerStatus.Crashed => AlertType.Critical,
+        _ => AlertType.Warning
+    };
 }
