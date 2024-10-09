@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\App\CS2Launcher.AspNetCore.App.csproj" Private="false" />
-    <ProjectReference Include="..\..\modules\CoreRcon\src\CoreRCON.Extensions.CounterStrike\CoreRCON.Extensions.CounterStrike.csproj" NoWarn="IDE0055" PrivateAssets="all" />
+    <ProjectReference Include="..\..\modules\CoreRcon\src\CoreRCON.Extensions.CounterStrike\CoreRCON.Extensions.CounterStrike.csproj" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
-    <PackageReference Include="AspNet.Security.OpenId.Steam" Version="9.0.0-rc.1.24460.76" />
+    <PackageReference Include="AspNet.Security.OpenId.Steam" Version="9.0.0-rc.2.24508.67" />
 
     <!-- NOTE: force transitive deps of CoreRCON, since `PrivateAssets` is used to prevent generated a dependency key on nuget -->
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.0-rc.*" />
