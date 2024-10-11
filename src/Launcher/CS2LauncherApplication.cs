@@ -21,6 +21,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using CS2Launcher.AspNetCore.Launcher.Infrastructure;
 using CS2Launcher.AspNetCore.App.Abstractions.Api;
+using CS2Launcher.AspNetCore.Launcher.Hubs;
 
 namespace CS2Launcher.AspNetCore.Launcher;
 
@@ -63,8 +64,9 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
             .AddApplicationStatus()
             .AddCheck<DedicatedServerHealthCheck>( nameof( DedicatedServer ) );
 
-        builder.Services.AddSingleton<IDedicatedServer, DedicatedServer>()
-            .AddHostedService( serviceProvider => serviceProvider.GetRequiredService<IDedicatedServer>() )
+        builder.Services.AddSingleton<DedicatedServer>()
+            .AddSingleton<IDedicatedServer>( serviceProvider => serviceProvider.GetRequiredService<DedicatedServer>() )
+            .AddHostedService( serviceProvider => serviceProvider.GetRequiredService<DedicatedServer>() )
             .AddOptions<DedicatedServerOptions>()
             .BindConfiguration( "Server" )
             .ValidateDataAnnotations();
@@ -188,7 +190,8 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
             .AddCookie()
             .AddSteam();
 
-        Services.AddSignalR()
+        Services.AddTransient<IMetricsHubSubscriber, MetricsHubSubscriber>()
+            .AddSignalR()
             .AddJsonProtocol();
 
         Services.AddOptions<LauncherAppOptions>()

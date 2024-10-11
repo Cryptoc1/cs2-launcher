@@ -23,6 +23,9 @@ export default {
         mono: ['IBM Plex Mono', ...defaultTheme.fontFamily.mono],
         sans: ['Nunito Sans', 'Noto Sans', 'Roboto', ...defaultTheme.fontFamily.sans]
       },
+      gridTemplateRows: {
+        layout: 'auto 1fr'
+      }
     }
   },
 }

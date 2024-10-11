@@ -1,17 +1,13 @@
-<div class=@ClassNames.Combine(AdditionalAttributes, ToCssClass(Type), Pulse ? "animate-pulse" : "", "bg-ctp-surface0 flex flex-col p-2 px-4 ring-1 rounded-md space-y-1")>
+<section class=@ClassNames.Combine(AdditionalAttributes, ToCssClass(Type), Pulse ? "animate-pulse" : "", "bg-ctp-surface0 flex flex-col p-2 px-4 ring-1 rounded-md space-y-1")>
     <h5 class="flex flex-row font-semibold items-center space-x-2 text-lg">
         <Icon Name="@(Icon ?? ToIconName(Type))" Size="TextSize.ExtraLarge2" />
         <span>@Heading</span>
     </h5>
-    @if (!string.IsNullOrEmpty(Text))
+    @if (Content is not null)
     {
-        <p>@Text</p>
+        @Content
     }
-    @if (ChildContent is not null)
-    {
-        @ChildContent
-    }
-</div>
+</section>
 
 @code {
 
@@ -19,20 +15,17 @@
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; init; }
 
     [Parameter]
-    public RenderFragment? ChildContent { get; init; }
+    public RenderFragment? Content { get; init; }
 
     [EditorRequired]
     [Parameter]
-    public string Heading { get; init; } = string.Empty;
+    public RenderFragment Heading { get; init; }
 
     [Parameter]
     public IconName? Icon { get; init; }
 
     [Parameter]
     public bool Pulse { get; init; }
-
-    [Parameter]
-    public string? Text { get; init; }
 
     [Parameter]
     public AlertType Type { get; init; }

@@ -27,8 +27,9 @@ internal sealed class RequestCancellationFilter : IExceptionFilter
 
         if( exception switch
         {
-            ConnectionAbortedException or ConnectionResetException or OperationCanceledException => true,
+            ConnectionAbortedException or ConnectionResetException => true,
             IOException io => io.Message is "The client reset the request stream.",
+            OperationCanceledException or TaskCanceledException => true,
 
             _ => false
         } )

@@ -10,6 +10,7 @@ internal sealed class DedicatedServerProcess : Process, IAsyncDisposable
     public bool IsStarted { get; private set; }
 
     private readonly CancellationTokenRegistration cancellation;
+    private readonly SemaphoreSlim locker = new( 1, 1 );
     private readonly ProcessPriorityClass priority;
 
     public DedicatedServerProcess( DedicatedServerOptions options, CancellationToken cancellation )
@@ -91,16 +92,46 @@ internal sealed class DedicatedServerProcess : Process, IAsyncDisposable
     {
         if( disposing )
         {
+            if( IsRunning )
+            {
+                // NOTE: ensure child processes are disposed
+                Kill( true );
+            }
+
             cancellation.Dispose();
+            locker.Dispose();
         }
 
         base.Dispose( disposing );
     }
 
-    public ValueTask DisposeAsync( )
+    public async ValueTask DisposeAsync( )
     {
-        Dispose();
-        return cancellation.DisposeAsync();
+        await cancellation.DisposeAsync();
+
+        locker.Dispose();
+        base.Dispose( true );
+
+        GC.SuppressFinalize( this );
+    }
+
+    public async ValueTask<bool> Refresh( CancellationToken cancellation = default )
+    {
+        if( !IsRunning )
+        {
+            return false;
+        }
+
+        await locker.WaitAsync( cancellation );
+        try
+        {
+            base.Refresh();
+            return true;
+        }
+        finally
+        {
+            locker.Release();
+        }
     }
 
     public new bool Start( )

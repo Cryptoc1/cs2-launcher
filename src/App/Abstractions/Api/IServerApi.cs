@@ -16,9 +16,17 @@ public interface IServerApi
     /// <param name="cancellation"> A token that may cancel the request. </param>
     Task<ServerMetrics> Metrics( CancellationToken cancellation = default );
 
+    /// <summary> Restart the server. </summary>
+    /// <param name="cancellation"> A token that may cancel the request. </param>
+    Task<ServerStatus> Restart( CancellationToken cancellation = default );
+
     /// <summary> Retrieve the status of the server. </summary>
     /// <param name="cancellation"> A token that may cancel the request. </param>
     Task<ServerStatus> Status( CancellationToken cancellation = default );
+
+    /// <summary> Terminate the server. </summary>
+    /// <param name="cancellation"> A token that may cancel the request. </param>
+    Task<ServerStatus> Terminate( CancellationToken cancellation = default );
 }
 
 /// <summary> Represents the parameters for changing the map of the server. </summary>
@@ -33,11 +41,10 @@ public sealed record class ChangeMapParameters
 /// <summary> Represents performance metrics of the server. </summary>
 /// <param name="Memory"> The server's memory metrics. </param>
 /// <param name="Processor"> The server's processor metrics. </param>
-/// <param name="Status"> The server's current state. </param>
-public sealed record class ServerMetrics( ServerMemoryMetrics Memory, ServerProcessorMetrics Processor, ServerStatus Status )
+public sealed record class ServerMetrics( ServerMemoryMetrics Memory, ServerProcessorMetrics Processor )
 {
     /// <summary> Represents metrics where each value is <c>0</c>. </summary>
-    public static readonly ServerMetrics Zero = new( ServerMemoryMetrics.Zero, ServerProcessorMetrics.Zero, default );
+    public static readonly ServerMetrics Zero = new( ServerMemoryMetrics.Zero, ServerProcessorMetrics.Zero );
 }
 
 /// <summary> Represents the server's memory usage metrics. </summary>
@@ -72,6 +79,9 @@ public enum ServerStatus : byte
     /// <summary> Indicates the server has not yet been started. </summary>
     NotStarted,
 
+    /// <summary> The server is not enabled. </summary>
+    Disabled,
+
     /// <summary> Indicates the server is currently starting. </summary>
     Starting,
 
@@ -79,5 +89,8 @@ public enum ServerStatus : byte
     Running,
 
     /// <summary> Indicates the server has crashed. </summary>
-    Crashed
+    Crashed,
+
+    /// <summary> Indicates the server was terminated. </summary>
+    Terminated
 }

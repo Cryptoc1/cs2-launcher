@@ -6,9 +6,9 @@
     }
 
     ::deep body {
-        @apply backdrop-blur bg-ctp-base ctp-macchiato min-h-screen;
-        @apply bg-gradient-to-b from-ctp-crust/40 to-ctp-mantle/60;
+        @apply backdrop-blur bg-ctp-base bg-gradient-to-b from-ctp-crust/40 to-ctp-mantle/60 ctp-macchiato;
         @apply antialiased caret-ctp-rosewater font-normal font-sans leading-normal text-base text-ctp-text tracking-normal;
+        @apply grid grid-cols-1 grid-rows-layout min-h-screen;
 
         font-optical-sizing: auto;
         font-variation-settings: "wdth" 100, "YTLC" 500;
@@ -20,14 +20,14 @@
 
     ::deep button:not(.icon),
     ::deep a.btn:not(.icon) {
-        @apply bg-ctp-surface2 cursor-pointer drop-shadow-sm ease-in inline-block outline-none p-1 px-3 rounded-md ring-0 ring-ctp-pink/20 text-ctp-text transition;
+        @apply bg-ctp-surface2 cursor-pointer drop-shadow-sm ease-in inline-block outline-none p-1 px-3 rounded-md ring-0 ring-ctp-pink/40 text-ctp-text transition;
         @apply active:bg-ctp-overlay1 active:ring-1 active:shadow-md active:text-ctp-text;
         @apply focus:ring-1 focus-visible:ring-2 hover:ring-1 hover:shadow-sm;
     }
 
     ::deep button.icon,
     ::deep a.btn.icon {
-        @apply cursor-pointer ease-in inline-block flex outline-none p-1.5 ring-0 ring-ctp-pink/20 rounded-md text-ctp-text transition;
+        @apply cursor-pointer ease-in inline-block flex outline-none p-1.5 ring-0 ring-ctp-pink/40 rounded-md text-ctp-text transition;
         @apply active:!bg-ctp-base active:ring-1 active:shadow-md active:text-ctp-text;
         @apply focus:ring-1 focus-visible:ring-2 hover:bg-ctp-base hover:drop-shadow-sm hover:ring-1 hover:shadow-sm;
     }

@@ -10,7 +10,7 @@ internal sealed partial class DedicatedServer(
     ILogger<DedicatedServer> logger,
     IOptions<DedicatedServerOptions> optionsAccessor ) : BackgroundService, IAsyncDisposable, IDedicatedServer
 {
-    private readonly SemaphoreSlim processLock = new( 1, 1 );
+    private readonly SemaphoreSlim locker = new( 0, 1 );
     private DedicatedServerProcess? process;
 
     public override void Dispose( )
@@ -33,21 +33,22 @@ internal sealed partial class DedicatedServer(
             process = default;
         }
 
+        base.Dispose();
         GC.SuppressFinalize( this );
     }
 
-    protected override Task ExecuteAsync( CancellationToken cancellation )
+    protected override async Task ExecuteAsync( CancellationToken cancellation )
     {
         var options = optionsAccessor.Value;
         if( !options.Enabled )
         {
-            return Task.CompletedTask;
+            return;
         }
 
-        if( !(process = new DedicatedServerProcess( options, cancellation )).Start() )
+        if( !(process ??= new DedicatedServerProcess( options, cancellation )).Start() )
         {
             logger.FailedToStart( process.ExitCode );
-            return Task.CompletedTask;
+            return;
         }
 
         logger.ServerStarted();
@@ -57,20 +58,17 @@ internal sealed partial class DedicatedServer(
             process.BeginOutputReadLine();
         }
 
-        return process.WaitForExitAsync( cancellation );
+        await process.WaitForExitAsync( cancellation );
+        await locker.WaitAsync( cancellation );
+
+        await StartAsync( cancellation );
     }
 
-    public async ValueTask<ServerMetrics> Metrics( )
+    public async ValueTask<ServerMetrics> Metrics( CancellationToken cancellation )
     {
-        if( process is null || !await Refresh() )
+        if( process is null || !await process.Refresh( cancellation ) )
         {
             return ServerMetrics.Zero;
-        }
-
-        var status = AsServerStatus( process );
-        if( status is not (ServerStatus.Starting or ServerStatus.Running) )
-        {
-            return new( ServerMemoryMetrics.Zero, ServerProcessorMetrics.Zero, status );
         }
 
         return new(
@@ -78,49 +76,53 @@ internal sealed partial class DedicatedServer(
             {
                 Peak = new( process.PeakPagedMemorySize64, process.PeakVirtualMemorySize64, process.PeakWorkingSet64 )
             },
-            new( process.PrivilegedProcessorTime, process.TotalProcessorTime, process.UserProcessorTime ),
-            status );
+            new( process.PrivilegedProcessorTime, process.TotalProcessorTime, process.UserProcessorTime ) );
     }
 
-    private async ValueTask<bool> Refresh( CancellationToken cancellation = default )
+    public void Restart( )
     {
-        if( !optionsAccessor.Value.Enabled || process is null )
+        if( process?.IsRunning is true )
         {
-            return false;
+            process.Kill( true );
         }
 
-        await processLock.WaitAsync( cancellation );
-        try
-        {
-            process.Refresh();
-            return true;
-        }
-        finally
-        {
-            processLock.Release();
-        }
+        locker.Release();
     }
 
-    public async ValueTask<ServerStatus> Status( )
+    public async ValueTask<ServerStatus> Status( CancellationToken cancellation )
     {
-        if( process is null || !await Refresh() )
+        if( !optionsAccessor.Value.Enabled )
+        {
+            return ServerStatus.Disabled;
+        }
+
+        if( process is null )
         {
             return ServerStatus.NotStarted;
         }
 
-        return AsServerStatus( process );
-    }
-
-    private static ServerStatus AsServerStatus( DedicatedServerProcess process )
-    {
-        ArgumentNullException.ThrowIfNull( process );
+        await process.Refresh( cancellation );
         return process switch
         {
             not null and { IsRunning: true } => ServerStatus.Running,
+            not null and { HasExited: true, ExitCode: -1 } => ServerStatus.Terminated,
             not null and { HasExited: true } => ServerStatus.Crashed,
             not null => ServerStatus.Starting,
             null => ServerStatus.NotStarted,
         };
+    }
+
+    public void Terminate( )
+    {
+        if( process is null )
+        {
+            return;
+        }
+
+        if( process.IsRunning )
+        {
+            process.Kill( true );
+        }
     }
 }
 

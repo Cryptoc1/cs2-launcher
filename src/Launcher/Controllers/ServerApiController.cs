@@ -29,11 +29,27 @@ public sealed class ServerApiController( ILauncherApiClient api ) : ApiControlle
         return Ok( metrics );
     }
 
+    /// <summary> Restart the server. </summary>
+    [HttpPut( "restart" )]
+    public async Task<ActionResult<ServerStatus>> Restart( )
+    {
+        var status = await api.Server.Restart( HttpContext.RequestAborted );
+        return Ok( status );
+    }
+
     /// <summary> Retrieve the current status of the server. </summary>
     [HttpGet( "status" )]
     public async Task<ActionResult<ServerStatus>> Status( )
     {
         var status = await api.Server.Status( HttpContext.RequestAborted );
+        return Ok( status );
+    }
+
+    /// <summary> Terminate the server. </summary>
+    [HttpPut( "terminate" )]
+    public async Task<ActionResult<ServerStatus>> Terminate( )
+    {
+        var status = await api.Server.Terminate( HttpContext.RequestAborted );
         return Ok( status );
     }
 }

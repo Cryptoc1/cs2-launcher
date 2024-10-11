@@ -8,25 +8,33 @@
 
 <PageTitle>CS2Launcher: Maps</PageTitle>
 
-<main class="container mx-auto p-4 pt-8 lg:w-2/3">
-    <h1 class="font-bold mb-4 text-3xl">Change Map</h1>
+<PageMain Heading="Change Map">
     <p class="py-2">Use the following tool to change the current map on the server by entering the "Workshop Url", or "Workshop Id" of the desired map.</p>
     @if (!State.IsLoading)
     {
         <div class="my-2 lg:w-2/3">
             @if (!State.IsServerRunning)
             {
-                <Alert Heading="The server is not running!" Type="@AlertType.Critical" />
+                <Alert Type="@AlertType.Critical">
+                    <Heading>The server is not running!</Heading>
+                </Alert>
             }
 
             @if (State.IsMapChanged is true)
             {
-                <Alert Heading="Command Executed" Text="Please note that if the requested map is quite large (>1GB), it may take some time for the server to acquire assets before the change takes affect." />
+                <Alert>
+                    <Heading>Command Executed</Heading>
+                    <Content>
+                        <p>Please note that if the requested map is quite large (>1GB), it may take some time for the server to acquire assets before the change takes affect.</p>
+                    </Content>
+                </Alert>
             }
 
             @if (State.IsMapChanged is false)
             {
-                <Alert Heading="Command Failed to Execute" Type="@AlertType.Warning" />
+                <Alert Type="@AlertType.Warning">
+                    <Heading>Command Failed to Execute</Heading>
+                </Alert>
             }
         </div>
 
@@ -47,7 +55,7 @@
             <Loading />
         </div>
     }
-</main>
+</PageMain>
 
 @code {
 

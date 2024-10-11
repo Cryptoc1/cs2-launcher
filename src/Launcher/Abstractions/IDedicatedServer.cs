@@ -1,14 +1,19 @@
 using CS2Launcher.AspNetCore.App.Abstractions.Api;
-using Microsoft.Extensions.Hosting;
 
 namespace CS2Launcher.AspNetCore.Launcher.Abstractions;
 
-/// <summary> Describes the "Dedicated Server" Hosted Service. </summary>
-public interface IDedicatedServer : IHostedService
+/// <summary> Describes a service for interacting with the underlying dedicated server process. </summary>
+public interface IDedicatedServer
 {
-    /// <summary> Retrieve performance metrics for the server. </summary>
-    ValueTask<ServerMetrics> Metrics( );
+    /// <summary> Retrieve performance metrics of the server. </summary>
+    ValueTask<ServerMetrics> Metrics( CancellationToken cancellation );
+
+    /// <summary> Restart the underlying process of the server. </summary>
+    void Restart( );
 
     /// <summary> The current status of the server. </summary>
-    ValueTask<ServerStatus> Status( );
+    ValueTask<ServerStatus> Status( CancellationToken cancellation );
+
+    /// <summary> Terminate the underlying process of the server. </summary>
+    void Terminate( );
 }

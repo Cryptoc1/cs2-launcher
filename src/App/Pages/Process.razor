@@ -13,44 +13,68 @@
 
 <PageTitle>CS2Launcher: Process</PageTitle>
 
-<main class="container mx-auto p-4 pt-8 lg:w-2/3">
-    <h1 class="font-bold mb-4 text-3xl">Process</h1>
+<PageMain Heading="Server Process">
     @if (!State.IsLoading)
     {
-        <div class="gap-4 grid grid-cols-3 my-2">
-            <Alert class="col-span-3" Heading="Status" Type="@ToAlertType(State.Metrics.Status)">
-                <p>Server is <code class="bg-ctp-surface1 font-semibold p-0.5 px-1 rounded-sm text-sm">@State.Metrics.Status.ToString()</code></p>
+        <section class="gap-4 grid grid-cols-3 my-2">
+            <Alert class="col-span-3" Type="@ToAlertType(State.Status)">
+                <Heading>
+                    Server is
+                    @if (State.IsServerResetting)
+                    {
+                        <Loading />
+                    }
+                    else
+                    {
+                        <code class="bg-ctp-surface1 font-semibold p-0.5 px-1 rounded-sm text-sm">@State.Status.ToString()</code>
+                    }
+                </Heading>
+                <Content>
+                    <div class="flex flex-row py-2 space-x-2">
+                        <button type="button" @onclick="@OnRestartClicked" disabled="@(State.IsServerResetting || State.Status is ServerStatus.Disabled or ServerStatus.Starting)">@(State.Status is ServerStatus.Running ? "Restart" : "Start")</button>
+                        <button type="button" @onclick="@OnTerminateClicked" disabled="@(State.IsServerResetting || State.Status is ServerStatus.Disabled or not ServerStatus.Running)">Terminate</button>
+                    </div>
+                </Content>
             </Alert>
 
-            <Alert Heading="Memory" Icon="@IconName.Memory">
-                <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Paged)</p>
-                <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Virtual)</p>
-                <p>Working: @FormatGigaBytes(State.Metrics.Memory.Working)</p>
+            <Alert Icon="@IconName.Memory">
+                <Heading>Memory</Heading>
+                <Content>
+                    <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Paged)</p>
+                    <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Virtual)</p>
+                    <p>Working: @FormatGigaBytes(State.Metrics.Memory.Working)</p>
+                </Content>
             </Alert>
 
             @if (State.Metrics.Memory.Peak is not null)
             {
-                <Alert Heading="Memory (peak)" Icon="@IconName.MemoryAlt">
-                    <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Peak.Paged)</p>
-                    <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Peak.Virtual)</p>
-                    <p>Working: @FormatGigaBytes(State.Metrics.Memory.Peak.Working)</p>
+                <Alert Icon="@IconName.MemoryAlt">
+                    <Heading>Memory (peak)</Heading>
+                    <Content>
+                        <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Peak.Paged)</p>
+                        <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Peak.Virtual)</p>
+                        <p>Working: @FormatGigaBytes(State.Metrics.Memory.Peak.Working)</p>
+                    </Content>
                 </Alert>
             }
 
-            <Alert Heading="Processor Time" Icon="@IconName.Pace">
-                <p>Privileged: @FormatTime(State.Metrics.Processor.Privileged)</p>
-                <p>User: @FormatTime(State.Metrics.Processor.User)</p>
-                <p>Total: @FormatTime(State.Metrics.Processor.Total)</p>
+            <Alert Icon="@IconName.Pace">
+                <Heading>Processor Time</Heading>
+                <Content>
+                    <p>Privileged: @FormatTime(State.Metrics.Processor.Privileged)</p>
+                    <p>User: @FormatTime(State.Metrics.Processor.User)</p>
+                    <p>Total: @FormatTime(State.Metrics.Processor.Total)</p>
+                </Content>
             </Alert>
-        </div>
+        </section>
     }
     else
     {
-        <div class="flex flex-row py-2">
+        <section class="flex flex-row py-2">
             <Loading />
-        </div>
+        </section>
     }
-</main>
+</PageMain>
 
 @code {
 
@@ -77,24 +101,25 @@
     {
         if (firstRender)
         {
+            signaler = new(Navigation);
             signals = [signaler.On<MetricsSignals.Report>(OnMetricsReported)];
+
             return Mutate(state => ProcessState.Load(Api.Server, signaler, state));
         }
 
         return Task.CompletedTask;
     }
 
-    protected override void OnInitialized()
-    {
-        signaler = new(Navigation);
-    }
-
     private async Task OnMetricsReported(MetricsSignals.Report report) => await Mutate(state => ProcessState.OnReport(report, state));
+
+    private Task OnRestartClicked() => Mutate(state => ProcessState.RestartServer(Api.Server, state));
+
+    private Task OnTerminateClicked() => Mutate(state => ProcessState.StopServer(Api.Server, state));
 
     private static AlertType ToAlertType(ServerStatus status) => status switch
     {
         ServerStatus.Running => AlertType.Information,
-        ServerStatus.Crashed => AlertType.Critical,
+        ServerStatus.Crashed or ServerStatus.Disabled => AlertType.Critical,
         _ => AlertType.Warning
     };
 }

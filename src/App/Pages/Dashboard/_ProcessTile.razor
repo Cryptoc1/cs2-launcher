@@ -4,10 +4,10 @@
 
 @inject ILauncherApiClient Api
 
-<_Tile Icon="@IconName.Memory" Path="/process" Title="Process">
+<_Tile Icon="@IconName.Memory" Path="/process" Title="Server Process">
     @if (!State.IsLoading)
     {
-        <p class="text-sm">Server is <code class="bg-ctp-surface1 font-semibold p-0.5 px-1 rounded-sm text-xs">@State.Status.ToString()</code></p>
+        <p class="text-sm"><code class="bg-ctp-surface1 font-semibold p-0.5 px-1 rounded-sm text-xs">@State.Status.ToString()</code></p>
     }
     else
     {

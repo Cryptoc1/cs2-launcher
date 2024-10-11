@@ -13,7 +13,7 @@
 
 <PageTitle>CS2Launcher: Console - @(State.IsLoading ? "Connecting..." : State.Host ?? State.ConnectError)</PageTitle>
 
-<main class="font-medium font-mono min-h-full mx-auto overflow-y-auto p-2 scroll-smooth w-full" @onclick="@OnMainClicked">
+<main class="font-medium font-mono h-full mx-auto overflow-y-auto p-2 scroll-smooth w-full" @onclick="@OnMainClicked">
     @if (!State.IsLoading)
     {
         @if (!string.IsNullOrEmpty(State.ConnectError))
@@ -82,8 +82,6 @@
     private ConsoleSignaler signaler;
     private List<IDisposable>? signals;
 
-    private bool IsCommandInputFocused { get; set; }
-
     public async ValueTask DisposeAsync()
     {
         signals?.ForEach(signal => signal.Dispose());
@@ -100,6 +98,7 @@
     {
         if (firstRender)
         {
+            signaler = new(Navigation);
             signals = [signaler.On<ConsoleSignals.ConnectFailed>(OnConnectFailed),
 signaler.On<ConsoleSignals.Connected>(OnConnected),
 signaler.On<ConsoleSignals.ExecutedCommand>(OnExecutedCommand),
@@ -111,18 +110,14 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
         return Task.CompletedTask;
     }
 
-    private void OnCommandInputBlur()
-    {
-        IsCommandInputFocused = false;
-    }
+    private async Task OnCommandInputBlur() => await Mutate(state => state with { IsInputFocused = false });
 
     private async Task OnCommandInputFocus()
     {
-        IsCommandInputFocused = true;
         await Mutate(state =>
         {
             state.Form.Offset = 0;
-            return state;
+            return state with { IsInputFocused = true };
         });
     }
 
@@ -198,14 +193,9 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
         await TryFocusCommandInput();
     }
 
-    protected override void OnInitialized()
-    {
-        signaler = new(Navigation);
-    }
-
     private async Task OnMainClicked()
     {
-        if (commandInput?.Element.HasValue is true && !IsCommandInputFocused)
+        if (commandInput?.Element.HasValue is true && !State.IsInputFocused)
         {
             await TryFocusCommandInput();
         }

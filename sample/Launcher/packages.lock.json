@@ -12,8 +12,8 @@
       },
       "AspNet.Security.OpenId": {
         "type": "Transitive",
-        "resolved": "9.0.0-rc.2.24508.67",
-        "contentHash": "ZhKhYUoTA7MNPfcs2Cj2IDblVJqTn0hxJJ2bgJmRg7Cx9v1GNx5+uHM2PjT99RbmXxvW2gfuWLMNCIFraoMgNA==",
+        "resolved": "9.0.0-rc.2.24509.43",
+        "contentHash": "p4va3YueiiKBz2tzG2W2F45Rr8NWqP3Wfx/CwJIsJ0bH99/1UxkdtYxAoSIe5qUO4/Fve73VX6WF9+S5W67G2A==",
         "dependencies": {
           "AngleSharp": "1.1.2",
           "Microsoft.IdentityModel.Protocols": "8.0.0"
@@ -21,11 +21,11 @@
       },
       "AspNet.Security.OpenId.Steam": {
         "type": "Transitive",
-        "resolved": "9.0.0-rc.2.24508.67",
-        "contentHash": "0GnxRz4kLI6fTiDqIUATAyTHxLY1iYZkII76FAkElUYvZNgvEbcLn8VDvBe0YCEkpNsefoCObCL+TU6AIWiXlA==",
+        "resolved": "9.0.0-rc.2.24509.43",
+        "contentHash": "dH2tnljDSU/O9ROaqeun0Iu7ay9J1NZVIpTrB7ZMduNjzwp3loLEvJqfkXmHPErXFrpJl+4NbglnuFzjoITx8A==",
         "dependencies": {
           "AngleSharp": "1.1.2",
-          "AspNet.Security.OpenId": "9.0.0-rc.2.24508.67",
+          "AspNet.Security.OpenId": "9.0.0-rc.2.24509.43",
           "Microsoft.IdentityModel.Protocols": "8.0.0"
         }
       },
@@ -473,7 +473,7 @@
       "cs2launcher.aspnetcore.launcher": {
         "type": "Project",
         "dependencies": {
-          "AspNet.Security.OpenId.Steam": "[9.0.0-rc.2.24508.67, )",
+          "AspNet.Security.OpenId.Steam": "[9.0.0-rc.2.24509.43, )",
           "AspNetCore.HealthChecks.ApplicationStatus": "[8.0.1, )",
           "CS2Launcher.AspNetCore.App": "[1.0.0, )",
           "Microsoft.AspNetCore.Components.WebAssembly.Server": "[9.0.0-rc.*, )",

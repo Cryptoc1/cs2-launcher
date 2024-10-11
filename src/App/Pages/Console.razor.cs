@@ -16,6 +16,7 @@ public sealed record ConsoleState : State
     public ConsoleForm Form { get; init; } = new();
     public List<string> History { get; set; } = [];
     public string Host { get; init; }
+    public bool IsInputFocused { get; init; }
     public bool IsLoading { get; init; } = true;
 
     internal static async IAsyncEnumerable<ConsoleState> ExecuteCommand( ConsoleSignaler signaler, ConsoleState state )
