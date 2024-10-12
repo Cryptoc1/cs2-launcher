@@ -10,30 +10,31 @@ internal sealed partial class DedicatedServer(
     ILogger<DedicatedServer> logger,
     IOptions<DedicatedServerOptions> optionsAccessor ) : BackgroundService, IAsyncDisposable, IDedicatedServer
 {
-    private readonly SemaphoreSlim locker = new( 0, 1 );
+    private readonly SemaphoreSlim restartTrigger = new( 0, 1 );
+
+    private bool disposed;
     private DedicatedServerProcess? process;
 
     public override void Dispose( )
     {
-        base.Dispose();
-        if( process is not null )
-        {
-            process.Dispose();
-            process = default;
-        }
-
-        GC.SuppressFinalize( this );
     }
 
     public async ValueTask DisposeAsync( )
     {
+        if( disposed )
+        {
+            return;
+        }
+
+        base.Dispose();
+
         if( process is not null )
         {
             await process.DisposeAsync();
             process = default;
         }
 
-        base.Dispose();
+        disposed = true;
         GC.SuppressFinalize( this );
     }
 
@@ -45,48 +46,41 @@ internal sealed partial class DedicatedServer(
             return;
         }
 
-        if( !(process ??= new DedicatedServerProcess( options, cancellation )).Start() )
+        if( await (process ??= new( options )).Start( cancellation ) )
+        {
+            logger.ServerStarted();
+        }
+        else
         {
             logger.FailedToStart( process.ExitCode );
-            return;
         }
 
-        logger.ServerStarted();
-        if( options.RedirectOutput )
-        {
-            process.OutputDataReceived += ( _, args ) => logger.ServerStdOut( args.Data );
-            process.BeginOutputReadLine();
-        }
-
-        await process.WaitForExitAsync( cancellation );
-        await locker.WaitAsync( cancellation );
+        await process.WaitForExit( cancellation );
+        await restartTrigger.WaitAsync( cancellation );
 
         await StartAsync( cancellation );
     }
 
     public async ValueTask<ServerMetrics> Metrics( CancellationToken cancellation )
     {
-        if( process is null || !await process.Refresh( cancellation ) )
+        if( process?.IsRunning is not true )
         {
             return ServerMetrics.Zero;
         }
 
+        await process.Refresh( cancellation );
         return new(
-            new( process.PagedMemorySize64, process.VirtualMemorySize64, process.WorkingSet64 )
+            new( process.PagedMemory, process.VirtualMemory, process.WorkingMemory )
             {
-                Peak = new( process.PeakPagedMemorySize64, process.PeakVirtualMemorySize64, process.PeakWorkingSet64 )
+                Peak = new( process.PeakPagedMemory, process.PeakVirtualMemory, process.PeakWorkingMemory )
             },
-            new( process.PrivilegedProcessorTime, process.TotalProcessorTime, process.UserProcessorTime ) );
+            new( process.ThreadCount, new( process.PrivilegedProcessorTime, process.TotalProcessorTime, process.UserProcessorTime ) ) );
     }
 
-    public void Restart( )
+    public async ValueTask Restart( CancellationToken cancellation )
     {
-        if( process?.IsRunning is true )
-        {
-            process.Kill( true );
-        }
-
-        locker.Release();
+        await Terminate( cancellation );
+        restartTrigger.Release();
     }
 
     public async ValueTask<ServerStatus> Status( CancellationToken cancellation )
@@ -112,23 +106,14 @@ internal sealed partial class DedicatedServer(
         };
     }
 
-    public void Terminate( )
+    public async ValueTask Terminate( CancellationToken cancellation )
     {
-        if( process is null )
+        if( process?.IsRunning is true )
         {
-            return;
-        }
-
-        if( process.IsRunning )
-        {
-            process.Kill( true );
+            await process.Terminate( cancellation );
         }
     }
 }
-
-/// <summary> Represents an exception that occurs when the <see cref="DedicatedServerProcess"/> crashes. </summary>
-/// <param name="exitCode"> The exit code of the underlying process. </param>
-public sealed class DedicatedServerCrashedException( int exitCode ) : Exception( $"{exitCode}" );
 
 internal static partial class DedicatedServerLogging
 {
@@ -137,7 +122,4 @@ internal static partial class DedicatedServerLogging
 
     [LoggerMessage( 0, LogLevel.Information, "Started" )]
     public static partial void ServerStarted( this ILogger<DedicatedServer> logger );
-
-    [LoggerMessage( 100, LogLevel.Trace, "{stdout}" )]
-    public static partial void ServerStdOut( this ILogger<DedicatedServer> logger, string? stdout );
 }

@@ -64,13 +64,22 @@ public sealed record class ServerMemoryMetrics( long Paged, long Virtual, long W
 }
 
 /// <summary> Represents the server's process usage metrics. </summary>
+/// <param name="Threads"> The number of threads in use by the server process. </param>
+/// <param name="Timings"> The server process's timings. </param>
+public sealed record class ServerProcessorMetrics( int Threads, ServerProcessorTimings Timings )
+{
+    /// <summary> Represents metrics where each value is <c>0</c>. </summary>
+    public static readonly ServerProcessorMetrics Zero = new( 0, ServerProcessorTimings.Zero );
+}
+
+/// <summary> Represents the server's process timings. </summary>
 /// <param name="Privileged"> The privileged processor time. </param>
 /// <param name="Total"> The total processor time. </param>
 /// <param name="User"> The user processor time. </param>
-public sealed record class ServerProcessorMetrics( TimeSpan Privileged, TimeSpan Total, TimeSpan User )
+public sealed record class ServerProcessorTimings( TimeSpan Privileged, TimeSpan Total, TimeSpan User )
 {
-    /// <summary> Represents metrics where each value is <c>0</c>. </summary>
-    public static readonly ServerProcessorMetrics Zero = new( TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero );
+    /// <summary> Represents timings where each value is <c>0</c>. </summary>
+    public static readonly ServerProcessorTimings Zero = new( TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero );
 }
 
 /// <summary> Represents the status of the server. </summary>

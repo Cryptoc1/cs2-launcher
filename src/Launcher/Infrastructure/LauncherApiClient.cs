@@ -45,7 +45,7 @@ sealed file class ServerApi(
 
     public async Task<ServerStatus> Restart( CancellationToken cancellation )
     {
-        server.Restart();
+        await server.Restart( cancellation );
         return await server.Status( cancellation );
     }
 
@@ -53,7 +53,7 @@ sealed file class ServerApi(
 
     public async Task<ServerStatus> Terminate( CancellationToken cancellation = default )
     {
-        server.Terminate();
+        await server.Terminate( cancellation );
         return await server.Status( cancellation );
     }
 }

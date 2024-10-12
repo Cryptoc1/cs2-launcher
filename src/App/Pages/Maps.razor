@@ -6,55 +6,45 @@
 
 @inject ILauncherApiClient Api
 
-<PageTitle>CS2Launcher: Maps</PageTitle>
-
-<PageMain Heading="Change Map">
+<PageMain Heading="Change Map" IsLoading="@State.IsLoading">
     <p class="py-2">Use the following tool to change the current map on the server by entering the "Workshop Url", or "Workshop Id" of the desired map.</p>
-    @if (!State.IsLoading)
-    {
-        <div class="my-2 lg:w-2/3">
-            @if (!State.IsServerRunning)
-            {
-                <Alert Type="@AlertType.Critical">
-                    <Heading>The server is not running!</Heading>
-                </Alert>
-            }
 
-            @if (State.IsMapChanged is true)
-            {
-                <Alert>
-                    <Heading>Command Executed</Heading>
-                    <Content>
-                        <p>Please note that if the requested map is quite large (>1GB), it may take some time for the server to acquire assets before the change takes affect.</p>
-                    </Content>
-                </Alert>
-            }
+    <div class="my-2 lg:w-2/3">
+        @if (!State.IsServerRunning)
+        {
+            <Alert Type="@AlertType.Critical">
+                <Heading>The server is not running!</Heading>
+            </Alert>
+        }
 
-            @if (State.IsMapChanged is false)
-            {
-                <Alert Type="@AlertType.Warning">
-                    <Heading>Command Failed to Execute</Heading>
-                </Alert>
-            }
+        @if (State.IsMapChanged is true)
+        {
+            <Alert>
+                <Heading>Command Executed</Heading>
+                <Content>
+                    <p>Please note that if the requested map is quite large (>1GB), it may take some time for the server to acquire assets before the change takes affect.</p>
+                </Content>
+            </Alert>
+        }
+
+        @if (State.IsMapChanged is false)
+        {
+            <Alert Type="@AlertType.Warning">
+                <Heading>Command Failed to Execute</Heading>
+            </Alert>
+        }
+    </div>
+
+    <EditForm Model="@State.Parameters" OnValidSubmit="OnValidSubmit">
+        <FormValidator @ref="@validator" />
+
+        <div class="flex flex-col p-2 space-y-1">
+            <InputText @bind-Value="@State.Parameters.WorkshopId" disabled="@(!State.IsServerRunning)" placeholder="Workshop Id (e.g. 'https://steamcommunity.com/sharedfiles/filedetails/?id=3329258290', or '3329258290')" />
+            <ValidationMessage For="() => State.Parameters.WorkshopId" />
         </div>
 
-        <EditForm Model="@State.Parameters" OnValidSubmit="OnValidSubmit">
-            <FormValidator @ref="@validator" />
-
-            <div class="flex flex-col p-2 space-y-1">
-                <InputText @bind-Value="@State.Parameters.WorkshopId" disabled="@(!State.IsServerRunning)" placeholder="Workshop Id (e.g. 'https://steamcommunity.com/sharedfiles/filedetails/?id=3329258290', or '3329258290')" />
-                <ValidationMessage For="() => State.Parameters.WorkshopId" />
-            </div>
-
-            <button class="mt-2" type="submit" disabled="@(!State.IsServerRunning || State.IsMapChanged.HasValue || validator?.IsModelModified() is not true)">Change</button>
-        </EditForm>
-    }
-    else
-    {
-        <div class="flex flex-row py-2">
-            <Loading />
-        </div>
-    }
+        <button class="mt-2" type="submit" disabled="@(!State.IsServerRunning || State.IsMapChanged.HasValue || validator?.IsModelModified() is not true)">Change</button>
+    </EditForm>
 </PageMain>
 
 @code {

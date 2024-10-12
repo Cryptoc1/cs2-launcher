@@ -1,4 +1,3 @@
-@using System.Diagnostics.CodeAnalysis
 @using CS2Launcher.AspNetCore.App.Abstractions.Api
 @using CS2Launcher.AspNetCore.App.Abstractions.Signals
 @using CS2Launcher.AspNetCore.App.Infrastructure
@@ -11,69 +10,59 @@
 @inject ILauncherApiClient Api
 @inject NavigationManager Navigation
 
-<PageTitle>CS2Launcher: Process</PageTitle>
+<PageMain Heading="Server Process" IsLoading="@State.IsLoading">
+    <section class="gap-4 grid grid-cols-3 my-2">
+        <Alert class="col-span-3" Type="@ToAlertType(State.Status)">
+            <Heading>
+                Server is
+                @if (State.IsServerResetting)
+                {
+                    <Loading />
+                }
+                else
+                {
+                    <code class="bg-ctp-surface1 font-semibold p-0.5 px-1 rounded-sm text-sm">@State.Status.ToString()</code>
+                }
+            </Heading>
+            <Content>
+                <div class="flex flex-row py-2 space-x-2">
+                    <button type="button" @onclick="@OnRestartClicked" disabled="@(State.IsServerResetting || State.Status is ServerStatus.Disabled or ServerStatus.Starting)">@(State.Status is ServerStatus.Running ? "Restart" : "Start")</button>
+                    <button type="button" @onclick="@OnTerminateClicked" disabled="@(State.IsServerResetting || State.Status is ServerStatus.Disabled or not ServerStatus.Running)">Terminate</button>
+                </div>
+            </Content>
+        </Alert>
 
-<PageMain Heading="Server Process">
-    @if (!State.IsLoading)
-    {
-        <section class="gap-4 grid grid-cols-3 my-2">
-            <Alert class="col-span-3" Type="@ToAlertType(State.Status)">
-                <Heading>
-                    Server is
-                    @if (State.IsServerResetting)
-                    {
-                        <Loading />
-                    }
-                    else
-                    {
-                        <code class="bg-ctp-surface1 font-semibold p-0.5 px-1 rounded-sm text-sm">@State.Status.ToString()</code>
-                    }
-                </Heading>
+        <Alert Icon="@IconName.Memory">
+            <Heading>Memory</Heading>
+            <Content>
+                <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Paged)</p>
+                <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Virtual)</p>
+                <p>Working: @FormatGigaBytes(State.Metrics.Memory.Working)</p>
+            </Content>
+        </Alert>
+
+        @if (State.Metrics.Memory.Peak is not null)
+        {
+            <Alert Icon="@IconName.MemoryAlt">
+                <Heading>Memory (peak)</Heading>
                 <Content>
-                    <div class="flex flex-row py-2 space-x-2">
-                        <button type="button" @onclick="@OnRestartClicked" disabled="@(State.IsServerResetting || State.Status is ServerStatus.Disabled or ServerStatus.Starting)">@(State.Status is ServerStatus.Running ? "Restart" : "Start")</button>
-                        <button type="button" @onclick="@OnTerminateClicked" disabled="@(State.IsServerResetting || State.Status is ServerStatus.Disabled or not ServerStatus.Running)">Terminate</button>
-                    </div>
+                    <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Peak.Paged)</p>
+                    <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Peak.Virtual)</p>
+                    <p>Working: @FormatGigaBytes(State.Metrics.Memory.Peak.Working)</p>
                 </Content>
             </Alert>
+        }
 
-            <Alert Icon="@IconName.Memory">
-                <Heading>Memory</Heading>
-                <Content>
-                    <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Paged)</p>
-                    <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Virtual)</p>
-                    <p>Working: @FormatGigaBytes(State.Metrics.Memory.Working)</p>
-                </Content>
-            </Alert>
-
-            @if (State.Metrics.Memory.Peak is not null)
-            {
-                <Alert Icon="@IconName.MemoryAlt">
-                    <Heading>Memory (peak)</Heading>
-                    <Content>
-                        <p>Paged: @FormatGigaBytes(State.Metrics.Memory.Peak.Paged)</p>
-                        <p>Virtual: @FormatGigaBytes(State.Metrics.Memory.Peak.Virtual)</p>
-                        <p>Working: @FormatGigaBytes(State.Metrics.Memory.Peak.Working)</p>
-                    </Content>
-                </Alert>
-            }
-
-            <Alert Icon="@IconName.Pace">
-                <Heading>Processor Time</Heading>
-                <Content>
-                    <p>Privileged: @FormatTime(State.Metrics.Processor.Privileged)</p>
-                    <p>User: @FormatTime(State.Metrics.Processor.User)</p>
-                    <p>Total: @FormatTime(State.Metrics.Processor.Total)</p>
-                </Content>
-            </Alert>
-        </section>
-    }
-    else
-    {
-        <section class="flex flex-row py-2">
-            <Loading />
-        </section>
-    }
+        <Alert Icon="@IconName.Pace">
+            <Heading>Processor</Heading>
+            <Content>
+                <p>Privileged Time: @FormatTime(State.Metrics.Processor.Timings.Privileged)</p>
+                <p>User Time: @FormatTime(State.Metrics.Processor.Timings.User)</p>
+                <p>Total Time: @FormatTime(State.Metrics.Processor.Timings.Total)</p>
+                <p>Threads: @State.Metrics.Processor.Threads</p>
+            </Content>
+        </Alert>
+    </section>
 </PageMain>
 
 @code {

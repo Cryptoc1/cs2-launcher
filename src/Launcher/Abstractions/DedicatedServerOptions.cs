@@ -48,9 +48,6 @@ public sealed class DedicatedServerOptions
     /// <summary> The RCON password the launch with. </summary>
     public string? RconPassword { get; set; }
 
-    /// <summary> Whether stdout of the underlying process should be redirected. </summary>
-    public bool RedirectOutput { get; set; } = true;
-
     /// <summary> The name of the system user to run the underlying process as. </summary>
     public string? SystemUser { get; set; }
 

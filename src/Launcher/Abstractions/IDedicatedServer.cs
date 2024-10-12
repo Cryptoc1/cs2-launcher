@@ -9,11 +9,11 @@ public interface IDedicatedServer
     ValueTask<ServerMetrics> Metrics( CancellationToken cancellation );
 
     /// <summary> Restart the underlying process of the server. </summary>
-    void Restart( );
+    ValueTask Restart( CancellationToken cancellation );
 
     /// <summary> The current status of the server. </summary>
     ValueTask<ServerStatus> Status( CancellationToken cancellation );
 
     /// <summary> Terminate the underlying process of the server. </summary>
-    void Terminate( );
+    ValueTask Terminate( CancellationToken cancellation );
 }

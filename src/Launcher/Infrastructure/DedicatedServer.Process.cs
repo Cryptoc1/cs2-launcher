@@ -1,55 +1,48 @@
 using System.Diagnostics;
-using System.Text;
 using CS2Launcher.AspNetCore.Launcher.Abstractions;
 
 namespace CS2Launcher.AspNetCore.Launcher.Infrastructure;
 
-internal sealed class DedicatedServerProcess : Process, IAsyncDisposable
+internal sealed class DedicatedServerProcess : IAsyncDisposable
 {
+    private readonly SemaphoreSlim locker = new( 1, 1 );
+    private readonly ProcessPriorityClass priority;
+    private readonly Process process;
+
+    public int ExitCode => process.ExitCode;
+    public bool HasExited => process.HasExited;
     public bool IsRunning => IsStarted && !HasExited;
     public bool IsStarted { get; private set; }
 
-    private readonly CancellationTokenRegistration cancellation;
-    private readonly SemaphoreSlim locker = new( 1, 1 );
-    private readonly ProcessPriorityClass priority;
+    public long PagedMemory => process.PagedMemorySize64;
+    public long PeakPagedMemory => process.PeakPagedMemorySize64;
 
-    public DedicatedServerProcess( DedicatedServerOptions options, CancellationToken cancellation )
+    public long VirtualMemory => process.VirtualMemorySize64;
+    public long PeakVirtualMemory => process.PeakVirtualMemorySize64;
+
+    public long WorkingMemory => process.WorkingSet64;
+    public long PeakWorkingMemory => process.PeakWorkingSet64;
+
+    public TimeSpan PrivilegedProcessorTime => process.PrivilegedProcessorTime;
+    public TimeSpan TotalProcessorTime => process.TotalProcessorTime;
+    public TimeSpan UserProcessorTime => process.UserProcessorTime;
+
+    public int ThreadCount => process.Threads.Count;
+
+    public DedicatedServerProcess( DedicatedServerOptions options )
     {
-        this.cancellation = cancellation.Register( OnCancellation, this );
         priority = options.ProcessPriority;
-
-        EnableRaisingEvents = false;
-        StartInfo = new( options.Program )
+        process = new()
         {
-            Arguments = BuildArguments( options ),
-            CreateNoWindow = true,
-            WindowStyle = ProcessWindowStyle.Minimized
-        };
-
-        if( options.RedirectOutput )
-        {
-            StartInfo.RedirectStandardError = true;
-            StartInfo.RedirectStandardOutput = true;
-            StartInfo.StandardErrorEncoding = Encoding.UTF8;
-            StartInfo.StandardOutputEncoding = Encoding.UTF8;
-            StartInfo.UseShellExecute = false;
-        }
-
-        if( !string.IsNullOrEmpty( options.SystemUser ) )
-        {
-            StartInfo.UserName = options.SystemUser;
-        }
-
-        if( !string.IsNullOrEmpty( options.WorkingDirectory ) )
-        {
-            StartInfo.WorkingDirectory = Path.GetFullPath( options.WorkingDirectory );
-        }
-
-        static void OnCancellation( object? state )
-        {
-            if( state is DedicatedServerProcess process && process.IsRunning )
+            EnableRaisingEvents = false,
+            StartInfo = new( options.Program )
             {
-                process.Kill( true );
+                Arguments = BuildArguments( options ),
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                UserName = options.SystemUser,
+                WindowStyle = ProcessWindowStyle.Minimized,
+                WorkingDirectory = !string.IsNullOrEmpty( options.WorkingDirectory ) ? Path.GetFullPath( options.WorkingDirectory ) : default
             }
         };
     }
@@ -88,63 +81,76 @@ internal sealed class DedicatedServerProcess : Process, IAsyncDisposable
         return arguments.Build();
     }
 
-    protected override void Dispose( bool disposing )
-    {
-        if( disposing )
-        {
-            if( IsRunning )
-            {
-                // NOTE: ensure child processes are disposed
-                Kill( true );
-            }
-
-            cancellation.Dispose();
-            locker.Dispose();
-        }
-
-        base.Dispose( disposing );
-    }
-
     public async ValueTask DisposeAsync( )
     {
-        await cancellation.DisposeAsync();
+        await Terminate();
 
         locker.Dispose();
-        base.Dispose( true );
+        process.Dispose();
 
         GC.SuppressFinalize( this );
     }
 
-    public async ValueTask<bool> Refresh( CancellationToken cancellation = default )
+    public async ValueTask Refresh( CancellationToken cancellation = default )
     {
-        if( !IsRunning )
+        if( IsRunning )
         {
-            return false;
+            await locker.WaitAsync( cancellation );
+            try
+            {
+                process.Refresh();
+            }
+            finally
+            {
+                locker.Release();
+            }
+        }
+    }
+
+    public async ValueTask<bool> Start( CancellationToken cancellation )
+    {
+        if( IsRunning )
+        {
+            await Refresh( cancellation );
+            return true;
         }
 
         await locker.WaitAsync( cancellation );
         try
         {
-            base.Refresh();
-            return true;
+            if( IsStarted = process.Start() )
+            {
+                process.PriorityBoostEnabled = true;
+                if( OperatingSystem.IsWindows() )
+                {
+                    process.PriorityClass = priority;
+                }
+            }
         }
         finally
         {
             locker.Release();
         }
-    }
 
-    public new bool Start( )
-    {
-        if( IsStarted = base.Start() )
-        {
-            PriorityBoostEnabled = true;
-            if( OperatingSystem.IsWindows() )
-            {
-                PriorityClass = priority;
-            }
-        }
-
+        await Refresh( cancellation );
         return IsStarted;
     }
+
+    public async ValueTask Terminate( CancellationToken cancellation = default )
+    {
+        if( IsRunning )
+        {
+            await locker.WaitAsync( cancellation );
+            try
+            {
+                process.Kill( true );
+            }
+            finally
+            {
+                locker.Release();
+            }
+        }
+    }
+
+    public Task WaitForExit( CancellationToken cancellation = default ) => process.WaitForExitAsync( cancellation );
 }

@@ -1,5 +1,5 @@
 export function focusAndSelectEnd(element) {
-  element.scrollIntoView({ behavior: "smooth" });
+  element.scrollIntoView({ behavior: 'smooth' });
   element.focus();
 
   if (!!element.value) {

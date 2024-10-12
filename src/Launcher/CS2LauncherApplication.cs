@@ -190,7 +190,7 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
             .AddCookie()
             .AddSteam();
 
-        Services.AddTransient<IMetricsHubSubscriber, MetricsHubSubscriber>()
+        Services.AddSingleton<IMetricsHubSubscriber, MetricsHubSubscriber>()
             .AddSignalR()
             .AddJsonProtocol();
 
