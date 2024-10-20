@@ -523,12 +523,12 @@
     "net9.0": {
       "AspNet.Security.OpenId.Steam": {
         "type": "Direct",
-        "requested": "[9.0.0-rc.2.24509.43, )",
-        "resolved": "9.0.0-rc.2.24509.43",
-        "contentHash": "dH2tnljDSU/O9ROaqeun0Iu7ay9J1NZVIpTrB7ZMduNjzwp3loLEvJqfkXmHPErXFrpJl+4NbglnuFzjoITx8A==",
+        "requested": "[9.0.0-rc.2.24515.38, )",
+        "resolved": "9.0.0-rc.2.24515.38",
+        "contentHash": "BTFsrGbIGlKy4yKY0iq4EPz+ZVtlO5kqBhIkTM3Sw4K8vwfqu5yrLpDn2Z4zcpypKoPnOuNTb0s+lloPSiWkxg==",
         "dependencies": {
           "AngleSharp": "1.1.2",
-          "AspNet.Security.OpenId": "9.0.0-rc.2.24509.43",
+          "AspNet.Security.OpenId": "9.0.0-rc.2.24515.38",
           "Microsoft.IdentityModel.Protocols": "8.0.0"
         }
       },
@@ -592,8 +592,8 @@
       },
       "AspNet.Security.OpenId": {
         "type": "Transitive",
-        "resolved": "9.0.0-rc.2.24509.43",
-        "contentHash": "p4va3YueiiKBz2tzG2W2F45Rr8NWqP3Wfx/CwJIsJ0bH99/1UxkdtYxAoSIe5qUO4/Fve73VX6WF9+S5W67G2A==",
+        "resolved": "9.0.0-rc.2.24515.38",
+        "contentHash": "ArotFF4WLUdzQ4+Z2ptwrSkpwaih8l0Q+pVQxtDRg0xyV2k2iiGwihNwG6TBzF0tnxFntAq+Fi8eFZYQ0sOwrA==",
         "dependencies": {
           "AngleSharp": "1.1.2",
           "Microsoft.IdentityModel.Protocols": "8.0.0"
