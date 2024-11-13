@@ -485,7 +485,7 @@
         "type": "Project",
         "dependencies": {
           "CS2Launcher.AspNetCore.App": "[1.0.0, )",
-          "Microsoft.AspNetCore.Components.WebAssembly": "[9.0.0-rc.*, )"
+          "Microsoft.AspNetCore.Components.WebAssembly": "[9.0.0, )"
         }
       }
     },

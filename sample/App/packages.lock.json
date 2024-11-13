@@ -4,7 +4,7 @@
     "net9.0": {
       "Microsoft.AspNetCore.Components.WebAssembly": {
         "type": "Direct",
-        "requested": "[9.0.0-rc.*, )",
+        "requested": "[9.0.0, )",
         "resolved": "9.0.0",
         "contentHash": "RwDygFGa1NdKh7N4S6P2xgxB0LeluLss/iZRdNnmOwN1zgpdLH9AnCnTIgDBAW7rhDjcPGrcjsDLNivwDRYwEQ==",
         "dependencies": {
