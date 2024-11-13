@@ -1,25 +1,5 @@
 <Project>
 
-  <PropertyGroup Condition=" '$(IsTestProject)' == 'true' ">
-    <MinVerSkip>true</MinVerSkip>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
-    <PackageReference Include="coverlet.collector" Version="6.0.2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-    <PackageReference Include="xunit" Version="2.8.0" />
-    <PackageReference Include="xunit.runner.console" Version="2.8.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.0" />
-
-    <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(IsBenchmarkProject)' == 'true' ">
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
-
-    <Using Include="BenchmarkDotNet.Attributes" />
-  </ItemGroup>
-
   <ItemGroup Condition=" '$(RunAnalyzers)' == 'true' ">
     <!-- Include editorconfig (Visual Studio expects editorconfigs in the root of projects). More info here: https://docs.microsoft.com/en-us/visualstudio/ide/create-portable-custom-editor-options?view=vs-2019#file-hierarchy-and-precedence -->
     <AdditionalFiles Include="$(SourceDirectory)\..\.editorconfig" Visible="false" />
