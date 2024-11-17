@@ -17,20 +17,19 @@ internal abstract class Signaler( Action<IHubConnectionBuilder> configure ) : IA
     {
     }
 
-    private static Func<HubConnection> ConnectionFactory( Action<IHubConnectionBuilder> configure )
-        => ( ) =>
-        {
-            var builder = new HubConnectionBuilder()
-                .AddJsonProtocol( options => options.PayloadSerializerOptions.TypeInfoResolverChain.Add( AppJsonContext.Default ) )
+    private static Func<HubConnection> ConnectionFactory( Action<IHubConnectionBuilder> configure ) => ( ) =>
+    {
+        var builder = new HubConnectionBuilder()
+            .AddJsonProtocol( options => options.PayloadSerializerOptions.TypeInfoResolverChain.Add( AppJsonContext.Default ) )
 #if DEBUG
-                .ConfigureLogging( logging => logging.SetMinimumLevel( LogLevel.Debug ) )
+            .ConfigureLogging( logging => logging.SetMinimumLevel( LogLevel.Debug ) )
 #endif
-                .WithAutomaticReconnect()
-                .WithStatefulReconnect();
+            .WithAutomaticReconnect()
+            .WithStatefulReconnect();
 
-            configure( builder );
-            return builder.Build();
-        };
+        configure( builder );
+        return builder.Build();
+    };
 
     public async ValueTask DisposeAsync( )
     {

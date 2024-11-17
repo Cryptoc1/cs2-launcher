@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ESCd.Extensions.Http" Version="1.0.1-rc.*" />
+    <PackageReference Include="ESCd.Extensions.Http" Version="1.0.3-rc.*" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="$(AspNetCoreVersion)" />
   </ItemGroup>
