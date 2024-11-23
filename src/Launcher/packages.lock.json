@@ -80,8 +80,8 @@
       },
       "ESCd.Extensions.Http": {
         "type": "Transitive",
-        "resolved": "1.0.3-rc.0.2",
-        "contentHash": "7U9V0pyPKyAgi6xbpWmCUqjNHVEmMQQjHLg7XBjqcDyiGmppaQV3TsvyWyGQlmQpWmP7zVc/gSFvEQJNPjAJRA==",
+        "resolved": "1.0.3",
+        "contentHash": "BgGzIhmwPrvJGhLMdI28YHQRXC0tb9wyzqW2G2pPLQUu0XRm4nZzctYK3jJnC44EKiZF9Y44mH2F4oFmfyTOQw==",
         "dependencies": {
           "Microsoft.Extensions.Http": "8.0.1",
           "Microsoft.Extensions.ObjectPool": "8.0.11",
@@ -513,7 +513,7 @@
       "cs2launcher.aspnetcore.app": {
         "type": "Project",
         "dependencies": {
-          "ESCd.Extensions.Http": "[1.0.3-rc.*, )",
+          "ESCd.Extensions.Http": "[1.0.3, )",
           "Microsoft.AspNetCore.Components.WebAssembly": "[8.0.11, )",
           "Microsoft.AspNetCore.SignalR.Client": "[8.0.11, )",
           "System.Text.Json": "[8.0.5, )"
@@ -601,8 +601,8 @@
       },
       "ESCd.Extensions.Http": {
         "type": "Transitive",
-        "resolved": "1.0.3-rc.0.2",
-        "contentHash": "7U9V0pyPKyAgi6xbpWmCUqjNHVEmMQQjHLg7XBjqcDyiGmppaQV3TsvyWyGQlmQpWmP7zVc/gSFvEQJNPjAJRA==",
+        "resolved": "1.0.3",
+        "contentHash": "BgGzIhmwPrvJGhLMdI28YHQRXC0tb9wyzqW2G2pPLQUu0XRm4nZzctYK3jJnC44EKiZF9Y44mH2F4oFmfyTOQw==",
         "dependencies": {
           "Microsoft.Extensions.Http": "9.0.0",
           "Microsoft.Extensions.ObjectPool": "9.0.0",
@@ -1037,7 +1037,7 @@
       "cs2launcher.aspnetcore.app": {
         "type": "Project",
         "dependencies": {
-          "ESCd.Extensions.Http": "[1.0.3-rc.*, )",
+          "ESCd.Extensions.Http": "[1.0.3, )",
           "Microsoft.AspNetCore.Components.WebAssembly": "[9.0.0, )",
           "Microsoft.AspNetCore.SignalR.Client": "[9.0.0, )",
           "System.Text.Json": "[9.0.0-rc.*, )"
