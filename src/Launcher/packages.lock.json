@@ -1040,7 +1040,7 @@
           "ESCd.Extensions.Http": "[1.0.3, )",
           "Microsoft.AspNetCore.Components.WebAssembly": "[9.0.0, )",
           "Microsoft.AspNetCore.SignalR.Client": "[9.0.0, )",
-          "System.Text.Json": "[9.0.0-rc.*, )"
+          "System.Text.Json": "[9.0.0, )"
         }
       }
     }
