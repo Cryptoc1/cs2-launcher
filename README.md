@@ -1,6 +1,14 @@
 # CS2 Launcher
 
+![Language](https://img.shields.io/github/languages/top/cryptoc1/cs2-launcher)
+[![Checks](https://img.shields.io/github/checks-status/cryptoc1/cs2-launcher/develop)](https://github.com/Cryptoc1/cs2-launcher/actions/workflows/default.yml)
+
 A .NET Generic Host Builder for running CS2 Dedicated Servers.
+
+|                                   |                                                                                                                                                 |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CS2Launcher.AspNetCore.App`      | [![Version](https://img.shields.io/nuget/vpre/CS2Launcher.AspNetCore.App)](https://www.nuget.org/packages/CS2Launcher.AspNetCore.App)           |
+| `CS2Launcher.AspNetCore.Launcher` | [![Version](https://img.shields.io/nuget/vpre/CS2Launcher.AspNetCore.Launcher)](https://www.nuget.org/packages/CS2Launcher.AspNetCore.Launcher) |
 
 ## Getting Started
 
