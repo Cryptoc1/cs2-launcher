@@ -30,7 +30,7 @@
 
     <!-- net8.0 -->
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-    <AspNetCoreVersion>8.0.12</AspNetCoreVersion>
+    <AspNetCoreVersion>9.0.2</AspNetCoreVersion>
     <AspNetCoreVersion Condition=" '$(TargetFramework)' == 'net9.0' ">9.0.1</AspNetCoreVersion>
   </PropertyGroup>
 
