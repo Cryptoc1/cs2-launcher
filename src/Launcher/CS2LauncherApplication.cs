@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using CS2Launcher.AspNetCore.App;
+using CS2Launcher.AspNetCore.App.Abstractions.Api;
 using CS2Launcher.AspNetCore.App.Hosting;
 using CS2Launcher.AspNetCore.Launcher.Abstractions;
 using CS2Launcher.AspNetCore.Launcher.Authorization;
 using CS2Launcher.AspNetCore.Launcher.Configuration;
 using CS2Launcher.AspNetCore.Launcher.Hosting;
-using HealthChecks.ApplicationStatus.DependencyInjection;
+using CS2Launcher.AspNetCore.Launcher.Hubs;
+using CS2Launcher.AspNetCore.Launcher.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -19,9 +21,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.Metrics;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using CS2Launcher.AspNetCore.Launcher.Infrastructure;
-using CS2Launcher.AspNetCore.App.Abstractions.Api;
-using CS2Launcher.AspNetCore.Launcher.Hubs;
 
 namespace CS2Launcher.AspNetCore.Launcher;
 
@@ -61,7 +60,7 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
             .AddRouting( options => options.LowercaseUrls = true );
 
         builder.Services.AddHealthChecks()
-            .AddApplicationStatus()
+            .AddApplicationLifecycleHealthCheck()
             .AddCheck<DedicatedServerHealthCheck>( nameof( DedicatedServer ) );
 
         builder.Services.AddSingleton<DedicatedServer>()
