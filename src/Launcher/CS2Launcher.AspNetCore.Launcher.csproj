@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Common" Version="9.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Common" Version="9.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,8 +35,8 @@
     <PackageReference Include="AspNet.Security.OpenId.Steam" Version="9.0.0" />
 
     <!-- NOTE: force transitive deps of CoreRCON, since `PrivateAssets` is used to prevent generated a dependency key on nuget -->
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.2" />
-    <PackageReference Include="System.IO.Pipelines" Version="9.0.2" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.3" />
+    <PackageReference Include="System.IO.Pipelines" Version="9.0.3" />
   </ItemGroup>
 
   <Target DependsOnTargets="BuildOnlySettings;ResolveReferences" Name="CopyProjectReferencesToPackage">

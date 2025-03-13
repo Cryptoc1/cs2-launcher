@@ -9,7 +9,7 @@
     <Nullable>enable</Nullable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <TargetFramework>net9.0</TargetFramework>
-    <AspNetCoreVersion>9.0.2</AspNetCoreVersion>
+    <AspNetCoreVersion>9.0.3</AspNetCoreVersion>
   </PropertyGroup>
 
 </Project>
