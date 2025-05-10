@@ -84,11 +84,11 @@
       },
       "ESCd.Extensions.Http": {
         "type": "Transitive",
-        "resolved": "1.0.6",
-        "contentHash": "Ao6WuyKm6k0E57e/NSZCnL6TuDeF0DkYK1ei9T7oS+sbETuiShZHNxWa3H4z+MFFh9SXevScEzjuNpyRnd5EPA==",
+        "resolved": "1.0.7",
+        "contentHash": "VYZuHBtabDkhksK3x+HJkC5zgwEqXO6ghQz8sIYGm4dkwr0wTSZR0oUSajE1RNkdrHaiXazn9I9l75fsd1Icrg==",
         "dependencies": {
           "Microsoft.Extensions.Http": "8.0.1",
-          "Microsoft.Extensions.ObjectPool": "8.0.13",
+          "Microsoft.Extensions.ObjectPool": "8.0.15",
           "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
           "System.Net.Http.Json": "8.0.1",
           "System.Text.Json": "8.0.5"
@@ -537,7 +537,7 @@
       "cs2launcher.aspnetcore.app": {
         "type": "Project",
         "dependencies": {
-          "ESCd.Extensions.Http": "[1.0.6, )",
+          "ESCd.Extensions.Http": "[1.0.7, )",
           "Microsoft.AspNetCore.Components.WebAssembly": "[8.0.15, )",
           "Microsoft.AspNetCore.SignalR.Client": "[8.0.15, )",
           "System.Text.Json": "[8.0.5, )"
@@ -629,14 +629,14 @@
       },
       "ESCd.Extensions.Http": {
         "type": "Transitive",
-        "resolved": "1.0.6",
-        "contentHash": "Ao6WuyKm6k0E57e/NSZCnL6TuDeF0DkYK1ei9T7oS+sbETuiShZHNxWa3H4z+MFFh9SXevScEzjuNpyRnd5EPA==",
+        "resolved": "1.0.7",
+        "contentHash": "VYZuHBtabDkhksK3x+HJkC5zgwEqXO6ghQz8sIYGm4dkwr0wTSZR0oUSajE1RNkdrHaiXazn9I9l75fsd1Icrg==",
         "dependencies": {
-          "Microsoft.Extensions.Http": "9.0.2",
-          "Microsoft.Extensions.ObjectPool": "9.0.2",
+          "Microsoft.Extensions.Http": "9.0.4",
+          "Microsoft.Extensions.ObjectPool": "9.0.4",
           "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
-          "System.Net.Http.Json": "9.0.2",
-          "System.Text.Json": "9.0.2"
+          "System.Net.Http.Json": "9.0.4",
+          "System.Text.Json": "9.0.4"
         }
       },
       "Microsoft.AspNetCore.Authorization": {
@@ -917,15 +917,15 @@
       },
       "Microsoft.Extensions.Http": {
         "type": "Transitive",
-        "resolved": "9.0.2",
-        "contentHash": "34+kcwxPZr3Owk9eZx268+gqGNB8G/8Y96gZHomxam0IOH08FhPBjPrLWDtKdVn4+sVUUJnJMpECSTJi4XXCcg==",
+        "resolved": "9.0.4",
+        "contentHash": "ezelU6HJgmq4862YoWuEbHGSV+JnfnonTSbNSJVh6n6wDehyiJn4hBtcK7rGbf2KO3QeSvK5y8E7uzn1oaRH5w==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "9.0.2",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
-          "Microsoft.Extensions.Diagnostics": "9.0.2",
-          "Microsoft.Extensions.Logging": "9.0.2",
-          "Microsoft.Extensions.Logging.Abstractions": "9.0.2",
-          "Microsoft.Extensions.Options": "9.0.2"
+          "Microsoft.Extensions.Configuration.Abstractions": "9.0.4",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.4",
+          "Microsoft.Extensions.Diagnostics": "9.0.4",
+          "Microsoft.Extensions.Logging": "9.0.4",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.4",
+          "Microsoft.Extensions.Options": "9.0.4"
         }
       },
       "Microsoft.Extensions.Logging": {
@@ -1042,8 +1042,8 @@
       },
       "System.Net.Http.Json": {
         "type": "Transitive",
-        "resolved": "9.0.2",
-        "contentHash": "d5wtk+Xc5xRa+rZT4sz+RNp+u6qQrx4DSS8zOTfhelYbW6FFWHv3k/qwdj2j0FArZCoCVBTlyOEBvVX2j7C8pw=="
+        "resolved": "9.0.4",
+        "contentHash": "t34SoSx8l/O5kv7IwYXENjQOTpVKFkH3ydZejcZCsNsymthJrdCguvHFcbP3ayeBOXdm4Bq8bhmVGCgr0RXIQg=="
       },
       "System.Net.ServerSentEvents": {
         "type": "Transitive",
@@ -1085,7 +1085,7 @@
       "cs2launcher.aspnetcore.app": {
         "type": "Project",
         "dependencies": {
-          "ESCd.Extensions.Http": "[1.0.6, )",
+          "ESCd.Extensions.Http": "[1.0.7, )",
           "Microsoft.AspNetCore.Components.WebAssembly": "[9.0.4, )",
           "Microsoft.AspNetCore.SignalR.Client": "[9.0.4, )",
           "System.Text.Json": "[9.0.4, )"
