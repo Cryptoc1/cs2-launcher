@@ -1,0 +1,9 @@
+<Project>
+
+  <Target Name="_RestoreNpmPackages" BeforeTargets="Restore" AfterTargets="_GetAllRestoreProjectPathItems" Returns="@(_NpmRestoreOutputs)">
+    <MSBuild BuildInParallel="$(RestoreBuildInParallel)" ContinueOnError="$(RestoreContinueOnError)" Projects="@(FilteredRestoreGraphProjectInputItemsWithoutDuplicates)" SkipNonexistentTargets="true" Targets="RestoreNpmPackages">
+      <Output TaskParameter="TargetOutputs" ItemName="_NpmRestoreOutputs" />
+    </MSBuild>
+  </Target>
+
+</Project>

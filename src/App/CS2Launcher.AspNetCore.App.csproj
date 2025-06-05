@@ -33,7 +33,12 @@
     <Content Include="build\*.props" Pack="true" PackagePath="build\" />
   </ItemGroup>
 
-  <Target Name="RestoreNpmPackages" AfterTargets="PrepareForBuild;Restore" BeforeTargets="BeforeBuild" Condition=" '$(EnablePostCSSTransform)' == 'true' AND 'true' == 'false' ">
+  <PropertyGroup>
+    <RestoreNpmPackagesBefore>BeforeBuild</RestoreNpmPackagesBefore>
+    <RestoreNpmPackagesBefore Condition=" '$(TargetFramework)' == '' ">DispatchToInnerBuilds</RestoreNpmPackagesBefore>
+  </PropertyGroup>
+
+  <Target Name="RestoreNpmPackages" AfterTargets="PrepareForBuild;Restore" BeforeTargets="$(RestoreNpmPackagesBefore)" Inputs="$(MSBuildProjectFile);package.json;package-lock.json" Outputs="node_modules\.package-lock.json" Condition=" '$(EnablePostCSSTransform)' == 'true' ">
     <!-- The project contains a `package.json`, but not a `package-lock.json` -->
     <Exec Command="npm i" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="!Exists('$(MSBuildProjectDirectory)\package-lock.json') AND Exists('$(MSBuildProjectDirectory)\package.json') AND !Exists('$(MSBuildProjectDirectory)\node_modules\.package-lock.json')" />
 
@@ -41,7 +46,7 @@
     <Exec Command="npm ci" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="Exists('$(MSBuildProjectDirectory)\package-lock.json') AND Exists('$(MSBuildProjectDirectory)\package.json') AND !Exists('$(MSBuildProjectDirectory)\node_modules\.package-lock.json')" />
   </Target>
 
-  <Target Name="TransformScopedCssBundle" AfterTargets="BundleScopedCssFiles" Condition=" '$(EnablePostCSSTransform)' == 'true' ">
+  <Target Name="TransformScopedCssBundle" AfterTargets="BundleScopedCssFiles" DependsOnTargets="RestoreNpmPackages" Condition=" '$(EnablePostCSSTransform)' == 'true' ">
     <PropertyGroup>
       <_ScopedCssBundle>$(ProjectDir)obj\$(ConfigurationName)\$(TargetFramework)\scopedcss\projectbundle\$(ProjectName).bundle.scp.css</_ScopedCssBundle>
       <!-- <_ScopedCssBundle Condition=" '$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true' ">$(ProjectDir)obj\$(ConfigurationName)\$(TargetFramework)\scopedcss\bundle\$(ProjectName).styles.css</_ScopedCssBundle> -->
