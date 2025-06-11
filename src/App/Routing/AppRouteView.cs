@@ -21,8 +21,8 @@ public sealed class AppRouteView : RouteView
     protected override void Render( RenderTreeBuilder builder )
     {
         builder.OpenComponent<CascadingValue<AppUser?>>( 0 );
-        builder.AddComponentParameter( 1, nameof( CascadingValue<AppUser?>.Value ), User );
-        builder.AddComponentParameter( 2, nameof( CascadingValue<AppUser?>.ChildContent ), new RenderFragment( builder =>
+        builder.AddComponentParameter( 1, nameof( CascadingValue<>.Value ), User );
+        builder.AddComponentParameter( 2, nameof( CascadingValue<>.ChildContent ), new RenderFragment( builder =>
         {
             builder.OpenComponent<Components.ErrorDialog>( 0 );
             builder.AddComponentParameter( 1, nameof( Components.ErrorDialog.ChildContent ), new RenderFragment( base.Render ) );
