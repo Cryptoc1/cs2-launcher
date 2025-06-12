@@ -93,20 +93,20 @@
         }
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             signaler = new(Navigation);
-            signals = [signaler.On<ConsoleSignals.ConnectFailed>(OnConnectFailed),
-signaler.On<ConsoleSignals.Connected>(OnConnected),
-signaler.On<ConsoleSignals.ExecutedCommand>(OnExecutedCommand),
-signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
+            signals = [
+                signaler.On<ConsoleSignals.ConnectFailed>(OnConnectFailed),
+                signaler.On<ConsoleSignals.Connected>(OnConnected),
+                signaler.On<ConsoleSignals.ExecutedCommand>(OnExecutedCommand),
+                signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
 
-            return Mutate(state => ConsoleState.Load(LocalStorage, signaler, state));
+            await Mutate(state => ConsoleState.Load(LocalStorage, signaler, state));
+            return;
         }
-
-        return Task.CompletedTask;
     }
 
     private async Task OnCommandInputBlur() => await Mutate(state => state with { IsInputFocused = false });
@@ -176,7 +176,7 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
         }
     }
 
-    private Task OnExecutedCommand(ConsoleSignals.ExecutedCommand command) => Mutate(state => ConsoleState.OnExecutedCommand(LocalStorage, command, state));
+    private async Task OnExecutedCommand(ConsoleSignals.ExecutedCommand command) => await Mutate(state => ConsoleState.OnExecutedCommand(LocalStorage, command, state));
 
     private async Task OnExecuteCommandFailed(ConsoleSignals.ExecuteCommandFailed failure) => await Mutate(state => ConsoleState.OnExecuteCommandFailed(failure, state));
 
@@ -200,7 +200,7 @@ signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
         }
     }
 
-    private Task OnRetryClicked() => Mutate(state => ConsoleState.Reconnect(signaler, state));
+    private async Task OnRetryClicked() => await Mutate(state => ConsoleState.Reconnect(signaler, state));
 
     private async Task OnSubmit()
     {

@@ -6,7 +6,7 @@ using CS2Launcher.AspNetCore.App.Interop;
 
 namespace CS2Launcher.AspNetCore.App.Pages;
 
-public sealed record ConsoleState : State
+public sealed record ConsoleState : State<ConsoleState>
 {
     private const string HistoryStorageKey = "console.history";
     private const int MaxEntries = 250;

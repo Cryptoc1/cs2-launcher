@@ -6,6 +6,7 @@
     "CommunityToolkit.*.dll",
     "Microsoft.*.dll",
   ],
+  "csharp.format.enable": true,
   "csharp.suppressBuildAssetsNotification": true,
   "csharp.suppressHiddenDiagnostics": false,
   "dotnet.backgroundAnalysis.analyzerDiagnosticsScope": "fullSolution",
@@ -13,6 +14,7 @@
   "dotnet.codeLens.enableReferencesCodeLens": false,
   "dotnet.codeLens.enableTestsCodeLens": false,
   "dotnet.defaultSolution": "cs2-launcher.slnx",
+  "dotnet.formatting.organizeImportsOnFormat": true,
   "dotnet.navigation.navigateToDecompiledSources": true,
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
@@ -36,11 +38,12 @@
   },
   "html.format.wrapAttributes": "auto",
   "html.format.wrapLineLength": 0,
-  "omnisharp.enableLspDriver": true,
+  // "omnisharp.enableLspDriver": true,
   "omnisharp.enableEditorConfigSupport": true,
-  "omnisharp.organizeImportsOnFormat": true,
   "omnisharp.sdkIncludePrereleases": true,
   "omnisharp.useEditorFormattingSettings": false,
   "omnisharp.useModernNet": true,
   "npm.packageManager": "npm",
+  "razor.format.enable": true,
+  "razor.languageServer.useNewFormattingEngine": true
 }

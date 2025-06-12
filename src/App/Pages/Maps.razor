@@ -61,6 +61,6 @@
         return Task.CompletedTask;
     }
 
-    private Task OnValidSubmit() => Mutate(state => MapsState.ChangeMap(Api.Server, state));
+    private async Task OnValidSubmit() => await Mutate(state => MapsState.ChangeMap(Api.Server, state));
 
 }

@@ -4,7 +4,7 @@ using CS2Launcher.AspNetCore.App.Infrastructure;
 
 namespace CS2Launcher.AspNetCore.App.Pages;
 
-public sealed record MapsState : State
+public sealed record MapsState : State<MapsState>
 {
     public IDictionary<string, string[]>? Errors { get; init; }
     public bool? IsMapChanged { get; init; }

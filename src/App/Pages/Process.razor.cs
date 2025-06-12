@@ -5,7 +5,7 @@ using CS2Launcher.AspNetCore.App.Infrastructure;
 
 namespace CS2Launcher.AspNetCore.App.Pages;
 
-public sealed record ProcessState : State
+public sealed record ProcessState : State<ProcessState>
 {
     public bool IsLoading { get; init; } = true;
     public bool IsServerResetting { get; init; }

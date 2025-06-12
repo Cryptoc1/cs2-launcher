@@ -3,7 +3,7 @@ using CS2Launcher.AspNetCore.App.Components;
 
 namespace CS2Launcher.AspNetCore.App.Pages.Dashboard;
 
-public sealed record ProcessTileState : State
+public sealed record ProcessTileState : State<ProcessTileState>
 {
     public bool IsLoading { get; init; } = true;
     public ServerStatus Status { get; init; }

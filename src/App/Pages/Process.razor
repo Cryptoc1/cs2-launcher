@@ -86,24 +86,23 @@
     private static string FormatGigaBytes(long bytes) => $"{((bytes / 1024f) / 1024f) / 1024f:0.00}GB";
     private static string FormatTime(TimeSpan time) => $@"{time:hh\:mm\:ss}";
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             signaler = new(Navigation);
             signals = [signaler.On<MetricsSignals.Report>(OnMetricsReported)];
 
-            return Mutate(state => ProcessState.Load(Api.Server, signaler, state));
+            await Mutate(state => ProcessState.Load(Api.Server, signaler, state));
+            return;
         }
-
-        return Task.CompletedTask;
     }
 
     private async Task OnMetricsReported(MetricsSignals.Report report) => await Mutate(state => ProcessState.OnReport(report, state));
 
-    private Task OnRestartClicked() => Mutate(state => ProcessState.RestartServer(Api.Server, state));
+    private async Task OnRestartClicked() => await Mutate(state => ProcessState.RestartServer(Api.Server, state));
 
-    private Task OnTerminateClicked() => Mutate(state => ProcessState.StopServer(Api.Server, state));
+    private async Task OnTerminateClicked() => await Mutate(state => ProcessState.StopServer(Api.Server, state));
 
     private static AlertType ToAlertType(ServerStatus status) => status switch
     {
