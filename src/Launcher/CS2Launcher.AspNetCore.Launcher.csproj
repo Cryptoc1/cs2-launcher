@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Common" Version="9.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Common" Version="9.7.0" />
   </ItemGroup>
 
   <ItemGroup>
