@@ -35,8 +35,8 @@
     <PackageReference Include="AspNet.Security.OpenId.Steam" Version="9.0.0" />
 
     <!-- NOTE: force transitive deps of CoreRCON, since `PrivateAssets` is used to prevent generated a dependency key on nuget -->
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.6" />
-    <PackageReference Include="System.IO.Pipelines" Version="9.0.6" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.7" />
+    <PackageReference Include="System.IO.Pipelines" Version="9.0.7" />
   </ItemGroup>
 
   <Target DependsOnTargets="BuildOnlySettings;ResolveReferences" Name="CopyProjectReferencesToPackage">

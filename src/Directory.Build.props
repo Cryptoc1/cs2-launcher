@@ -30,8 +30,8 @@
 
     <!-- net8.0 -->
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-    <AspNetCoreVersion>8.0.17</AspNetCoreVersion>
-    <AspNetCoreVersion Condition=" '$(TargetFramework)' == 'net9.0' ">9.0.6</AspNetCoreVersion>
+    <AspNetCoreVersion>8.0.18</AspNetCoreVersion>
+    <AspNetCoreVersion Condition=" '$(TargetFramework)' == 'net9.0' ">9.0.7</AspNetCoreVersion>
   </PropertyGroup>
 
   <!-- Git Versioning + Metadata -->

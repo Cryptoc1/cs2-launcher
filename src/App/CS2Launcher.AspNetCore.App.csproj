@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
-    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="System.Text.Json" Version="8.0.6" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
-    <PackageReference Include="System.Text.Json" Version="9.0.6" />
+    <PackageReference Include="System.Text.Json" Version="9.0.7" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +38,7 @@
     <RestoreNpmPackagesBefore Condition=" '$(TargetFramework)' == '' ">DispatchToInnerBuilds</RestoreNpmPackagesBefore>
   </PropertyGroup>
 
-  <Target Name="RestoreNpmPackages" AfterTargets="PrepareForBuild;Restore" BeforeTargets="$(RestoreNpmPackagesBefore)" Inputs="$(MSBuildProjectFile);package.json;package-lock.json" Outputs="node_modules\.package-lock.json" Condition=" '$(EnablePostCSSTransform)' == 'true' ">
+  <Target Name="RestoreNpmPackages" AfterTargets="PrepareForBuild;Restore" BeforeTargets="$(RestoreNpmPackagesBefore)" Inputs="$(MSBuildProjectFile);package.json;package-lock.json" Outputs="node_modules\.package-lock.json" Condition=" '$(EnableInteropBuild)' == 'true' OR '$(EnablePostCSSTransform)' == 'true' ">
     <!-- The project contains a `package.json`, but not a `package-lock.json` -->
     <Exec Command="npm i" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="!Exists('$(MSBuildProjectDirectory)\package-lock.json') AND Exists('$(MSBuildProjectDirectory)\package.json') AND !Exists('$(MSBuildProjectDirectory)\node_modules\.package-lock.json')" />
 
