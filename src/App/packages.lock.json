@@ -4,9 +4,9 @@
     "net8.0": {
       "ESCd.Extensions.Http": {
         "type": "Direct",
-        "requested": "[1.0.10, )",
-        "resolved": "1.0.10",
-        "contentHash": "ZNY0aNp3V3YXXgyTUMn3PWYuxGUhUSmBwu1mAN2CHPwLIfQWXtif+d4P8FZIQB7ilUCYPR7sNjZShde6YTRjaA==",
+        "requested": "[1.0.11, )",
+        "resolved": "1.0.11",
+        "contentHash": "IKZQojYnEV8eLqVltR0yagD0bK2zkxu4HJmxpLvQg7srmXbBJ1AwrFBg3cwNXILR7StjHBtCAgbPGgu0pOJF0A==",
         "dependencies": {
           "Microsoft.Extensions.Http": "8.0.1",
           "Microsoft.Extensions.ObjectPool": "8.0.18",
@@ -395,9 +395,9 @@
     "net9.0": {
       "ESCd.Extensions.Http": {
         "type": "Direct",
-        "requested": "[1.0.10, )",
-        "resolved": "1.0.10",
-        "contentHash": "ZNY0aNp3V3YXXgyTUMn3PWYuxGUhUSmBwu1mAN2CHPwLIfQWXtif+d4P8FZIQB7ilUCYPR7sNjZShde6YTRjaA==",
+        "requested": "[1.0.11, )",
+        "resolved": "1.0.11",
+        "contentHash": "IKZQojYnEV8eLqVltR0yagD0bK2zkxu4HJmxpLvQg7srmXbBJ1AwrFBg3cwNXILR7StjHBtCAgbPGgu0pOJF0A==",
         "dependencies": {
           "Microsoft.Extensions.Http": "9.0.7",
           "Microsoft.Extensions.ObjectPool": "9.0.7",
