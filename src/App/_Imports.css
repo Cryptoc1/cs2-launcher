@@ -1,0 +1,100 @@
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/forms';
+
+@import "@catppuccin/tailwindcss/macchiato.css";
+
+@theme {
+    --background-image-cs2-logo: url('https://cdn.akamai.steamstatic.com/apps/csgo/images/csgo_react/global/logo_cs_sm.svg');
+
+    --font-mono: 'IBM Plex Mono', monospace;
+
+    --font-sans: 'Nunito Sans', 'Noto Sans', 'Roboto', sans-serif;
+    --font-sans--font-optical-sizing: auto;
+
+    --grid-rows-layout: auto 1fr;
+}
+
+
+* {
+    @apply antialiased;
+    scrollbar-width: thin;
+}
+
+body {
+    @apply backdrop-blur bg-ctp-base bg-gradient-to-b from-ctp-crust/40 to-ctp-mantle/60;
+    @apply antialiased caret-ctp-rosewater font-normal font-sans leading-normal text-base text-ctp-text tracking-normal;
+    @apply grid grid-cols-1 grid-rows-(--grid-rows-layout) min-h-screen;
+
+    font-optical-sizing: auto;
+    font-variation-settings: "wdth" 100, "YTLC" 500;
+}
+
+::selection {
+    @apply backdrop-blur bg-ctp-rosewater/40 shadow text-ctp-text;
+}
+
+button:not(.icon),
+a.btn:not(.icon) {
+    @apply bg-ctp-surface2 cursor-pointer drop-shadow-sm ease-in inline-block outline-none p-1 px-3 rounded-md ring-0 ring-ctp-pink/40 text-ctp-text transition;
+    @apply focus:ring-1 focus-visible:ring-2 hover:ring-1 hover:shadow-sm;
+    @apply active:bg-ctp-overlay1 active:ring-1 active:shadow-md active:text-ctp-text;
+}
+
+button.icon,
+a.btn.icon {
+    @apply cursor-pointer ease-in inline-block flex outline-none p-1.5 ring-0 ring-ctp-pink/40 rounded-md text-ctp-text transition;
+    @apply focus:ring-1 focus-visible:ring-2 hover:bg-ctp-base hover:drop-shadow-sm hover:ring-1 hover:shadow-sm;
+    @apply active:bg-ctp-base active:ring-1 active:shadow-md active:text-ctp-text;
+}
+
+button.icon:disabled,
+a.btn.icon:disabled {
+    @apply cursor-not-allowed text-ctp-overlay1;
+    @apply hover:bg-transparent hover:drop-shadow-none hover:ring-0 hover:shadow-none hover:text-ctp-subtext0;
+}
+
+code,
+pre,
+samp {
+    @apply font-mono;
+}
+
+samp {
+    @apply whitespace-pre;
+}
+
+input:not(.input-no-defaults),
+select {
+    @apply backdrop-blur border-none bg-ctp-surface0/95 ease-in outline-none px-3 py-2 rounded-sm shadow-sm transition;
+    @apply focus:ring-1 focus:ring-ctp-pink focus-visible:ring-1 focus-visible:ring-ctp-pink;
+    @apply active:ring-1 active:ring-ctp-pink;
+}
+
+input[type="checkbox"] {
+    @apply appearance-none h-6 w-6 checked:bg-ctp-pink;
+}
+
+button:disabled,
+a.btn:disabled,
+input:disabled,
+input:read-only:not([type="checkbox"]),
+select:disabled,
+textarea:disabled,
+textarea:read-only {
+    @apply cursor-not-allowed text-ctp-overlay1;
+}
+
+input:not(.input-no-defaults).invalid,
+select.invalid,
+textarea.invalid {
+    @apply outline-ctp-red/60 outline-offset-0;
+}
+
+label {
+    @apply pl-1 text-ctp-subtext0 text-sm;
+}
+
+.validation-message {
+    @apply font-medium pl-0.5 pt-1 text-ctp-red text-xs;
+}

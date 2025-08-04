@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Sample (net9.0)",
+      "name": "_debug",
       "type": "blazorwasm",
       "request": "launch",
       "browser": "chrome",
@@ -42,5 +42,18 @@
       "url": "https://localhost:52750",
       "webRoot": "${workspaceFolder}/sample/Launcher",
     }
+  ],
+   "compounds": [
+    {
+      "name": "Debug",
+      "configurations": [
+        "_debug"
+      ],
+      "preLaunchTask": "build",
+      "presentation": {
+        "group": "default",
+        "order": 1,
+      }
+    },
   ]
 }

@@ -27,7 +27,6 @@
     <SupportedPlatform Include="browser" />
 
     <None Include="$(SourceDirectory)..\README.md" Pack="true" PackagePath="\" />
-    <None Update="_Imports.razor.css" CssScope="_" />
     <Content Remove="*.config.js" />
 
     <Content Include="build\*.props" Pack="true" PackagePath="build\" />
@@ -53,7 +52,7 @@
 
       <_CrossEnvArguments>MSBUILD_PROJECT_DIR='$(MSBuildProjectDirectory)'</_CrossEnvArguments>
 
-      <_PostCssArguments>$(_ScopedCssBundle) -r --config . --verbose</_PostCssArguments>
+      <_PostCssArguments>$(_ScopedCssBundle) -r --config .</_PostCssArguments>
       <_PostCssArguments Condition=" '$(Configuration)' == 'Release' ">$(_PostCssArguments) --env production --no-map</_PostCssArguments>
     </PropertyGroup>
 
