@@ -17,15 +17,8 @@ internal static class LauncherApplicationExtensions
         app.UseAuthentication();
         app.UseAuthorization();
 
-#if NET8_0
-        app.UseBlazorFrameworkFiles();
-        app.UseStaticFiles( new StaticFileOptions { ServeUnknownFileTypes = true } );
-#endif
-
-#if NET9_0_OR_GREATER
         app.MapStaticAssets()
             .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
-#endif
 
         app.MapHub<ConsoleHub>( "/api/signals/console" )
             .RequireAuthorization()
