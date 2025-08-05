@@ -29,9 +29,7 @@ jobs:
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
-          dotnet-version: |
-            8.0.x
-            9.0.x
+          dotnet-version: 9.0.x
 
       - name: restore
         run: dotnet workload restore && dotnet restore --locked-mode
@@ -61,16 +59,10 @@ jobs:
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
-          dotnet-version: |
-            8.0.x
-            9.0.x
+          dotnet-version: 9.0.x
 
       - name: restore
-        run: dotnet workload restore && dotnet workload install wasm-tools-net8 && dotnet restore --locked-mode
-
-      - name: restore npm
-        run: npm ci
-        working-directory: ./src/App
+        run: dotnet workload restore && dotnet workload install wasm-tools && dotnet restore --locked-mode
 
       - name: pack
         run: dotnet pack -c Release -o dist --no-restore

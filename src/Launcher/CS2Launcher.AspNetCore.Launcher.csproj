@@ -14,29 +14,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNet.Security.OpenId.Steam" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Common" Version="9.7.0" />
+
+    <!-- NOTE: force transitive deps of CoreRCON, since `PrivateAssets` is used to prevent generated a dependency key on nuget -->
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.8" />
+    <PackageReference Include="System.IO.Pipelines" Version="9.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\App\CS2Launcher.AspNetCore.App.csproj" Private="false" />
     <ProjectReference Include="..\..\modules\CoreRcon\src\CoreRCON.Extensions.CounterStrike\CoreRCON.Extensions.CounterStrike.csproj" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
-    <PackageReference Include="AspNet.Security.OpenId.Steam" Version="8.0.0" />
-
-    <!-- NOTE: force transitive deps of CoreRCON, since `PrivateAssets` is used to prevent generated a dependency key on nuget -->
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.1" />
-    <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
-    <PackageReference Include="AspNet.Security.OpenId.Steam" Version="9.0.0" />
-
-    <!-- NOTE: force transitive deps of CoreRCON, since `PrivateAssets` is used to prevent generated a dependency key on nuget -->
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.8" />
-    <PackageReference Include="System.IO.Pipelines" Version="9.0.8" />
   </ItemGroup>
 
   <Target DependsOnTargets="BuildOnlySettings;ResolveReferences" Name="CopyProjectReferencesToPackage">
