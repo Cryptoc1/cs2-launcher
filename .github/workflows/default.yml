@@ -39,7 +39,7 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: restore
-        run: dotnet workload restore && dotnet restore
+        run: dotnet workload restore && dotnet restore --locked-mode
 
       - name: build
         run: dotnet build --no-restore
@@ -72,7 +72,7 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: restore
-        run: dotnet workload restore && dotnet restore
+        run: dotnet workload restore && dotnet restore --locked-mode
 
       - name: pack
         run: dotnet pack -c Release -o dist --no-restore
