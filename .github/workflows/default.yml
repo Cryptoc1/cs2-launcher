@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: npm
-          cache-dependency-path: "**/package-lock.json"
+          cache-dependency-path: ./**/package-lock.json
           node-version: 22.x
 
       - name: setup dotnet
@@ -39,7 +39,7 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: restore
-        run: dotnet workload restore && dotnet restore --locked-mode
+        run: dotnet workload restore && dotnet restore
 
       - name: build
         run: dotnet build --no-restore
@@ -72,7 +72,7 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: restore
-        run: dotnet workload restore && dotnet restore --locked-mode
+        run: dotnet workload restore && dotnet restore
 
       - name: pack
         run: dotnet pack -c Release -o dist --no-restore
