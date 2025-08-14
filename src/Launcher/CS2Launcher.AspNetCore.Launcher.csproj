@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OpenId.Steam" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Common" Version="9.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Common" Version="9.8.0" />
 
     <!-- NOTE: force transitive deps of CoreRCON, since `PrivateAssets` is used to prevent generated a dependency key on nuget -->
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.8" />
