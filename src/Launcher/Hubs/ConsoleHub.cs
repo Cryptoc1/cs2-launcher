@@ -21,7 +21,8 @@ public sealed class ConsoleHub( IServerConsoleFactory consoleFactory ) : Hub
         string value;
         try
         {
-            value = await GetOrCreateConsole().SendCommandAsync( command.Command, Context.ConnectionAborted );
+            var console = await GetOrCreateConsole();
+            value = await console.SendCommandAsync( command.Command, Context.ConnectionAborted );
         }
         catch( Exception exception ) when( exception is RCONException )
         {
@@ -37,14 +38,14 @@ public sealed class ConsoleHub( IServerConsoleFactory consoleFactory ) : Hub
             Context.ConnectionAborted );
     }
 
-    private RCONClient GetOrCreateConsole( )
+    private async ValueTask<RCONClient> GetOrCreateConsole( )
     {
         if( Context.Items.TryGetValue( ConsoleKey, out var value ) && value is RCONClient client )
         {
             return client;
         }
 
-        Context.Items[ ConsoleKey ] = client = consoleFactory.Create();
+        Context.Items[ ConsoleKey ] = client = await consoleFactory.Create( Context.ConnectionAborted );
         return client;
     }
 
@@ -55,7 +56,7 @@ public sealed class ConsoleHub( IServerConsoleFactory consoleFactory ) : Hub
         try
         {
             status = await Connect(
-                GetOrCreateConsole(),
+                await GetOrCreateConsole(),
                 Context.ConnectionAborted );
         }
         catch( RCONException exception )

@@ -24,8 +24,7 @@ public sealed class DedicatedServerOptions
     public string? GSLToken { get; set; }
 
     /// <summary> The host ip to bind the server to. </summary>
-    [Required]
-    public string Host { get; set; }
+    public string? Host { get; set; }
 
     /// <summary> Whether to launch the dedicated server in 'insecure' mode. </summary>
     public bool Insecure { get; set; }
@@ -42,8 +41,7 @@ public sealed class DedicatedServerOptions
     public ProcessPriorityClass ProcessPriority { get; set; } = ProcessPriorityClass.Normal;
 
     /// <summary> The absolute path of the CS2 program to launch. </summary>
-    [Required]
-    public string Program { get; set; }
+    public string? Program { get; set; }
 
     /// <summary> The RCON password the launch with. </summary>
     public string? RconPassword { get; set; }

@@ -35,21 +35,21 @@ internal sealed class DedicatedServerProcess : IAsyncDisposable
         process = new()
         {
             EnableRaisingEvents = false,
-            StartInfo = new( options.Program )
+            StartInfo = new( options.Program! )
             {
                 Arguments = BuildArguments( options ),
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 UserName = options.SystemUser,
                 WindowStyle = ProcessWindowStyle.Minimized,
-                WorkingDirectory = !string.IsNullOrEmpty( options.WorkingDirectory ) ? Path.GetFullPath( options.WorkingDirectory ) : default
+                WorkingDirectory = DetermineWorkingDirectory( options )
             }
         };
     }
 
     private static string BuildArguments( DedicatedServerOptions options )
     {
-        var arguments = new CS2ArgumentsBuilder( "-dedicated" )
+        var arguments = new CS2ArgumentsBuilder( "-dedicated -console -usercon" )
             .Append( options.Insecure ? "-insecure" : string.Empty );
 
         if( !string.IsNullOrEmpty( options.GSLToken ) )
@@ -79,6 +79,18 @@ internal sealed class DedicatedServerProcess : IAsyncDisposable
 
         options.OnBuildArguments?.Invoke( arguments );
         return arguments.Build();
+    }
+
+    private static string DetermineWorkingDirectory( DedicatedServerOptions options )
+    {
+        ArgumentNullException.ThrowIfNull( options );
+
+        if( string.IsNullOrEmpty( options.WorkingDirectory ) )
+        {
+            return Path.GetDirectoryName( options.Program )!;
+        }
+
+        return Path.GetFullPath( options.WorkingDirectory );
     }
 
     public async ValueTask DisposeAsync( )

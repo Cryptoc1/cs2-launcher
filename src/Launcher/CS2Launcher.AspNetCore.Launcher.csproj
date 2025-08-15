@@ -21,13 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\App\CS2Launcher.AspNetCore.App.csproj" Private="false" />
+    <ProjectReference Include="..\App\CS2Launcher.AspNetCore.App.csproj" />
   </ItemGroup>
-
-  <Target DependsOnTargets="BuildOnlySettings;ResolveReferences" Name="CopyProjectReferencesToPackage">
-    <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
-    </ItemGroup>
-  </Target>
 
 </Project>

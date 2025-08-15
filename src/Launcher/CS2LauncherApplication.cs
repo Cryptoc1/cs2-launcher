@@ -68,7 +68,8 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
             .AddHostedService( serviceProvider => serviceProvider.GetRequiredService<DedicatedServer>() )
             .AddOptions<DedicatedServerOptions>()
             .BindConfiguration( "Server" )
-            .ValidateDataAnnotations();
+            .ValidateDataAnnotations()
+            .Validate( options => !options.Enabled || !string.IsNullOrWhiteSpace( options.Program ), $"The {nameof( DedicatedServerOptions )}.{nameof( DedicatedServerOptions.Enabled )} == True, but a {nameof( DedicatedServerOptions.Program )} was not specified." );
 
         return new( builder );
     }

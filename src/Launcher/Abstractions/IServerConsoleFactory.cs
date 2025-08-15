@@ -7,5 +7,5 @@ public interface IServerConsoleFactory
 {
     /// <summary> Create a new client. </summary>
     /// <remarks> Callers are responsible for disposal of the created client. </remarks>
-    public RCONClient Create( );
+    public ValueTask<RCONClient> Create( CancellationToken cancellation );
 }

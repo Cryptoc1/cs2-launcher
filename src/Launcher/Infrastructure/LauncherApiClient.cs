@@ -32,7 +32,7 @@ sealed file class ServerApi(
 
         try
         {
-            using var console = consoleFactory.Create();
+            using var console = await consoleFactory.Create( cancellation );
             return await console.DSWorkshopChangeLevel( workshopId.ToString(), cancellation ) is "";
         }
         catch( RCONException )
