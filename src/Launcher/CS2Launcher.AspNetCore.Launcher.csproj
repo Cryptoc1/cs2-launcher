@@ -5,7 +5,6 @@
     <Description>A .NET Generic Host Builder for running CS2 Dedicated Servers.</Description>
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
