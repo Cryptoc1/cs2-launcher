@@ -1,9 +1,9 @@
-using CoreRCON;
-using CoreRCON.Extensions.CounterStrike;
 using CS2Launcher.AspNetCore.App.Abstractions.Api;
 using CS2Launcher.AspNetCore.App.Annotations;
 using CS2Launcher.AspNetCore.Launcher.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using Racoon;
+using Racoon.Extensions.CounterStrike;
 
 namespace CS2Launcher.AspNetCore.Launcher.Infrastructure;
 

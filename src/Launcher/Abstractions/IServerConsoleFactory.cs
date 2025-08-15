@@ -1,4 +1,4 @@
-using CoreRCON;
+using Racoon;
 
 namespace CS2Launcher.AspNetCore.Launcher.Abstractions;
 
@@ -7,5 +7,5 @@ public interface IServerConsoleFactory
 {
     /// <summary> Create a new client. </summary>
     /// <remarks> Callers are responsible for disposal of the created client. </remarks>
-    RCONClient Create( );
+    public RCONClient Create( );
 }

@@ -1,10 +1,10 @@
+using CS2Launcher.AspNetCore.App.Abstractions.Signals;
+using CS2Launcher.AspNetCore.Launcher.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using CoreRCON;
-using CoreRCON.Extensions.CounterStrike;
-using CS2Launcher.AspNetCore.Launcher.Abstractions;
-using CoreRCON.Parsers.Standard;
-using CS2Launcher.AspNetCore.App.Abstractions.Signals;
+using Racoon;
+using Racoon.Extensions;
+using Racoon.Parsers.Standard;
 
 namespace CS2Launcher.AspNetCore.Launcher.Hubs;
 
@@ -75,8 +75,8 @@ public sealed class ConsoleHub( IServerConsoleFactory consoleFactory ) : Hub
 
         static async Task<Status> Connect( RCONClient console, CancellationToken cancellation )
         {
-            await console.ConnectAsync().ConfigureAwait( false );
-            return await console.Status( cancellation ).ConfigureAwait( false );
+            await console.ConnectAsync( cancellation );
+            return await console.Status( cancellation );
         }
     }
 
