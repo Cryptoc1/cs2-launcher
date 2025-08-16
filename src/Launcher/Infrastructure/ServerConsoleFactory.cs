@@ -47,16 +47,21 @@ internal sealed class ServerConsoleFactory(
             return addresses.First( address => address.AddressFamily is AddressFamily.InterNetwork );
         }
 
-        foreach( var network in NetworkInterface.GetAllNetworkInterfaces() )
+        foreach( var adapter in NetworkInterface.GetAllNetworkInterfaces() )
         {
-            if( network.OperationalStatus is OperationalStatus.Up && network.NetworkInterfaceType is not NetworkInterfaceType.Loopback )
+            if( !adapter.Supports( NetworkInterfaceComponent.IPv4 ) )
             {
-                var properties = network.GetIPProperties();
+                continue;
+            }
+
+            if( adapter.OperationalStatus is OperationalStatus.Up && IsCandidateInterface( adapter.NetworkInterfaceType ) )
+            {
+                var properties = adapter.GetIPProperties();
                 if( properties.GatewayAddresses.Any( gateway => gateway.Address.AddressFamily is AddressFamily.InterNetwork ) )
                 {
                     foreach( var info in properties.UnicastAddresses )
                     {
-                        if( info.Address.AddressFamily is AddressFamily.InterNetwork )
+                        if( info.Address.AddressFamily is AddressFamily.InterNetwork && info.Address != IPAddress.Loopback )
                         {
                             return info.Address;
                         }
@@ -66,6 +71,8 @@ internal sealed class ServerConsoleFactory(
         }
 
         throw new InvalidOperationException( "The host of the Dedicated Server could not be resolved." );
+
+        static bool IsCandidateInterface( NetworkInterfaceType type ) => type is not NetworkInterfaceType.Loopback and (NetworkInterfaceType.Ethernet or NetworkInterfaceType.Ethernet3Megabit or NetworkInterfaceType.FastEthernetFx or NetworkInterfaceType.FastEthernetT or NetworkInterfaceType.GigabitEthernet);
     }
 }
 
