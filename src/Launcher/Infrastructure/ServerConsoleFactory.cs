@@ -2,18 +2,25 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using CS2Launcher.AspNetCore.Launcher.Abstractions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Racoon;
 using Racoon.Extensions.CounterStrike.Parsers;
 
 namespace CS2Launcher.AspNetCore.Launcher.Infrastructure;
 
-internal sealed class ServerConsoleFactory( IOptions<DedicatedServerOptions> optionsAccessor ) : IServerConsoleFactory
+internal sealed class ServerConsoleFactory(
+    ILogger<ServerConsoleFactory> logger,
+    IOptions<DedicatedServerOptions> optionsAccessor ) : IServerConsoleFactory
 {
     public async ValueTask<RCONClient> Create( CancellationToken cancellation )
     {
         var options = optionsAccessor.Value;
-        return new( await ResolveServerHost( options, cancellation ), 27015, options.RconPassword!, new()
+
+        var host = await ResolveServerHost( options, cancellation );
+        logger.OnResolvedHost( options.Host, host );
+
+        return new( host, 27015, options.RconPassword!, new()
         {
             AutoConnect = true,
             OnCreatingParserPool = builder => builder.UseCounterStrike()
@@ -60,4 +67,10 @@ internal sealed class ServerConsoleFactory( IOptions<DedicatedServerOptions> opt
 
         throw new InvalidOperationException( "The host of the Dedicated Server could not be resolved." );
     }
+}
+
+internal static partial class ServerConsoleFactoryLogging
+{
+    [LoggerMessage( 0, LogLevel.Information, "Resolved dedicated server host '{host}' to: {address}" )]
+    public static partial void OnResolvedHost( this ILogger<ServerConsoleFactory> logger, string? host, IPAddress address );
 }
