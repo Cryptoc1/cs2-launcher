@@ -32,7 +32,7 @@ jobs:
           node-version: 22.x
 
       - name: setup dotnet
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
@@ -65,7 +65,7 @@ jobs:
           node-version: 22.x
 
       - name: setup dotnet
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
@@ -89,7 +89,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: setup dotnet
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 9.0.x
 
