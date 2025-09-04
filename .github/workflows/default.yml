@@ -25,14 +25,14 @@ jobs:
           submodules: true
 
       - name: setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
           node-version: 22.x
 
       - name: setup dotnet
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
@@ -55,17 +55,16 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-          submodules: true
 
       - name: setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
           node-version: 22.x
 
       - name: setup dotnet
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
@@ -89,7 +88,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: setup dotnet
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 9.0.x
 

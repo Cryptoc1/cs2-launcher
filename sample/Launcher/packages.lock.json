@@ -452,26 +452,26 @@
       },
       "Racoon": {
         "type": "Transitive",
-        "resolved": "1.0.0-rc.1",
-        "contentHash": "8hWFmGM6F6lwqGGcKRM5fyVlngRqo6PxjukemFviclBKHmz604aavDhakLnmBDeIk4q9yL1T/pTjGgNB34YgcQ==",
+        "resolved": "1.0.0-rc.2",
+        "contentHash": "0VGPSrePfFr1XhwwPXX8QTlUtNFrvRk/Sh6ZvAOuI7O0McISeyock5edUG0rFonk4GXOIm8f97iyyIrMmJRNNQ==",
         "dependencies": {
-          "Racoon.Parsers": "1.0.0-rc.1",
+          "Racoon.Parsers": "1.0.0-rc.2",
           "System.Diagnostics.DiagnosticSource": "9.0.8",
           "System.IO.Pipelines": "9.0.8"
         }
       },
       "Racoon.Extensions.CounterStrike": {
         "type": "Transitive",
-        "resolved": "1.0.0-rc.1",
-        "contentHash": "DX8p7H58w8YFC9Z4HERlb1Pc8FFIWfUjDmrDW/ojb7s1u/V1AowlaPXHa7yzJasfd9KJ3hEsWg3PO0+nbXf/gQ==",
+        "resolved": "1.0.0-rc.2",
+        "contentHash": "zdgXzzk/KIh//u2ne4+ViUpc1aalou0hLFUQ9/UOwgrABDcgRu2G+IohTm90mj4cB6pJ6ObAslBFFoSh53/tew==",
         "dependencies": {
-          "Racoon": "1.0.0-rc.1"
+          "Racoon": "1.0.0-rc.2"
         }
       },
       "Racoon.Parsers": {
         "type": "Transitive",
-        "resolved": "1.0.0-rc.1",
-        "contentHash": "aYbSZqitIEiaR8/ZvZb12vg7CrD18QUO4TSFufRtfoRZT8zDZ3O1o8IhYQfFeiRmcLBMnGrCA2+bHiIQqtEtyw=="
+        "resolved": "1.0.0-rc.2",
+        "contentHash": "LRKEgcIcAPaceHU4XBTmxcI/V7z/P0u89bdgQ8W0sEw5rd2kOTvMC3TrQ39nEE/zG10ANridMDzUOzycwgdHCw=="
       },
       "System.Diagnostics.DiagnosticSource": {
         "type": "Transitive",
@@ -524,7 +524,7 @@
           "CS2Launcher.AspNetCore.App": "[1.0.0, )",
           "Microsoft.AspNetCore.Components.WebAssembly.Server": "[9.0.8, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.Common": "[9.8.0, )",
-          "Racoon.Extensions.CounterStrike": "[1.0.0-rc.1, )"
+          "Racoon.Extensions.CounterStrike": "[1.0.0-rc.2, )"
         }
       },
       "cs2launcher.sample.app": {

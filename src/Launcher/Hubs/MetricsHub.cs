@@ -40,7 +40,7 @@ public sealed class MetricsHub( IMetricsHubSubscriber subscriber ) : Hub
 public interface IMetricsHubSubscriber
 {
     /// <summary> Subscribes the given <paramref name="connectionId"/> to <see cref="MetricsSignals.Report"/>. </summary>
-    IAsyncDisposable Subscribe( string connectionId );
+    public IAsyncDisposable Subscribe( string connectionId );
 }
 
 internal sealed class MetricsHubSubscriber( IHubContext<MetricsHub> metricsHub, IDedicatedServer server ) : IAsyncDisposable, IMetricsHubSubscriber
