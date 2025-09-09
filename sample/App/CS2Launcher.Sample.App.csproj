@@ -3,6 +3,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.NET.Sdk.WebAssembly.Pack" Version="9.0.9" />
     <ProjectReference Include="..\..\src\App\CS2Launcher.AspNetCore.App.csproj" />
   </ItemGroup>
 
