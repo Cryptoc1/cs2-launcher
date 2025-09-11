@@ -29,7 +29,7 @@
     <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
 
     <TargetFramework>net9.0</TargetFramework>
-    <AspNetCoreVersion>9.0.8</AspNetCoreVersion>
+    <AspNetCoreVersion>9.0.9</AspNetCoreVersion>
   </PropertyGroup>
 
   <!-- Git Versioning + Metadata -->
