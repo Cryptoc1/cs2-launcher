@@ -60,7 +60,7 @@ internal sealed class MetricsHubSubscriber( IHubContext<MetricsHub> metricsHub, 
         private readonly CancellationTokenSource cancellation = new();
         private readonly Timer timer;
 
-        public TimeSpan SampleRate { get; init; } = TimeSpan.FromSeconds( 3 );
+        public TimeSpan SampleRate { get; init; } = TimeSpan.FromSeconds( 2.5 );
 
         public MetricsMonitor( IDedicatedServer server )
         {
@@ -108,8 +108,8 @@ internal sealed class MetricsHubSubscriber( IHubContext<MetricsHub> metricsHub, 
             }
 
             await cancellation.CancelAsync();
-            cancellation.Dispose();
 
+            cancellation.Dispose();
             timer.Dispose();
         }
 

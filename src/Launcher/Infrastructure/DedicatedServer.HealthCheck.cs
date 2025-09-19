@@ -10,10 +10,12 @@ internal sealed class DedicatedServerHealthCheck( IDedicatedServer server ) : IH
     {
         ArgumentNullException.ThrowIfNull( context );
 
-        return await server.Status( cancellation ) switch
+        var status = await server.Status( cancellation );
+        return status switch
         {
-            ServerStatus.Starting or ServerStatus.Running => HealthCheckResult.Healthy( $"{nameof( IDedicatedServer )} is {server.Status}." ),
-            _ => HealthCheckResult.Degraded( $"{nameof( IDedicatedServer )} is {server.Status}." ),
+            ServerStatus.Starting or ServerStatus.Running => HealthCheckResult.Healthy( $"{nameof( IDedicatedServer )} is {status}." ),
+            ServerStatus.Crashed => HealthCheckResult.Unhealthy( $"{nameof( IDedicatedServer )} has crashed." ),
+            _ => HealthCheckResult.Degraded( $"{nameof( IDedicatedServer )} is {status}." ),
         };
     }
 }

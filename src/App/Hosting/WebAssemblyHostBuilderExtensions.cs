@@ -1,10 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
+using CS2Launcher.AspNetCore.App.Abstractions.Api;
 using CS2Launcher.AspNetCore.App.Infrastructure;
 using ESCd.Extensions.Http;
-using CS2Launcher.AspNetCore.App.Abstractions.Api;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace CS2Launcher.AspNetCore.App.Hosting;
 
@@ -25,7 +25,8 @@ public static class WebAssemblyHostBuilderExtensions
         builder.Services.AddTransient<ApiProblemHandler>()
             .AddQueryStringBuilderObjectPool()
             .AddHttpClient<ILauncherApiClient, LauncherApiClient>( http => http.BaseAddress = new( builder.HostEnvironment.BaseAddress + "api/" ) )
-            .AddHttpMessageHandler<ApiProblemHandler>();
+            .AddHttpMessageHandler<ApiProblemHandler>()
+            .AddStandardResilienceHandler();
 
         builder.Services.AddCS2LauncherApp<TRoot>();
         return builder;

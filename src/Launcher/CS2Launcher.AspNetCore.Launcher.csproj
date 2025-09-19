@@ -4,6 +4,7 @@
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Description>A .NET Generic Host Builder for running CS2 Dedicated Servers.</Description>
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+    <OptimizationPreference>Speed</OptimizationPreference>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

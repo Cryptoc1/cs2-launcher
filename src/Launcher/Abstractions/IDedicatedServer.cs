@@ -6,14 +6,14 @@ namespace CS2Launcher.AspNetCore.Launcher.Abstractions;
 public interface IDedicatedServer
 {
     /// <summary> Retrieve performance metrics of the server. </summary>
-    ValueTask<ServerMetrics> Metrics( CancellationToken cancellation );
+    public ValueTask<ServerMetrics> Metrics( CancellationToken cancellation );
 
     /// <summary> Restart the underlying process of the server. </summary>
-    ValueTask Restart( CancellationToken cancellation );
+    public ValueTask Restart( CancellationToken cancellation );
 
     /// <summary> The current status of the server. </summary>
-    ValueTask<ServerStatus> Status( CancellationToken cancellation );
+    public ValueTask<ServerStatus> Status( CancellationToken cancellation );
 
     /// <summary> Terminate the underlying process of the server. </summary>
-    ValueTask Terminate( CancellationToken cancellation );
+    public ValueTask Terminate( CancellationToken cancellation );
 }

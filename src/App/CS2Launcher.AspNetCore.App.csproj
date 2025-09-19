@@ -4,15 +4,19 @@
     <Description>Blazor Runtime Components for CS2 Launcher.</Description>
     <EnablePostCSSTransform>true</EnablePostCSSTransform>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <ExcludeConfigFilesFromBuildOutput>true</ExcludeConfigFilesFromBuildOutput>
     <IsAotCompatible>true</IsAotCompatible>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+    <WasmEmitSymbolMap Condition=" '$(Configuration)' == 'Debug' ">true</WasmEmitSymbolMap>
+    <WasmEnableWebcil>true</WasmEnableWebcil>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="ESCd.Extensions.Http" Version="1.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.9.0" />
     <PackageReference Include="System.Text.Json" Version="9.0.9" />
   </ItemGroup>
 

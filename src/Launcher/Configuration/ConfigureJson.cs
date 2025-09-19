@@ -27,6 +27,10 @@ internal sealed class ConfigureJson : IConfigureOptions<Microsoft.AspNetCore.Htt
     private static void AddAppJson( JsonSerializerOptions options )
     {
         ArgumentNullException.ThrowIfNull( options );
+
+        options.DictionaryKeyPolicy = new JsonPathNamingPolicy( JsonNamingPolicy.CamelCase );
+        options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+
         options.TypeInfoResolverChain.Add( AppJsonContext.Default );
     }
 }

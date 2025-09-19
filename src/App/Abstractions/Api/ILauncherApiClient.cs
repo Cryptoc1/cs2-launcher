@@ -4,5 +4,5 @@ namespace CS2Launcher.AspNetCore.App.Abstractions.Api;
 public interface ILauncherApiClient
 {
     /// <summary> Provides access to Server API operations. </summary>
-    IServerApi Server { get; }
+    public IServerApi Server { get; }
 }

@@ -10,23 +10,23 @@ public interface IServerApi
     /// <param name="parameters"> The request parameters. </param>
     /// <param name="cancellation"> A token that may cancel the request. </param>
     /// <returns> A value indicating whether the request was successfully submitting. </returns>
-    Task<bool> ChangeMap( ChangeMapParameters parameters, CancellationToken cancellation = default );
+    public Task<bool> ChangeMap( ChangeMapParameters parameters, CancellationToken cancellation = default );
 
     /// <summary> Retrieve performance metrics of the server. </summary>
     /// <param name="cancellation"> A token that may cancel the request. </param>
-    Task<ServerMetrics> Metrics( CancellationToken cancellation = default );
+    public Task<ServerMetrics> Metrics( CancellationToken cancellation = default );
 
     /// <summary> Restart the server. </summary>
     /// <param name="cancellation"> A token that may cancel the request. </param>
-    Task<ServerStatus> Restart( CancellationToken cancellation = default );
+    public Task<ServerStatus> Restart( CancellationToken cancellation = default );
 
     /// <summary> Retrieve the status of the server. </summary>
     /// <param name="cancellation"> A token that may cancel the request. </param>
-    Task<ServerStatus> Status( CancellationToken cancellation = default );
+    public Task<ServerStatus> Status( CancellationToken cancellation = default );
 
     /// <summary> Terminate the server. </summary>
     /// <param name="cancellation"> A token that may cancel the request. </param>
-    Task<ServerStatus> Terminate( CancellationToken cancellation = default );
+    public Task<ServerStatus> Terminate( CancellationToken cancellation = default );
 }
 
 /// <summary> Represents the parameters for changing the map of the server. </summary>

@@ -10,7 +10,7 @@ public sealed class ServerApiController( ILauncherApiClient api ) : ApiControlle
 {
     /// <summary> Request the map to be changed on the server. </summary>
     [HttpPost( "map" )]
-    public async Task<ActionResult> ChangeMap( [FromBody] ChangeMapParameters parameters )
+    public async Task<ActionResult<bool>> ChangeMap( [FromBody] ChangeMapParameters parameters )
     {
         if( !ModelState.IsValid )
         {

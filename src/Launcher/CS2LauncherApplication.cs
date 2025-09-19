@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.Metrics;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -53,6 +54,7 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
         builder.Configuration.AddEnvironmentVariables( prefix: "CS2L_" );
 
         builder.Services.AddCors()
+            .AddProblemDetails()
             .AddRequestDecompression()
             .AddRequestTimeouts()
             .AddResponseCaching()
@@ -61,7 +63,8 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
 
         builder.Services.AddHealthChecks()
             .AddApplicationLifecycleHealthCheck()
-            .AddCheck<DedicatedServerHealthCheck>( nameof( DedicatedServer ) );
+            .AddCheck<DedicatedServerHealthCheck>( nameof( DedicatedServer ) )
+            .AddCheck( "self", ( ) => HealthCheckResult.Healthy(), [ "live" ] );
 
         builder.Services.AddSingleton<DedicatedServer>()
             .AddSingleton<IDedicatedServer>( serviceProvider => serviceProvider.GetRequiredService<DedicatedServer>() )
@@ -148,6 +151,7 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
             app.UseResponseCompression();
         }
 
+        app.UseRequestCancellation();
         app.UseRequestTimeouts();
         if( app.Services.GetService<RootComponentDescriptor>() is not null )
         {

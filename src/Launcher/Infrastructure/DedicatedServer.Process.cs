@@ -39,6 +39,10 @@ internal sealed class DedicatedServerProcess : IAsyncDisposable
             {
                 Arguments = BuildArguments( options ),
                 CreateNoWindow = true,
+                EnvironmentVariables =
+                {
+                    ["LD_LIBRARY_PATH"] = $"{Environment.GetEnvironmentVariable("LD_LIBRARY_PATH")}:{Path.GetDirectoryName(options.Program)}"
+                },
                 UseShellExecute = false,
                 UserName = options.SystemUser,
                 WindowStyle = ProcessWindowStyle.Minimized,
