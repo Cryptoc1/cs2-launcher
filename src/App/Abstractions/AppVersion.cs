@@ -21,7 +21,7 @@ public sealed class AppVersion
     public int Patch { get; }
 
     /// <summary> The height of a pre-release in relation to the version. </summary>
-    public int? Candidate { get; }
+    public float? Candidate { get; }
 
     /// <summary> Additional versioning metadata for tracking. </summary>
     public string? Metadata { get; }
@@ -48,7 +48,7 @@ public sealed class AppVersion
                 }
 
                 index += 4;
-                Candidate = int.Parse( informational[ index..end ], CultureInfo.InvariantCulture );
+                Candidate = float.Parse( informational[ index..end ], CultureInfo.InvariantCulture );
             }
 
             index = informational.IndexOf( '+' );
