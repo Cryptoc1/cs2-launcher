@@ -9,7 +9,7 @@
   "csharp.format.enable": true,
   "csharp.suppressBuildAssetsNotification": true,
   "csharp.suppressHiddenDiagnostics": false,
-  "dotnet.backgroundAnalysis.analyzerDiagnosticsScope": "fullSolution",
+  "dotnet.backgroundAnalysis.analyzerDiagnosticsScope": "openFiles",
   "dotnet.backgroundAnalysis.compilerDiagnosticsScope": "fullSolution",
   "dotnet.codeLens.enableReferencesCodeLens": false,
   "dotnet.codeLens.enableTestsCodeLens": false,
@@ -19,10 +19,13 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "*.cs": "${capture}.*.cs",
-    "*.cshtml": "${capture}.cshtml.cs,${capture}.cshtml.css,${capture}.cshtml.js",
+    "*.css": "${capture}.*.css,${capture}.css.map",
+    "*.cshtml": "${capture}.cshtml.cs",
     "*.csproj": "${capture}.csproj.user,packages.lock.json",
+    "*.js": "${capture}.*.js,${capture}.js.map,${capture}.*.json,${capture}.*.ts",
     "*.json": "${capture}.*.json",
     "*.razor": "${capture}.razor.cs, ${capture}.razor.css, ${capture}.razor.js",
+    "*.ts": "${capture}.*.js,${capture}.*.json,${capture}.*.ts"
   },
   "files.exclude": {
     "**/.git": true,
@@ -40,10 +43,12 @@
   "html.format.wrapLineLength": 0,
   // "omnisharp.enableLspDriver": true,
   "omnisharp.enableEditorConfigSupport": true,
-  "omnisharp.sdkIncludePrereleases": true,
+  "omnisharp.projectFilesExcludePattern": "**/node_modules/**,**/.git/**,**/bower_components/**,**/.vs/**,**/bin/**,**/obj/**",
+  "omnisharp.sdkIncludePrereleases": false,
   "omnisharp.useEditorFormattingSettings": false,
   "omnisharp.useModernNet": true,
   "npm.packageManager": "npm",
   "razor.format.enable": true,
-  "razor.languageServer.useNewFormattingEngine": true
+  "razor.languageServer.cohostingEnabled": false,
+  "razor.languageServer.useNewFormattingEngine": true,
 }
