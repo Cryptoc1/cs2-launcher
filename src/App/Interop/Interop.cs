@@ -1,5 +1,5 @@
-﻿using Microsoft.JSInterop;
-using CS2Launcher.AspNetCore.App.Infrastructure;
+﻿using CS2Launcher.AspNetCore.App.Infrastructure;
+using Microsoft.JSInterop;
 
 namespace CS2Launcher.AspNetCore.App.Interop;
 
@@ -12,20 +12,20 @@ internal abstract class Interop( IJSRuntime runtime, string moduleName ) : IAsyn
     private IJSObjectReference? module;
     protected IJSRuntime Runtime { get; } = runtime;
 
-    protected async ValueTask Access( Func<IJSObjectReference, ValueTask> method )
+    protected async ValueTask Access( Func<IJSObjectReference, ValueTask> accessor )
     {
-        PlatformGuard.ThrowIfNotBrowser();
+        ArgumentNullException.ThrowIfNull( accessor );
 
         await EnsureModuleReference();
-        await method( module! );
+        await accessor( module! );
     }
 
-    protected async ValueTask<T> Access<T>( Func<IJSObjectReference, ValueTask<T>> method )
+    protected async ValueTask<T> Access<T>( Func<IJSObjectReference, ValueTask<T>> accessor )
     {
-        PlatformGuard.ThrowIfNotBrowser();
+        ArgumentNullException.ThrowIfNull( accessor );
 
         await EnsureModuleReference();
-        return await method( module! );
+        return await accessor( module! );
     }
 
     public async ValueTask DisposeAsync( )
@@ -40,6 +40,7 @@ internal abstract class Interop( IJSRuntime runtime, string moduleName ) : IAsyn
 
     private async ValueTask EnsureModuleReference( )
     {
+        PlatformGuard.ThrowIfNotBrowser();
         if( module is not null )
         {
             return;

@@ -69,7 +69,7 @@
       <FileWrites Include="$(IntermediateOutputPath)esbuild.outputs.txt" />
     </ItemGroup>
 
-    <DefineStaticWebAssets CandidateAssets="@(_ESBuildOutput)" FingerprintCandidates="$(StaticWebAssetsFingerprintContent)" FingerprintPatterns="@(StaticWebAssetFingerprintPattern)" SourceType="Computed" SourceId="$(PackageId)" ContentRoot="$(_ESBuildOutputFullPath)" BasePath="$(StaticWebAssetBasePath)Interop/" AssetMergeSource="$(StaticWebAssetMergeTarget)" CacheManifestPath="$(_ResolveProjectStaticWebAssetsCachePath)">
+    <DefineStaticWebAssets CandidateAssets="@(_ESBuildOutput)" FingerprintCandidates="$(StaticWebAssetsFingerprintContent)" FingerprintPatterns="@(StaticWebAssetFingerprintPattern)" SourceType="Computed" SourceId="$(PackageId)" ContentRoot="$(_ESBuildOutputFullPath)" BasePath="$(StaticWebAssetBasePath)/Interop/" AssetMergeSource="$(StaticWebAssetMergeTarget)" CacheManifestPath="$(_ResolveProjectStaticWebAssetsCachePath)">
       <Output TaskParameter="Assets" ItemName="StaticWebAsset" />
       <Output TaskParameter="Assets" ItemName="_InteropModuleStaticWebAsset" />
     </DefineStaticWebAssets>
