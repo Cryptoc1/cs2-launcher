@@ -1,4 +1,4 @@
-export const get = key => {
+export const get = (key: string) => {
   const value = localStorage.getItem(key);
   if (!value) return null;
 
@@ -9,4 +9,4 @@ export const get = key => {
   }
 };
 
-export const set = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+export const set = (key: string, value: any) => localStorage.setItem(key, JSON.stringify(value));

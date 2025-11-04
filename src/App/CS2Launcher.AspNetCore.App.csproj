@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <Description>Blazor Runtime Components for CS2 Launcher.</Description>
+    <EnableInteropBuild>true</EnableInteropBuild>
     <EnablePostCSSTransform>true</EnablePostCSSTransform>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <ExcludeConfigFilesFromBuildOutput>true</ExcludeConfigFilesFromBuildOutput>
@@ -17,19 +18,24 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.10.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.10" />
+    <PackageReference Include="System.Text.Json" Version="$(AspNetCoreVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
 
     <None Include="$(SourceDirectory)..\README.md" Pack="true" PackagePath="\" />
-    <Content Remove="*.config.js" />
-
     <Content Include="build\*.props" Pack="true" PackagePath="build\" />
+
+    <InteropModules Include="Interop/*.ts" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
   <PropertyGroup>
+    <GenerateComputedBuildStaticWebAssetsDependsOn>
+      BuildInteropModules;
+      $(GenerateComputedBuildStaticWebAssetsDependsOn)
+    </GenerateComputedBuildStaticWebAssetsDependsOn>
+
     <RestoreNpmPackagesBefore>BeforeBuild</RestoreNpmPackagesBefore>
     <RestoreNpmPackagesBefore Condition=" '$(TargetFramework)' == '' ">DispatchToInnerBuilds</RestoreNpmPackagesBefore>
   </PropertyGroup>
@@ -42,11 +48,40 @@
     <Exec Command="npm ci" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="Exists('$(MSBuildProjectDirectory)\package-lock.json') AND Exists('$(MSBuildProjectDirectory)\package.json') AND !Exists('$(MSBuildProjectDirectory)\node_modules\.package-lock.json')" />
   </Target>
 
+  <Target Name="BuildInteropModules" BeforeTargets="AssignTargetPaths;ResolveProjectStaticWebAssets" DependsOnTargets="RestoreNpmPackages" Inputs="@(InteropModules)" Outputs="$(IntermediateOutputPath)esbuild.outputs.txt" Condition=" '$(EnableInteropBuild)' == 'true' ">
+    <PropertyGroup>
+      <_ESBuildOutputFullPath>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)esbuild'))/</_ESBuildOutputFullPath>
+    </PropertyGroup>
+
+    <Exec Command="npx tsc -noEmit" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <Exec Command="node esbuild.config.js --configuration $(Configuration) --inputs &quot;@(InteropModules)&quot; --output $(_ESBuildOutputFullPath)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+
+    <ItemGroup>
+      <_ESBuildOutput Include="$(_ESBuildOutputFullPath)\**" />
+    </ItemGroup>
+
+    <WriteLinesToFile File="$(IntermediateOutputPath)esbuild.outputs.txt" Lines="@(_ESBuildOutput->'%(FullPath)')" Overwrite="true" />
+  </Target>
+
+  <Target Name="DefineInteropStaticWebAssets" AfterTargets="BuildInteropModules" DependsOnTargets="ResolveStaticWebAssetsConfiguration">
+    <ItemGroup>
+      <FileWrites Include="@(_ESBuildOutput)" />
+      <FileWrites Include="$(IntermediateOutputPath)esbuild.outputs.txt" />
+    </ItemGroup>
+
+    <DefineStaticWebAssets CandidateAssets="@(_ESBuildOutput)" FingerprintCandidates="$(StaticWebAssetsFingerprintContent)" FingerprintPatterns="@(StaticWebAssetFingerprintPattern)" SourceType="Computed" SourceId="$(PackageId)" ContentRoot="$(_ESBuildOutputFullPath)" BasePath="$(StaticWebAssetBasePath)Interop/" AssetMergeSource="$(StaticWebAssetMergeTarget)" CacheManifestPath="$(_ResolveProjectStaticWebAssetsCachePath)">
+      <Output TaskParameter="Assets" ItemName="StaticWebAsset" />
+      <Output TaskParameter="Assets" ItemName="_InteropModuleStaticWebAsset" />
+    </DefineStaticWebAssets>
+
+    <DefineStaticWebAssetEndpoints CandidateAssets="@(_InteropModuleStaticWebAsset)" ExistingEndpoints="@(StaticWebAssetEndpoint)" ContentTypeMappings="@(StaticWebAssetContentTypeMapping)">
+      <Output TaskParameter="Endpoints" ItemName="StaticWebAssetEndpoint" />
+    </DefineStaticWebAssetEndpoints>
+  </Target>
+
   <Target Name="TransformScopedCssBundle" AfterTargets="BundleScopedCssFiles" DependsOnTargets="RestoreNpmPackages" Condition=" '$(EnablePostCSSTransform)' == 'true' ">
     <PropertyGroup>
       <_ScopedCssBundle>$(ProjectDir)obj\$(ConfigurationName)\$(TargetFramework)\scopedcss\projectbundle\$(ProjectName).bundle.scp.css</_ScopedCssBundle>
-      <!-- <_ScopedCssBundle Condition=" '$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true' ">$(ProjectDir)obj\$(ConfigurationName)\$(TargetFramework)\scopedcss\bundle\$(ProjectName).styles.css</_ScopedCssBundle> -->
-
       <_CrossEnvArguments>MSBUILD_PROJECT_DIR='$(MSBuildProjectDirectory)'</_CrossEnvArguments>
 
       <_PostCssArguments>$(_ScopedCssBundle) -r --config .</_PostCssArguments>

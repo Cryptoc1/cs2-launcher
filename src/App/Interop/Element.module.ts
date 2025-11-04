@@ -1,4 +1,4 @@
-export function focusAndSelectEnd(element) {
+export function focusAndSelectEnd(element: HTMLInputElement | HTMLTextAreaElement) {
   element.scrollIntoView({ behavior: 'smooth' });
   element.focus();
 
