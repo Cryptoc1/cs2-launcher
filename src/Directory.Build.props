@@ -28,8 +28,8 @@
     <AnalysisLevel>preview-recommended</AnalysisLevel>
     <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
 
-    <TargetFramework>net9.0</TargetFramework>
-    <AspNetCoreVersion>9.0.10</AspNetCoreVersion>
+    <TargetFramework>net10.0</TargetFramework>
+    <AspNetCoreVersion>10.0.0</AspNetCoreVersion>
   </PropertyGroup>
 
   <!-- Git Versioning + Metadata -->

@@ -15,10 +15,6 @@ internal sealed partial class DedicatedServer(
     private bool disposed;
     private DedicatedServerProcess? process;
 
-    public override void Dispose( )
-    {
-    }
-
     public async ValueTask DisposeAsync( )
     {
         if( disposed )
@@ -26,8 +22,7 @@ internal sealed partial class DedicatedServer(
             return;
         }
 
-        base.Dispose();
-
+        Dispose();
         if( process is not null )
         {
             await process.DisposeAsync();

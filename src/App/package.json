@@ -7,17 +7,17 @@
     "fully supports es6-module"
   ],
   "devDependencies": {
-    "@tailwindcss/postcss": "4.1.16",
-    "autoprefixer": "10.4.21",
-    "caniuse-lite": "1.0.30001753",
+    "@tailwindcss/postcss": "4.1.17",
+    "autoprefixer": "10.4.22",
+    "caniuse-lite": "1.0.30001754",
     "cross-env": "10.1.0",
     "cssnano": "7.1.2",
-    "esbuild": "0.25.12",
+    "esbuild": "0.27.0",
     "postcss": "8.5.6",
     "postcss-cli": "11.0.1",
     "postcss-prepend-imports": "1.0.1",
     "postcss-preset-env": "10.4.0",
-    "tailwindcss": "4.1.16",
+    "tailwindcss": "4.1.17",
     "typescript": "5.9.3",
     "yargs": "18.0.0"
   },

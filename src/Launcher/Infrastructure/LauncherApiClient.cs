@@ -1,3 +1,4 @@
+using System.Globalization;
 using CS2Launcher.AspNetCore.App.Abstractions.Api;
 using CS2Launcher.AspNetCore.App.Annotations;
 using CS2Launcher.AspNetCore.Launcher.Abstractions;
@@ -33,7 +34,7 @@ sealed file class ServerApi(
         try
         {
             using var console = await consoleFactory.Create( cancellation );
-            return await console.DSWorkshopChangeLevel( workshopId.ToString(), cancellation ) is "";
+            return await console.HostWorkshopMap( workshopId, cancellation ) is "";
         }
         catch( RCONException )
         {
