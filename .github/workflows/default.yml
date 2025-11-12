@@ -38,8 +38,11 @@ jobs:
           cache-dependency-path: ./**/packages.lock.json
           dotnet-version: 10.0.x
 
+      - name: install workloads
+        run: dotnet workload restore && dotnet workload install wasm-tools
+
       - name: restore
-        run: dotnet workload restore && dotnet restore --locked-mode
+        run: dotnet restore
 
       - name: build
         run: dotnet build --no-restore
@@ -70,8 +73,11 @@ jobs:
           cache-dependency-path: ./**/packages.lock.json
           dotnet-version: 10.0.x
 
+      - name: install workloads
+        run: dotnet workload restore && dotnet workload install wasm-tools
+
       - name: restore
-        run: dotnet workload restore && dotnet restore --locked-mode
+        run: dotnet restore
 
       - name: pack
         run: dotnet pack -c Release -o dist --no-restore
@@ -85,7 +91,7 @@ jobs:
   publish:
     needs: [pack]
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: setup dotnet
         uses: actions/setup-dotnet@v5
