@@ -36,10 +36,12 @@ jobs:
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
-          dotnet-version: 10.0.x
+          dotnet-version: |
+            9.0.x
+            10.0.x
 
       - name: install workloads
-        run: dotnet workload restore && dotnet workload install wasm-tools
+        run: dotnet workload restore && dotnet workload install wasm-tools wasm-tools-net9
 
       - name: restore
         run: dotnet restore
