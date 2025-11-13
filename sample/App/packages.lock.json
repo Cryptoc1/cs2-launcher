@@ -31,7 +31,7 @@
         "type": "Direct",
         "requested": "[10.0.0, )",
         "resolved": "10.0.0",
-        "contentHash": "jRA47332BBtRFmHdeIcZyssj2vplKl7/0GoaNVVQQXKFvPcpBgR5R1jTGqMyWb89skl6B6/L/uZ4WE2IEwZPJA=="
+        "contentHash": "bewqpnzRlrdGaiT4f8aSbHiKuFhm/HWKcOAgvhFpYL1OhWR0zWakDnCB67XaJ33yQKj0gsIEMl1vry6c9iGpwQ=="
       },
       "ESCd.Extensions.Http": {
         "type": "Transitive",

@@ -17,7 +17,7 @@ env:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v5
@@ -53,7 +53,7 @@ jobs:
     needs: [build]
     if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/develop')
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v5
