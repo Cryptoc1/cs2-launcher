@@ -55,11 +55,11 @@
       },
       "Racoon.Extensions.CounterStrike": {
         "type": "Direct",
-        "requested": "[1.1.0, )",
-        "resolved": "1.1.0",
-        "contentHash": "+tmpMLMV/cIL+RGRWu/8Le1ijpn4g6Y3jQ/BUI4PVUn6pt1rUGMHnLWrP0KD6Ca3PhkYqsjYpFo4DuI11kM9MQ==",
+        "requested": "[1.1.1, )",
+        "resolved": "1.1.1",
+        "contentHash": "nnvTu4QAazEoUetugU3MbKBWPXo2UIAtvqHfSTR9bHz4aHrMjzPEOK+XN/2eP2sExYpqILpge6OFOdIJoSn5RA==",
         "dependencies": {
-          "Racoon": "1.1.0"
+          "Racoon": "1.1.1"
         }
       },
       "AngleSharp": {
@@ -249,16 +249,16 @@
       },
       "Racoon": {
         "type": "Transitive",
-        "resolved": "1.1.0",
-        "contentHash": "PgVNyE1i8Am8iDJs2vSq/o516mLvqGlDYx5wuFPXdXyRD5cGrUEXTRBtYsazw9e97QjmgJBEUN5ZfiWf2c3Suw==",
+        "resolved": "1.1.1",
+        "contentHash": "8R7AYfYDdBn+aN90GI6kNC/E6SIMPhPhOrcIReEitUP6z+MyEqwJLJwMfArjdBPlBULRzyTCkN+FijlrH73lrQ==",
         "dependencies": {
-          "Racoon.Parsers": "1.1.0"
+          "Racoon.Parsers": "1.1.1"
         }
       },
       "Racoon.Parsers": {
         "type": "Transitive",
-        "resolved": "1.1.0",
-        "contentHash": "XWwOhjqBm3CtvH8d1zu7YLW5SBYb1TchdDMk+aLB+Hs27UPaSTZQc+xvApR0QbqFVzpR5t9nJwwJNL2xe8x/cQ=="
+        "resolved": "1.1.1",
+        "contentHash": "6xDJsAGhYlae5jS5tkho//JIipqYrnLMBADQAUWhy9NzsZQfyaSOJnDFNNvfnx8AnHFqMqo/zgcFJq6uVWxeOQ=="
       },
       "cs2launcher.aspnetcore.app": {
         "type": "Project",
