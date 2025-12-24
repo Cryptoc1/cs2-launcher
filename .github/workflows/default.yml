@@ -36,9 +36,7 @@ jobs:
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
-          dotnet-version: |
-            9.0.x
-            10.0.x
+          dotnet-version: 10.0.x
 
       - name: install workloads
         run: dotnet workload restore && dotnet workload install wasm-tools wasm-tools-net9
@@ -73,9 +71,7 @@ jobs:
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
-          dotnet-version: |
-            9.0.x
-            10.0.x
+          dotnet-version: 10.0.x
 
       - name: install workloads
         run: dotnet workload restore && dotnet workload install wasm-tools wasm-tools-net9
@@ -87,7 +83,7 @@ jobs:
         run: dotnet pack -c Release -o dist --no-restore
 
       - name: upload artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: cs2-launcher-packages
           path: dist
@@ -103,7 +99,7 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: download artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cs2-launcher-packages
 
