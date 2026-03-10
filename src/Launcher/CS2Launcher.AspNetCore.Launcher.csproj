@@ -17,7 +17,7 @@
     <PackageReference Include="AspNet.Security.OpenId.Steam" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Common" Version="10.3.0" />
-    <PackageReference Include="Racoon.Extensions.CounterStrike" Version="1.1.3" />
+    <PackageReference Include="Racoon.Extensions.CounterStrike" Version="1.1.4" />
   </ItemGroup>
 
   <ItemGroup>
