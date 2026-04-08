@@ -66,6 +66,7 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
             .AddCheck<DedicatedServerHealthCheck>( nameof( DedicatedServer ) )
             .AddCheck( "self", ( ) => HealthCheckResult.Healthy(), [ "live" ] );
 
+#pragma warning disable IL2026,IL3050
         builder.Services.AddSingleton<DedicatedServer>()
             .AddSingleton<IDedicatedServer>( serviceProvider => serviceProvider.GetRequiredService<DedicatedServer>() )
             .AddHostedService( serviceProvider => serviceProvider.GetRequiredService<DedicatedServer>() )
@@ -73,6 +74,7 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
             .BindConfiguration( "Server" )
             .ValidateDataAnnotations()
             .Validate( options => !options.Enabled || !string.IsNullOrWhiteSpace( options.Program ), $"The {nameof( DedicatedServerOptions )}.{nameof( DedicatedServerOptions.Enabled )} == True, but a {nameof( DedicatedServerOptions.Program )} was not specified." );
+#pragma warning restore IL2026,IL3050
 
         return new( builder );
     }
@@ -140,7 +142,6 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
         }
 
         app.UseForwardedHeaders();
-        app.UseHttpsRedirection();
         app.UseCookiePolicy();
         app.UseCors();
 
@@ -157,11 +158,6 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
         {
             app.UseLauncherApp();
         }
-        else
-        {
-            app.Map( "/", ( ) => Results.NoContent() )
-                .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
-        }
 
         app.MapHealthChecks( "/healthz" )
            .WithRequestTimeout( TimeSpan.FromMinutes( 2 ) );
@@ -176,6 +172,8 @@ public sealed class CS2LauncherApplicationBuilder : IHostApplicationBuilder
 
     /// <summary> Host the Launcher App with the root component of type <typeparamref name="TRoot"/>. </summary>
     /// <typeparam name="TRoot"> The root component of the Launcher App. </typeparam>
+    [RequiresDynamicCode( "Launcher App relies on Mvc, which does not fully support trimming and AOT compilation." )]
+    [RequiresUnreferencedCode( "Launcher App relies on Mvc, which does not fully support trimming and AOT compilation." )]
     public CS2LauncherApplicationBuilder WithLauncherApp<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.All )] TRoot>( )
         where TRoot : RootComponent
     {

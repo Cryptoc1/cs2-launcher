@@ -1,5 +1,4 @@
-using System.Globalization;
-using CS2Launcher.AspNetCore.App.Abstractions.Api;
+﻿using CS2Launcher.AspNetCore.App.Abstractions.Api;
 using CS2Launcher.AspNetCore.App.Annotations;
 using CS2Launcher.AspNetCore.Launcher.Abstractions;
 using Microsoft.Extensions.DependencyInjection;

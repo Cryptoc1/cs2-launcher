@@ -6,7 +6,6 @@
     <EnablePostCSSTransform>true</EnablePostCSSTransform>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <ExcludeConfigFilesFromBuildOutput>true</ExcludeConfigFilesFromBuildOutput>
-    <IsAotCompatible>true</IsAotCompatible>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
     <WasmEmitSymbolMap Condition=" '$(Configuration)' == 'Debug' ">true</WasmEmitSymbolMap>
