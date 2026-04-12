@@ -2,58 +2,30 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "_debug",
-      "type": "blazorwasm",
-      "request": "launch",
-      "browser": "chrome",
-      "cwd": "${workspaceFolder}/sample/Launcher",
-      "dotNetConfig": {
-        "justMyCode": true,
-        "logging": {
-          "engineLogging": false,
-          "moduleLoad": false,
-          "threadExit": false,
-        },
-        "requireExactSource": true,
-        "sourceFileMap": {
-          "/Views": "${workspaceFolder}/src/Launcher/Views"
-        },
-        "sourceLinkOptions": {
-          "https://raw.githubusercontent.com/*": {
-            "enabled": true
-          },
-          "*": {
-            "enabled": false
-          }
-        },
-        "stopAtEntry": false,
-      },
-      "env": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "hosted": true,
-      "preLaunchTask": "${defaultBuildTask}",
-      "program": "${workspaceFolder}/sample/Launcher/bin/Debug/net9.0/CS2Launcher.Sample.Launcher.dll",
-      "serverReadyAction": {
-        "action": "debugWithChrome",
-        "killOnServerStop": true,
-        "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
-      },
-      "url": "https://localhost:52750",
-      "webRoot": "${workspaceFolder}/sample/Launcher",
-    }
-  ],
-   "compounds": [
-    {
       "name": "Debug",
-      "configurations": [
-        "_debug"
-      ],
-      "preLaunchTask": "build",
-      "presentation": {
-        "group": "default",
-        "order": 1,
+      "type": "aspire",
+      "request": "launch",
+      "program": "${workspaceFolder}/sample/AppHost/CS2Launcher.Sample.AppHost.csproj",
+      "debuggers": {
+        "project": {
+          "justMyCode": true,
+          "logging": {
+            "engineLogging": false,
+            "moduleLoad": false,
+            "threadExit": false
+          },
+          "requireExactSource": true,
+          "sourceLinkOptions": {
+            "https://raw.githubusercontent.com/*": {
+              "enabled": true
+            },
+            "*": {
+              "enabled": false
+            }
+          },
+          "stopAtEntry": false
+        }
       }
-    },
+    }
   ]
 }

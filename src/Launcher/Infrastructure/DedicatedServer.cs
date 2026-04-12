@@ -1,4 +1,4 @@
-using CS2Launcher.AspNetCore.App.Abstractions.Api;
+﻿using CS2Launcher.AspNetCore.App.Abstractions.Api;
 using CS2Launcher.AspNetCore.Launcher.Abstractions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 namespace CS2Launcher.AspNetCore.Launcher.Infrastructure;
 
 internal sealed partial class DedicatedServer(
+    IServerInstaller installer,
     ILogger<DedicatedServer> logger,
     IOptions<DedicatedServerOptions> optionsAccessor ) : BackgroundService, IAsyncDisposable, IDedicatedServer
 {
@@ -35,6 +36,8 @@ internal sealed partial class DedicatedServer(
 
     protected override async Task ExecuteAsync( CancellationToken cancellation )
     {
+        await installer.WaitForInstallation( cancellation );
+
         var options = optionsAccessor.Value;
         if( !options.Enabled )
         {
@@ -53,7 +56,7 @@ internal sealed partial class DedicatedServer(
         await process.WaitForExit( cancellation );
         await restartTrigger.WaitAsync( cancellation );
 
-        await StartAsync( cancellation );
+        await ExecuteAsync( cancellation );
     }
 
     public async ValueTask<ServerMetrics> Metrics( CancellationToken cancellation )

@@ -2,6 +2,7 @@
   <Folder Name="/sample/">
     <File Path="sample/Directory.Build.props" />
     <Project Path="sample/App/CS2Launcher.Sample.App.csproj" />
+    <Project Path="sample/AppHost/CS2Launcher.Sample.AppHost.csproj" />
     <Project Path="sample/Launcher/CS2Launcher.Sample.Launcher.csproj" />
   </Folder>
   <Folder Name="/src/">
@@ -9,5 +10,8 @@
     <File Path="src/Directory.Build.targets" />
     <Project Path="src/App/CS2Launcher.AspNetCore.App.csproj" />
     <Project Path="src/Launcher/CS2Launcher.AspNetCore.Launcher.csproj" />
+  </Folder>
+  <Folder Name="/src/Aspire/">
+    <Project Path="src/Aspire/Hosting/CS2Launcher.Aspire.Hosting.csproj" />
   </Folder>
 </Solution>

@@ -1,0 +1,12 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.2.2">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Aspire\Hosting\CS2Launcher.Aspire.Hosting.csproj" IsAspireProjectResource="false" />
+    <ProjectReference Include="..\Launcher\CS2Launcher.Sample.Launcher.csproj" AspireProjectMetadataTypeName="Launcher" />
+  </ItemGroup>
+
+</Project>

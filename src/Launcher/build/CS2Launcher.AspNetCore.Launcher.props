@@ -1,0 +1,35 @@
+<Project>
+
+  <PropertyGroup>
+    <CS2LauncherDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..'))</CS2LauncherDirectory>
+    <!--<CS2LauncherItemsVisible>false</CS2LauncherItemsVisible>-->
+    <CS2LauncherItemsVisible>true</CS2LauncherItemsVisible>
+
+    <ContainerRuntimeIdentifier>linux-x64</ContainerRuntimeIdentifier>
+    <!--<DockerfilePath>$(CS2LauncherDirectory)\build\$(Configuration).Dockerfile</DockerfilePath>-->
+    <DockerfilePath>$(Configuration).Dockerfile</DockerfilePath>
+    <EnableSdkContainerDebugging>True</EnableSdkContainerDebugging>
+
+    <!-- <ContainerRepository>cs2-launcher</ContainerRepository> -->
+    <!-- <ContainerImageTag>latest</ContainerImageTag> -->
+    <!-- <DeployOnBuild>true</DeployOnBuild> -->
+    <PublishProfile>DefaultContainer</PublishProfile>
+  </PropertyGroup>
+
+  <ItemGroup>
+     <Content Include="$(CS2LauncherDirectory)\build\*.Dockerfile">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+      <Link>%(Filename)%(Extension)</Link>
+      <Visible>$(CS2LauncherItemsVisible)</Visible>
+    </Content> 
+
+    <Dockerfile Include="$(CS2LauncherDirectory)\build\*.Dockerfile">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+      <Link>%(Filename)%(Extension)</Link>
+      <Visible>$(CS2LauncherItemsVisible)</Visible>
+    </Dockerfile>
+  </ItemGroup>
+
+</Project>

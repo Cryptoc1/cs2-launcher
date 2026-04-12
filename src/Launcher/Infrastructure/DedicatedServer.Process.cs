@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using CS2Launcher.AspNetCore.Launcher.Abstractions;
 
 namespace CS2Launcher.AspNetCore.Launcher.Infrastructure;
@@ -160,6 +160,7 @@ internal sealed class DedicatedServerProcess : IAsyncDisposable
             try
             {
                 process.Kill( true );
+                await WaitForExit( cancellation ).ConfigureAwait( false );
             }
             finally
             {

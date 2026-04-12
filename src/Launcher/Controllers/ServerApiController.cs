@@ -1,4 +1,4 @@
-using CS2Launcher.AspNetCore.App.Abstractions.Api;
+﻿using CS2Launcher.AspNetCore.App.Abstractions.Api;
 using CS2Launcher.AspNetCore.Launcher.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,8 +17,8 @@ public sealed class ServerApiController( ILauncherApiClient api ) : ApiControlle
             return ValidationProblem( ModelState );
         }
 
-        return Ok(
-            await api.Server.ChangeMap( parameters, HttpContext.RequestAborted ) );
+        var changed = await api.Server.ChangeMap( parameters, HttpContext.RequestAborted );
+        return Ok( changed );
     }
 
     /// <summary> Retrieve performance metrics for the server. </summary>

@@ -1,9 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
+  <Import Project="..\..\src\Launcher\build\CS2Launcher.AspNetCore.Launcher.props" />
 
   <PropertyGroup>
     <InvariantGlobalization>true</InvariantGlobalization>
     <OptimizationPreference>Speed</OptimizationPreference>
+    <!-- <PublishAot>true</PublishAot> -->
+    <!-- <PublishReadyToRun Condition=" '$(Configuration)' == 'Release' ">true</PublishReadyToRun> -->
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishTrimmed>true</PublishTrimmed>
     <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
     <TrimMode>partial</TrimMode>
     <UserSecretsId>CS2LAUNCHER-SAMPLE-17947b4b-b2a8-4c6d-a8ae-8eea3c24f3c0</UserSecretsId>
   </PropertyGroup>
@@ -11,6 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\App\CS2Launcher.Sample.App.csproj" />
     <ProjectReference Include="..\..\src\Launcher\CS2Launcher.AspNetCore.Launcher.csproj" />
+
+     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" /> 
   </ItemGroup>
 
 </Project>

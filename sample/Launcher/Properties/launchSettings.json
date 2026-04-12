@@ -1,12 +1,20 @@
 {
   "profiles": {
-    "CS2Launcher.Sample": {
-      "commandName": "Project",
+    "cs2-launcher": {
+      "commandName": "Docker",
       "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "containerRunArguments": " --mount type=bind,src=.\\CS2Launcher.Sample.AppHost\\Certs,dst=/certs ",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HTTPS_PORTS": "443",
+        "ASPNETCORE_HTTP_PORTS": "80",
+        "DOTNET_ENVIRONMENT": "Development",
       },
-      "applicationUrl": "https://localhost:52750;http://localhost:52751"
+      "publishAllPorts": false,
+      "useSSL": true,
+      "httpPort": 5192,
+      "sslPort": 7126
     }
   }
 }

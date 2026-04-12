@@ -8,6 +8,13 @@
         "dotnet-outdated"
       ],
       "rollForward": false
+    },
+    "aspire.cli": {
+      "version": "13.2.2",
+      "commands": [
+        "aspire"
+      ],
+      "rollForward": false
     }
   }
 }

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- <Description>A .NET Generic Host Builder for running CS2 Dedicated Servers.</Description> -->
+    <!-- <PackageReadmeFile>README.md</PackageReadmeFile> -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="$(AspireVersion)" />
+    <PackageReference Include="Aspire.Hosting.Docker" Version="$(AspireVersion)" />
+  </ItemGroup>
+
+</Project>

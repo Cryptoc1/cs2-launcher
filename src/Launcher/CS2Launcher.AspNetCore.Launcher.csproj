@@ -6,6 +6,7 @@
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
     <OptimizationPreference>Speed</OptimizationPreference>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
     <PackageReference Include="AspNet.Security.OpenId.Steam" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Common" Version="10.4.0" />
+     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" /> 
     <PackageReference Include="Racoon.Extensions.CounterStrike" Version="1.1.5" />
   </ItemGroup>
 

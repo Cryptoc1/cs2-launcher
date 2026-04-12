@@ -61,20 +61,12 @@ public sealed class CS2LauncherApplication : IApplicationBuilder, IAsyncDisposab
             .AddResponseCompression()
             .AddRouting( options => options.LowercaseUrls = true );
 
+        builder.Services.AddDedicatedServer()
+            .AddServerInstaller();
+
         builder.Services.AddHealthChecks()
             .AddApplicationLifecycleHealthCheck()
-            .AddCheck<DedicatedServerHealthCheck>( nameof( DedicatedServer ) )
             .AddCheck( "self", ( ) => HealthCheckResult.Healthy(), [ "live" ] );
-
-#pragma warning disable IL2026,IL3050
-        builder.Services.AddSingleton<DedicatedServer>()
-            .AddSingleton<IDedicatedServer>( serviceProvider => serviceProvider.GetRequiredService<DedicatedServer>() )
-            .AddHostedService( serviceProvider => serviceProvider.GetRequiredService<DedicatedServer>() )
-            .AddOptions<DedicatedServerOptions>()
-            .BindConfiguration( "Server" )
-            .ValidateDataAnnotations()
-            .Validate( options => !options.Enabled || !string.IsNullOrWhiteSpace( options.Program ), $"The {nameof( DedicatedServerOptions )}.{nameof( DedicatedServerOptions.Enabled )} == True, but a {nameof( DedicatedServerOptions.Program )} was not specified." );
-#pragma warning restore IL2026,IL3050
 
         return new( builder );
     }
