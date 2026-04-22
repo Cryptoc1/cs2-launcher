@@ -30,7 +30,7 @@
     <AnalysisLevel>preview-recommended</AnalysisLevel>
 
     <TargetFramework>net10.0</TargetFramework>
-    <AspNetCoreVersion>10.0.6</AspNetCoreVersion>
+    <AspNetCoreVersion>10.0.7</AspNetCoreVersion>
   </PropertyGroup>
 
   <!-- Git Versioning + Metadata -->
