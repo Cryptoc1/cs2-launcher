@@ -36,43 +36,43 @@
       },
       "Microsoft.AspNetCore.Components.WebAssembly": {
         "type": "Transitive",
-        "resolved": "10.0.6",
-        "contentHash": "eLdaMWy0l2GaKp/IaxS7LZMuKpsCTGMYaTBkZLGdkg4RExzQs4vKBqw5Lm2Z2bF6vc7YZOo3DdDWs2GqAzMb9g==",
+        "resolved": "10.0.7",
+        "contentHash": "3MdUFSPOBlmkCx+YjWQS0s1B+v5QeyHxmix9yQ+HIiF/a01xpgIDXECOK5tCwOwjol01QP0fzKBnBP5LBBRETQ==",
         "dependencies": {
-          "Microsoft.JSInterop.WebAssembly": "10.0.6"
+          "Microsoft.JSInterop.WebAssembly": "10.0.7"
         }
       },
       "Microsoft.AspNetCore.Components.WebAssembly.Server": {
         "type": "Transitive",
-        "resolved": "10.0.6",
-        "contentHash": "LUaQResAFLTomhILqkT7XfS0jqcItLLNCSdPGV8eeXGUxbrVZ08g8CtIOgzw/x3pfpHU6ZjCFwCkrUozDB5+Xw==",
+        "resolved": "10.0.7",
+        "contentHash": "OfuZkTusYUgT3m9C94OSv3m1mNiIryUL8nw6VMexWQdVMLD71w+HJeIK+l6u5HuMRrc3GegUuFPazrtBwrQj5Q==",
         "dependencies": {
-          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.6"
+          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.7"
         }
       },
       "Microsoft.AspNetCore.Http.Connections.Client": {
         "type": "Transitive",
-        "resolved": "10.0.6",
-        "contentHash": "neN3h4JIzp6zqYuXRdhrSXRSdi6EHaHEgZqol5lcXKiWZEJ2KfQhwKyrm+tFe7iMx3+kGDq+qUB9aiU+1nAELA=="
+        "resolved": "10.0.7",
+        "contentHash": "oZzsyHxPfwJg9xLrIow1HRe6Y2w1/ylRKJLbCvePVNZgy/2WeYDk68V+Z20zzs6gXNQS3UjbbdsQai3/ih/CeA=="
       },
       "Microsoft.AspNetCore.SignalR.Client": {
         "type": "Transitive",
-        "resolved": "10.0.6",
-        "contentHash": "2HrBpZhooHodyJNmpvzH6zQcSTCMgFcCrAEIjhTJ1ct5wKTAtyveas1Mb9CZT5XUshd0M5XF+XvCB0Z52fEENQ==",
+        "resolved": "10.0.7",
+        "contentHash": "P0vOQH/vHTpRBjsqK21CV+JDcppN4+80nhcNhKT61YA2DturJGC5wuQnRVKvMtbi7wW7QNbtpo8+KA+cnE/HQw==",
         "dependencies": {
-          "Microsoft.AspNetCore.Http.Connections.Client": "10.0.6",
-          "Microsoft.AspNetCore.SignalR.Client.Core": "10.0.6"
+          "Microsoft.AspNetCore.Http.Connections.Client": "10.0.7",
+          "Microsoft.AspNetCore.SignalR.Client.Core": "10.0.7"
         }
       },
       "Microsoft.AspNetCore.SignalR.Client.Core": {
         "type": "Transitive",
-        "resolved": "10.0.6",
-        "contentHash": "bXlXE6cs9P6Qja9ScuNeJrStBMJORDF009y83oo2DJX1z4DUUApZojgm/OkHs8IKm75PTfukK33yDzctDlEInw=="
+        "resolved": "10.0.7",
+        "contentHash": "zItZbjPjkhViHO9cxf0QMlXKHESgoIMcH1yPnlkfC2NVdcyxmcQ8aKdV6LSn4+v1rEiRZgALxSNT9fPwYlCtcA=="
       },
       "Microsoft.DotNet.HotReload.WebAssembly.Browser": {
         "type": "Transitive",
-        "resolved": "10.0.202",
-        "contentHash": "//aZ/qUD7sc2gcUlraZe4yD0jzxRv7uwUMuuDe7Wdlz404vgLpsdt5xD2l44VHjyUuOgH27ulK3MdJgQVjofzA=="
+        "resolved": "10.0.203",
+        "contentHash": "OFnGv+vIMJdTX9U1gTIwOeE3isTt5MSy+hFpRvXceYZ2TBadvxWunKL1FHMBtY/fRXbJTtBKhByybknDQwhwgw=="
       },
       "Microsoft.Extensions.AmbientMetadata.Application": {
         "type": "Transitive",
@@ -184,8 +184,8 @@
       },
       "Microsoft.JSInterop.WebAssembly": {
         "type": "Transitive",
-        "resolved": "10.0.6",
-        "contentHash": "JZkBoGzuXMn7crqod9COqf5Cb+VL7YlHJKo5EutgteGoX87OJf9mlxomykTabuhnm4h5xvZzENPUD4ltDyok6w=="
+        "resolved": "10.0.7",
+        "contentHash": "qHLPMsIQhqQ5jTBU3MzQg37rp6EzKT2iaMfGOSzBEiGxg4i+/1aGj3T19u/sboEGMPBx2nwIMLbSK1zLZucMcQ=="
       },
       "Polly.Core": {
         "type": "Transitive",
@@ -210,31 +210,31 @@
       },
       "Racoon": {
         "type": "Transitive",
-        "resolved": "1.1.5",
-        "contentHash": "TljCKXZTIVRiPENYDjT1doGM2zDlMs4eh37ai76DLrhGEb2OcaVHv70JWuEM1SZoE2k1D6jrgNXkcpeasMETxA==",
+        "resolved": "1.1.6",
+        "contentHash": "88SGI4fr90PNxxhP3ef2LaocpXIYKeBY1mwjSIPz62hXS57z43qrndDDSe+WKmiO+FsEGVTw4sUeQyFa1ZWiWQ==",
         "dependencies": {
-          "Racoon.Parsers": "1.1.5"
+          "Racoon.Parsers": "1.1.6"
         }
       },
       "Racoon.Extensions.CounterStrike": {
         "type": "Transitive",
-        "resolved": "1.1.5",
-        "contentHash": "oZ+YkzvtcqRlR/N7qv0IVjO0/6bLb5G9+51PNHKvZ8+SdE/O7h+kJrJWU9v1O+xIoGx16G9WojKOrKF6flvRYA==",
+        "resolved": "1.1.6",
+        "contentHash": "kly+iq3tCmR7/JMTo7i7WTOXuFQjXO300HY1m98NCFQ6b35GGwj9fbwZmag9jYnMSjOVx8LQ1+xm7G/Em0dNfw==",
         "dependencies": {
-          "Racoon": "1.1.5"
+          "Racoon": "1.1.6"
         }
       },
       "Racoon.Parsers": {
         "type": "Transitive",
-        "resolved": "1.1.5",
-        "contentHash": "rbP4Q8wlCCVxuWW3BKUW1K8g0XY1iWt/aFCPARh3RPgXrMoc2Kr3zyU9TFEnl6VmDVHRVv7VsKmkHKVa3AEuxg=="
+        "resolved": "1.1.6",
+        "contentHash": "IJdzVbosXqh9nYIkHv+qQVLpTFQNaAtKDVyamATAO/yBjDNB194QBqR7oaPE/KfTqy0eCGEUiI4YNCtXoGWykg=="
       },
       "cs2launcher.aspnetcore.app": {
         "type": "Project",
         "dependencies": {
           "ESCd.Extensions.Http": "[1.1.8, )",
-          "Microsoft.AspNetCore.Components.WebAssembly": "[10.0.6, )",
-          "Microsoft.AspNetCore.SignalR.Client": "[10.0.6, )",
+          "Microsoft.AspNetCore.Components.WebAssembly": "[10.0.7, )",
+          "Microsoft.AspNetCore.SignalR.Client": "[10.0.7, )",
           "Microsoft.Extensions.Http.Resilience": "[10.5.0, )"
         }
       },
@@ -243,17 +243,17 @@
         "dependencies": {
           "AspNet.Security.OpenId.Steam": "[10.0.0, )",
           "CS2Launcher.AspNetCore.App": "[1.0.0, )",
-          "Microsoft.AspNetCore.Components.WebAssembly.Server": "[10.0.6, )",
+          "Microsoft.AspNetCore.Components.WebAssembly.Server": "[10.0.7, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.Common": "[10.5.0, )",
-          "Racoon.Extensions.CounterStrike": "[1.1.5, )"
+          "Racoon.Extensions.CounterStrike": "[1.1.6, )"
         }
       },
       "cs2launcher.sample.app": {
         "type": "Project",
         "dependencies": {
           "CS2Launcher.AspNetCore.App": "[1.0.0, )",
-          "Microsoft.AspNetCore.Components.WebAssembly": "[10.0.6, )",
-          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "[10.0.202, )"
+          "Microsoft.AspNetCore.Components.WebAssembly": "[10.0.7, )",
+          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "[10.0.203, )"
         }
       }
     },
