@@ -1,8 +1,8 @@
-@using CS2Launcher.AspNetCore.App.Abstractions.Api
+﻿@using CS2Launcher.AspNetCore.App.Abstractions.Api
 
 @page "/maps"
 
-@inherits Stateful<MapsState>
+@inherits StatefulComponent<MapsState>
 
 @inject ILauncherApiClient Api
 
@@ -55,12 +55,12 @@
     {
         if (firstRender)
         {
-            return Mutate(state => MapsState.Load(Api.Server, state));
+            return Mutate((state, cancellation) => MapsState.Load(Api.Server, state, cancellation));
         }
 
         return Task.CompletedTask;
     }
 
-    private async Task OnValidSubmit() => await Mutate(state => MapsState.ChangeMap(Api.Server, state));
+    private async Task OnValidSubmit() => await Mutate((state, cancellation) => MapsState.ChangeMap(Api.Server, state, cancellation));
 
 }

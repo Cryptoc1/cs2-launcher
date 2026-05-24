@@ -89,6 +89,11 @@
           "Microsoft.IdentityModel.Protocols": "8.14.0"
         }
       },
+      "ESCd.AspNetCore.Components.Stateful": {
+        "type": "Transitive",
+        "resolved": "1.0.1",
+        "contentHash": "/0vJVSrZ8eYQ/jQtRoYBUqfOGiH994z+2lRMIE/40tIOYfiv1mVgVksS6o3h1aryVQjQJEMCNOfeEda9lZrXNA=="
+      },
       "ESCd.Extensions.Http": {
         "type": "Transitive",
         "resolved": "1.1.10",
@@ -284,6 +289,7 @@
       "cs2launcher.aspnetcore.app": {
         "type": "Project",
         "dependencies": {
+          "ESCd.AspNetCore.Components.Stateful": "[1.0.1, )",
           "ESCd.Extensions.Http": "[1.1.10, )",
           "Microsoft.AspNetCore.Components.WebAssembly": "[10.0.8, )",
           "Microsoft.AspNetCore.SignalR.Client": "[10.0.8, )",

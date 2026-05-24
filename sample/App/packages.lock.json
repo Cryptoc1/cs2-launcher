@@ -27,6 +27,14 @@
         "resolved": "10.0.8",
         "contentHash": "xQ05xw4t8wjFxwD7a/Nye/IPEihIyUkZIbRzTytVFqko6Ows3UvjqHIEjk3gCOIZloNFOLykYPsTyKRCvEs6ng=="
       },
+      "ESCd.AspNetCore.Components.Stateful": {
+        "type": "Transitive",
+        "resolved": "1.0.1",
+        "contentHash": "/0vJVSrZ8eYQ/jQtRoYBUqfOGiH994z+2lRMIE/40tIOYfiv1mVgVksS6o3h1aryVQjQJEMCNOfeEda9lZrXNA==",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components": "10.0.7"
+        }
+      },
       "ESCd.Extensions.Http": {
         "type": "Transitive",
         "resolved": "1.1.10",
@@ -498,6 +506,7 @@
       "cs2launcher.aspnetcore.app": {
         "type": "Project",
         "dependencies": {
+          "ESCd.AspNetCore.Components.Stateful": "[1.0.1, )",
           "ESCd.Extensions.Http": "[1.1.10, )",
           "Microsoft.AspNetCore.Components.WebAssembly": "[10.0.8, )",
           "Microsoft.AspNetCore.SignalR.Client": "[10.0.8, )",

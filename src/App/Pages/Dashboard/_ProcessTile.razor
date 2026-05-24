@@ -1,6 +1,6 @@
-@using CS2Launcher.AspNetCore.App.Abstractions.Api
+﻿@using CS2Launcher.AspNetCore.App.Abstractions.Api
 
-@inherits Stateful<ProcessTileState>
+@inherits StatefulComponent<ProcessTileState>
 
 @inject ILauncherApiClient Api
 
@@ -21,7 +21,7 @@
     {
         if (firstRender)
         {
-            return Mutate(state => ProcessTileState.Load(Api.Server, state));
+            return Mutate((state, cancellation) => ProcessTileState.Load(Api.Server, state, cancellation));
         }
 
         return Task.CompletedTask;

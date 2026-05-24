@@ -1,11 +1,10 @@
-@using CS2Launcher.AspNetCore.App.Abstractions.Api
+﻿@using CS2Launcher.AspNetCore.App.Abstractions.Api
 @using CS2Launcher.AspNetCore.App.Abstractions.Signals
 @using CS2Launcher.AspNetCore.App.Infrastructure
 
 @page "/process"
 
-@inherits Stateful<ProcessState>
-@implements IAsyncDisposable
+@inherits StatefulComponent<ProcessState>
 
 @inject ILauncherApiClient Api
 @inject NavigationManager Navigation
@@ -71,7 +70,7 @@
     private MetricsSignaler signaler;
     private List<IDisposable>? signals;
 
-    public async ValueTask DisposeAsync()
+    protected override async ValueTask DisposeAsyncCore()
     {
         signals?.ForEach(signal => signal.Dispose());
         signals?.Clear();
@@ -93,16 +92,16 @@
             signaler = new(Navigation);
             signals = [signaler.On<MetricsSignals.Report>(OnMetricsReported)];
 
-            await Mutate(state => ProcessState.Load(Api.Server, signaler, state));
+            await Mutate((state, cancellation) => ProcessState.Load(Api.Server, signaler, state, cancellation));
             return;
         }
     }
 
     private async Task OnMetricsReported(MetricsSignals.Report report) => await Mutate(state => ProcessState.OnReport(report, state));
 
-    private async Task OnRestartClicked() => await Mutate(state => ProcessState.RestartServer(Api.Server, state));
+    private async Task OnRestartClicked() => await Mutate((state, cancellation) => ProcessState.RestartServer(Api.Server, state, cancellation));
 
-    private async Task OnTerminateClicked() => await Mutate(state => ProcessState.StopServer(Api.Server, state));
+    private async Task OnTerminateClicked() => await Mutate((state, cancellation) => ProcessState.StopServer(Api.Server, state, cancellation));
 
     private static AlertType ToAlertType(ServerStatus status) => status switch
     {

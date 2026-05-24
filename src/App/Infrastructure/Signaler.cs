@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using CS2Launcher.AspNetCore.App.Abstractions.Signals;
 using CS2Launcher.AspNetCore.App.Infrastructure;
 using CS2Launcher.AspNetCore.App.Json;
@@ -41,7 +41,7 @@ internal abstract class Signaler( Action<IHubConnectionBuilder> configure ) : IA
         GC.SuppressFinalize( this );
     }
 
-    public Task Connect( )
+    public Task Connect( CancellationToken cancellation = default )
     {
         PlatformGuard.ThrowIfNotBrowser( "Signaler cannot be initialized outside of a browser context." );
         if( Connection.State > HubConnectionState.Disconnected )
@@ -49,10 +49,10 @@ internal abstract class Signaler( Action<IHubConnectionBuilder> configure ) : IA
             return Task.CompletedTask;
         }
 
-        return Connection.StartAsync();
+        return Connection.StartAsync( cancellation );
     }
 
-    public Task Disconnect( ) => Connection.StopAsync();
+    public Task Disconnect( CancellationToken cancellation = default ) => Connection.StopAsync( cancellation );
 
     public IDisposable On<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.PublicProperties )] TSignal>( Func<TSignal, Task> handler )
         where TSignal : Signal<TSignal>
@@ -62,7 +62,7 @@ internal abstract class Signaler( Action<IHubConnectionBuilder> configure ) : IA
         where TSignal : Signal<TSignal>
         => Connection.On( typeof( TSignal ).Name, handler );
 
-    public Task Send<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.PublicProperties )] TSignal>( TSignal signal )
+    public Task Send<[DynamicallyAccessedMembers( DynamicallyAccessedMemberTypes.PublicProperties )] TSignal>( TSignal signal, CancellationToken cancellation = default )
         where TSignal : Signal<TSignal>
-        => Connection.SendAsync( typeof( TSignal ).Name, signal );
+        => Connection.SendAsync( typeof( TSignal ).Name, signal, cancellation );
 }

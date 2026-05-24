@@ -3,8 +3,7 @@
 
 @page "/console"
 
-@inherits Stateful<ConsoleState>
-@implements IAsyncDisposable
+@inherits StatefulComponent<ConsoleState>
 
 @inject ElementInterop ElementInterop
 @inject LocalStorageInterop LocalStorage
@@ -81,7 +80,7 @@
     private ConsoleSignaler signaler;
     private List<IDisposable>? signals;
 
-    public async ValueTask DisposeAsync()
+    protected override async ValueTask DisposeAsyncCore()
     {
         signals?.ForEach(signal => signal.Dispose());
         signals?.Clear();
@@ -104,7 +103,7 @@
                 signaler.On<ConsoleSignals.ExecutedCommand>(OnExecutedCommand),
                 signaler.On<ConsoleSignals.ExecuteCommandFailed>(OnExecuteCommandFailed)];
 
-            await Mutate(state => ConsoleState.Load(LocalStorage, signaler, state));
+            await Mutate((state, cancellation) => ConsoleState.Load(LocalStorage, signaler, state, cancellation));
             return;
         }
     }
@@ -126,7 +125,7 @@
         {
             "ArrowDown" => OnArrowDown(),
             "ArrowUp" => OnArrowUp(),
-            _ => new(false)
+            _ => Task.FromResult(false)
         });
 
         if (handled)
@@ -135,7 +134,7 @@
             await TryFocusCommandInput();
         }
 
-        ValueTask<bool> OnArrowDown()
+        Task<bool> OnArrowDown()
         {
             var offset = ((State.History.Count - 1) - State.Form.Offset) + 1;
             if (offset >= 0 && offset < State.History.Count)
@@ -152,10 +151,10 @@
                 });
             }
 
-            return new(false);
+            return Task.FromResult(false);
         }
 
-        ValueTask<bool> OnArrowUp()
+        Task<bool> OnArrowUp()
         {
             var offset = (State.History.Count - 1) - State.Form.Offset;
             if (offset >= 0)
@@ -172,11 +171,11 @@
                 });
             }
 
-            return new(false);
+            return Task.FromResult(false);
         }
     }
 
-    private async Task OnExecutedCommand(ConsoleSignals.ExecutedCommand command) => await Mutate(state => ConsoleState.OnExecutedCommand(LocalStorage, command, state));
+    private async Task OnExecutedCommand(ConsoleSignals.ExecutedCommand command) => await Mutate((state, cancellation) => ConsoleState.OnExecutedCommand(LocalStorage, command, state, cancellation));
 
     private async Task OnExecuteCommandFailed(ConsoleSignals.ExecuteCommandFailed failure) => await Mutate(state => ConsoleState.OnExecuteCommandFailed(failure, state));
 
@@ -200,11 +199,11 @@
         }
     }
 
-    private async Task OnRetryClicked() => await Mutate(state => ConsoleState.Reconnect(signaler, state));
+    private async Task OnRetryClicked() => await Mutate((state, cancellation) => ConsoleState.Reconnect(signaler, state, cancellation));
 
     private async Task OnSubmit()
     {
-        if (await Mutate(state => ConsoleState.ExecuteCommand(signaler, state)))
+        if (await Mutate((state, cancellation) => ConsoleState.ExecuteCommand(signaler, state, cancellation)))
         {
             await Task.Delay(75);
             await TryFocusCommandInput();

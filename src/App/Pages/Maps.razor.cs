@@ -1,6 +1,7 @@
+﻿using System.Runtime.CompilerServices;
 using CS2Launcher.AspNetCore.App.Abstractions.Api;
-using CS2Launcher.AspNetCore.App.Components;
 using CS2Launcher.AspNetCore.App.Infrastructure;
+using ESCd.AspNetCore.Components.Stateful;
 
 namespace CS2Launcher.AspNetCore.App.Pages;
 
@@ -12,7 +13,7 @@ public sealed record MapsState : State<MapsState>
     public bool IsServerRunning { get; init; }
     public ChangeMapParameters Parameters { get; init; } = new();
 
-    internal static async IAsyncEnumerable<MapsState> ChangeMap( IServerApi serverApi, MapsState state )
+    internal static async IAsyncEnumerable<MapsState> ChangeMap( IServerApi serverApi, MapsState state, [EnumeratorCancellation] CancellationToken cancellation )
     {
         ArgumentNullException.ThrowIfNull( serverApi );
         ArgumentNullException.ThrowIfNull( state );
@@ -23,19 +24,19 @@ public sealed record MapsState : State<MapsState>
             IsMapChanged = false,
         };
 
-        yield return await ChangeMap( serverApi, state ) with
+        yield return await ChangeMap( serverApi, state, cancellation ) with
         {
             Parameters = new()
         };
 
-        async static Task<MapsState> ChangeMap( IServerApi serverApi, MapsState state )
+        async static Task<MapsState> ChangeMap( IServerApi serverApi, MapsState state, CancellationToken cancellation )
         {
             try
             {
                 return state with
                 {
                     Errors = default,
-                    IsMapChanged = await serverApi.ChangeMap( state.Parameters )
+                    IsMapChanged = await serverApi.ChangeMap( state.Parameters, cancellation )
                 };
             }
             catch( ApiProblemException exception )
@@ -48,7 +49,7 @@ public sealed record MapsState : State<MapsState>
         }
     }
 
-    internal static async Task<MapsState> Load( IServerApi serverApi, MapsState state )
+    internal static async Task<MapsState> Load( IServerApi serverApi, MapsState state, CancellationToken cancellation )
     {
         ArgumentNullException.ThrowIfNull( serverApi );
         ArgumentNullException.ThrowIfNull( state );
@@ -56,7 +57,7 @@ public sealed record MapsState : State<MapsState>
         return state with
         {
             IsLoading = false,
-            IsServerRunning = await serverApi.Status() is ServerStatus.Running
+            IsServerRunning = await serverApi.Status( cancellation ) is ServerStatus.Running
         };
     }
 }

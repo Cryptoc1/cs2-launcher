@@ -1,8 +1,9 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using CS2Launcher.AspNetCore.App.Abstractions.Signals;
-using CS2Launcher.AspNetCore.App.Components;
 using CS2Launcher.AspNetCore.App.Infrastructure;
 using CS2Launcher.AspNetCore.App.Interop;
+using ESCd.AspNetCore.Components.Stateful;
 
 namespace CS2Launcher.AspNetCore.App.Pages;
 
@@ -19,7 +20,7 @@ public sealed record ConsoleState : State<ConsoleState>
     public bool IsInputFocused { get; init; }
     public bool IsLoading { get; init; } = true;
 
-    internal static async IAsyncEnumerable<ConsoleState> ExecuteCommand( ConsoleSignaler signaler, ConsoleState state )
+    internal static async IAsyncEnumerable<ConsoleState> ExecuteCommand( ConsoleSignaler signaler, ConsoleState state, [EnumeratorCancellation] CancellationToken cancellation )
     {
         ArgumentNullException.ThrowIfNull( signaler );
         ArgumentNullException.ThrowIfNull( state );
@@ -51,25 +52,25 @@ public sealed record ConsoleState : State<ConsoleState>
             History = history,
         };
 
-        await signaler.Send( signal );
+        await signaler.Send( signal, cancellation );
     }
 
-    internal static async IAsyncEnumerable<ConsoleState> Load( LocalStorageInterop localStorage, ConsoleSignaler signaler, ConsoleState state )
+    internal static async IAsyncEnumerable<ConsoleState> Load( LocalStorageInterop localStorage, ConsoleSignaler signaler, ConsoleState state, [EnumeratorCancellation] CancellationToken cancellation )
     {
         ArgumentNullException.ThrowIfNull( localStorage );
         ArgumentNullException.ThrowIfNull( state );
 
-        var connect = signaler.Connect();
+        var connect = signaler.Connect( cancellation );
         yield return state with
         {
-            History = await LoadHistory( localStorage )
+            History = await LoadHistory( localStorage, cancellation )
         };
 
         await connect;
 
-        static async ValueTask<List<string>> LoadHistory( LocalStorageInterop localStorage )
+        static async ValueTask<List<string>> LoadHistory( LocalStorageInterop localStorage, CancellationToken cancellation )
         {
-            var history = await localStorage.Get<List<string>>( HistoryStorageKey ) ?? [];
+            var history = await localStorage.Get<List<string>>( HistoryStorageKey, cancellation ) ?? [];
             history.EnsureCapacity( MaxEntries );
 
             return history;
@@ -91,7 +92,7 @@ public sealed record ConsoleState : State<ConsoleState>
             IsLoading = false,
         };
 
-    internal static async IAsyncEnumerable<ConsoleState> OnExecutedCommand( LocalStorageInterop localStorage, ConsoleSignals.ExecutedCommand command, ConsoleState state )
+    internal static async IAsyncEnumerable<ConsoleState> OnExecutedCommand( LocalStorageInterop localStorage, ConsoleSignals.ExecutedCommand command, ConsoleState state, [EnumeratorCancellation] CancellationToken cancellation )
     {
         ArgumentNullException.ThrowIfNull( localStorage );
         ArgumentNullException.ThrowIfNull( command );
@@ -112,7 +113,7 @@ public sealed record ConsoleState : State<ConsoleState>
                 }
             };
 
-            await localStorage.Set( HistoryStorageKey, state.History );
+            await localStorage.Set( HistoryStorageKey, state.History, cancellation );
         }
     }
 
@@ -140,19 +141,19 @@ public sealed record ConsoleState : State<ConsoleState>
         return state;
     }
 
-    internal static async IAsyncEnumerable<ConsoleState> Reconnect( ConsoleSignaler signaler, ConsoleState state )
+    internal static async IAsyncEnumerable<ConsoleState> Reconnect( ConsoleSignaler signaler, ConsoleState state, [EnumeratorCancellation] CancellationToken cancellation )
     {
         ArgumentNullException.ThrowIfNull( signaler );
         ArgumentNullException.ThrowIfNull( state );
 
-        await signaler.Disconnect();
+        await signaler.Disconnect( cancellation );
         yield return state with
         {
             ConnectError = "",
             IsLoading = true,
         };
 
-        await signaler.Connect();
+        await signaler.Connect( cancellation );
     }
 }
 
