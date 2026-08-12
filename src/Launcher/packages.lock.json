@@ -22,19 +22,13 @@
           "Microsoft.AspNetCore.Components.WebAssembly": "10.0.10"
         }
       },
-      "Microsoft.CodeAnalysis.NetAnalyzers": {
-        "type": "Direct",
-        "requested": "[10.0.302, )",
-        "resolved": "10.0.302",
-        "contentHash": "mbJSf5EOYkgnPQ0jO0qo4AByQYDGbBZDs0+23xdkK2ckuvYJGlPT1nPR0WCSnzwXdiVypOTZ4ArcT4H/X/f1mQ=="
-      },
       "Microsoft.Extensions.Diagnostics.HealthChecks.Common": {
         "type": "Direct",
-        "requested": "[10.8.0, )",
-        "resolved": "10.8.0",
-        "contentHash": "nyB5D+P7R2LOIrAiZyCgcUsQZcKa/n4PIGkE8eXGknlhPTfd5bivi2u4vhFVvjZYkObw/bpWRSwBllyx1ZuWGw==",
+        "requested": "[10.9.0, )",
+        "resolved": "10.9.0",
+        "contentHash": "CyHixu/WT6Nc70pT0wAzOwoquzaly6EtDpPvXxP07vVE6VvV1TzufS52F4sBlcC7ZIiscRLNEmZQuCmBSge1Mw==",
         "dependencies": {
-          "Microsoft.Extensions.Telemetry.Abstractions": "10.8.0"
+          "Microsoft.Extensions.Telemetry.Abstractions": "10.9.0"
         }
       },
       "Microsoft.NET.ILLink.Tasks": {
@@ -144,8 +138,8 @@
       },
       "Microsoft.Extensions.Compliance.Abstractions": {
         "type": "Transitive",
-        "resolved": "10.8.0",
-        "contentHash": "7I0DXMTCqpXpXg+SLLDlfedtv6DN5Lgiv+PR3MclzqKPOHNB17YP42KMNI61ckSrffh0xsuIqQyCIjvWc6vUuw=="
+        "resolved": "10.9.0",
+        "contentHash": "tuSqNuiJxlln43sZ8c1EDA4WXit1eX4foGadylXso3DnMVc+DtKfaNEwvHuiFXfPsEUZ6Z3GnF0Bfk9vvOsE4Q=="
       },
       "Microsoft.Extensions.DependencyInjection.AutoActivation": {
         "type": "Transitive",
@@ -197,10 +191,10 @@
       },
       "Microsoft.Extensions.Telemetry.Abstractions": {
         "type": "Transitive",
-        "resolved": "10.8.0",
-        "contentHash": "XHlOerNKjVrPJqbuFi196tyFhS7eNMoPUC800xJmCGsSiruE/goGoKyBKzS1HeelAGnoFPFrS+LgNitXNeEYRQ==",
+        "resolved": "10.9.0",
+        "contentHash": "rCyM64XvBNi2IY/5noMVsJjt22zVmnI+8tGrb6JnPRW/75Nyv9Hi+7gkxb7zQcR0+2mzS1sAqPXz2PsdHZCqHg==",
         "dependencies": {
-          "Microsoft.Extensions.Compliance.Abstractions": "10.8.0"
+          "Microsoft.Extensions.Compliance.Abstractions": "10.9.0"
         }
       },
       "Microsoft.IdentityModel.Abstractions": {
