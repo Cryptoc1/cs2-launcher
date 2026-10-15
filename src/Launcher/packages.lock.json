@@ -22,12 +22,6 @@
           "Microsoft.AspNetCore.Components.WebAssembly": "10.0.12"
         }
       },
-      "Microsoft.CodeAnalysis.NetAnalyzers": {
-        "type": "Direct",
-        "requested": "[10.0.401, )",
-        "resolved": "10.0.401",
-        "contentHash": "qGPLk4hknvVp6j9Lowa0qykw1cK7CyEyyy2aVs4dkOGroOMHJLRsMpUT53IKvYT6q78jxv96FZhzy3BrKCPgmA=="
-      },
       "Microsoft.Extensions.Diagnostics.HealthChecks.Common": {
         "type": "Direct",
         "requested": "[10.10.0, )",
@@ -68,11 +62,11 @@
       },
       "Racoon.Extensions.CounterStrike": {
         "type": "Direct",
-        "requested": "[1.1.11, )",
-        "resolved": "1.1.11",
-        "contentHash": "n9yNJ3EdqQb6OfqaCmC8L3imQuuIbPdIUShkKVk79p/wPVikI20WnxYx8aJsBwrkQBdlR0W+pSJP0Lgs3UUaEA==",
+        "requested": "[1.1.12, )",
+        "resolved": "1.1.12",
+        "contentHash": "naV1aoJG5j/V0FEFxMLPGconU60EJ5zb6aIQfLuUOdnnivTZnCUIuBpqPObY+pIoGryIbftoUUuvEOjDs+KKkw==",
         "dependencies": {
-          "Racoon": "1.1.11"
+          "Racoon": "1.1.12"
         }
       },
       "AngleSharp": {
@@ -270,16 +264,16 @@
       },
       "Racoon": {
         "type": "Transitive",
-        "resolved": "1.1.11",
-        "contentHash": "Z/b3YHeqZYIW1jtHpg6KJOm0anKBBLCqRmJu+PHRE/PUO/ypZvWztMxrBwl4hoCoDCO5hQhFAFIijJTqdbefsg==",
+        "resolved": "1.1.12",
+        "contentHash": "gP0Z6b/oSvBI0SRGTd/Mx5CehJcZH2uH4RoUmS2849q8jk16o0+j22zrQ7o1hwzEb8tmJR90TB9F1F2fzka0lA==",
         "dependencies": {
-          "Racoon.Parsers": "1.1.11"
+          "Racoon.Parsers": "1.1.12"
         }
       },
       "Racoon.Parsers": {
         "type": "Transitive",
-        "resolved": "1.1.11",
-        "contentHash": "jODTsjDwzyrwa6+iapDEb7oVbHN8SnPDq6SYQS9jIeSomsG6oXjNk0lVt/phlsw/8Cjfp/VwusmQjmBkHU4QYw=="
+        "resolved": "1.1.12",
+        "contentHash": "JWfQvEcmaA/69UxtLFlM2PR17T9rKBXD2jS4/UPQUcuwyZRLhXWFS93AtTyTHxAWmAT6lSK7ZIY38KU+swNJFA=="
       },
       "System.IO.Hashing": {
         "type": "Transitive",
