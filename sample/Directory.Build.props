@@ -8,8 +8,8 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <TargetFramework>net10.0</TargetFramework>
-    <AspNetCoreVersion>10.0.12</AspNetCoreVersion>
+    <TargetFramework>net11.0</TargetFramework>
+    <AspNetCoreVersion>11.0.*-*</AspNetCoreVersion>
   </PropertyGroup>
 
 </Project>

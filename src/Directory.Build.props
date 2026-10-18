@@ -29,8 +29,8 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <AnalysisLevel>preview-recommended</AnalysisLevel>
 
-    <TargetFramework>net10.0</TargetFramework>
-    <AspNetCoreVersion>10.0.12</AspNetCoreVersion>
+    <TargetFramework>net11.0</TargetFramework>
+    <AspNetCoreVersion>11.0.*-*</AspNetCoreVersion>
   </PropertyGroup>
 
   <!-- Git Versioning + Metadata -->
@@ -56,7 +56,7 @@
   <ItemGroup>
     <PackageReference Include="MinVer" Version="8.0.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Sbom.Targets" Version="4.1.13" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.*-*" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,11 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ESCd.Extensions.Http" Version="1.1.14" />
-    <PackageReference Include="ESCd.AspNetCore.Components.Stateful" Version="1.0.5" />
+    <PackageReference Include="ESCd.Extensions.Http" Version="1.1.16-rc.2" />
+    <PackageReference Include="ESCd.AspNetCore.Components.Stateful" Version="1.0.7-rc.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.10.0" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.11.0" />
   </ItemGroup>
 
   <ItemGroup>
