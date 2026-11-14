@@ -29,21 +29,14 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
-          node-version: 24.x
-
-      - name: setup dotnet (11.0)
-        uses: actions/setup-dotnet@v6
-        with:
-          cache: false
-          dotnet-quality: preview
-          dotnet-version: 11.0.x
+          node-version: 26.x
 
       - name: setup dotnet
         uses: actions/setup-dotnet@v6
         with:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
-          dotnet-version: 10.0.x
+          dotnet-version: 11.0.x
 
       - name: install workloads
         run: dotnet workload restore && dotnet workload install wasm-tools wasm-tools-net9
@@ -71,21 +64,13 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
-          node-version: 24.x
-
-      - name: setup dotnet (11.0)
-        uses: actions/setup-dotnet@v6
-        with:
-          cache: false
-          dotnet-quality: preview
-          dotnet-version: 11.0.x
+          node-version: 26.x
 
       - name: setup dotnet
         uses: actions/setup-dotnet@v6
         with:
-          cache: true
-          cache-dependency-path: ./**/packages.lock.json
-          dotnet-version: 10.0.x
+          cache: false
+          dotnet-version: 11.0.x
 
       - name: install workloads
         run: dotnet workload restore && dotnet workload install wasm-tools wasm-tools-net9
@@ -111,7 +96,6 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           cache: false
-          dotnet-quality: preview
           dotnet-version: 11.0.x
 
       - name: download artifact
@@ -119,5 +103,11 @@ jobs:
         with:
           name: cs2-launcher-packages
 
+      - name: nuget login
+        id: nuget-login
+        uses: NuGet/login@v1.2.0
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: push
-        run: dotnet nuget push "*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push "*.nupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

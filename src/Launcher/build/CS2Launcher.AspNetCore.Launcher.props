@@ -1,0 +1,7 @@
+<Project>
+
+  <PropertyGroup>
+    <Features>$(Features);runtime-async=on</Features>
+  </PropertyGroup>
+
+</Project>
